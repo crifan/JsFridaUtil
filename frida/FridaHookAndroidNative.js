@@ -2,7 +2,7 @@
 	File: FridaHookAndroidNative.js
 	Function: crifan's Frida hook Android native related functions
 	Author: Crifan Li
-	Latest: https://github.com/crifan/JsFridaUtil/blob/master/frida/FridaHookAndroidNative.js
+	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidNative.js
 	Updated: 20241122
 */
 

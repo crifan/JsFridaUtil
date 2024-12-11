@@ -2,7 +2,7 @@
 	File: JsUtil.js
 	Function: crifan's common Javascript related functions
 	Author: Crifan Li
-	Latest: https://github.com/crifan/JsFridaUtil/blob/master/JsUtil.js
+	Latest: https://github.com/crifan/JsFridaUtil/blob/main/JsUtil.js
 	Updated: 20241211
 */
 

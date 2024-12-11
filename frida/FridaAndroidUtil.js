@@ -2,7 +2,7 @@
 	File: FridaAndroidUtil.js
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
-	Latest: https://github.com/crifan/JsFridaUtil/blob/master/frida/FridaAndroidUtil.js
+	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
 	Updated: 20241209
 */
 

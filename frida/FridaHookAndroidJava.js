@@ -2,7 +2,7 @@
 	File: FridaHookAndroidJava.js
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
-	Latest: https://github.com/crifan/JsFridaUtil/blob/master/frida/FridaHookAndroidJava.js
+	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
 	Updated: 20241122
 */
 

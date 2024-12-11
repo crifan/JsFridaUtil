@@ -2,7 +2,7 @@
 	File: FridaHookNative.js
 	Function: crifan's Frida hook common native related functions
 	Author: Crifan Li
-	Latest: https://github.com/crifan/JsFridaUtil/blob/master/frida/FridaHookNative.js
+	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookNative.js
 	Updated: 20241121
 */
 

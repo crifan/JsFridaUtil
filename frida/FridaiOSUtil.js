@@ -2,7 +2,7 @@
 	File: FridaiOSUtil.js
 	Function: crifan's common Frida iOS util related functions
 	Author: Crifan Li
-	Latest: https://github.com/crifan/JsFridaUtil/blob/master/frida/FridaiOSUtil.js
+	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaiOSUtil.js
 	Updated: 20240823
 */
 
@@ -96,7 +96,7 @@ class FridaiOSUtil {
 
   }
 
-  // https://github.com/4ch12dy/FridaLib/blob/master/iOS/iOSFridaLib.js
+  // https://github.com/4ch12dy/FridaLib/blob/main/iOS/iOSFridaLib.js
 
   // xia0 log
   static XLOG(log) {

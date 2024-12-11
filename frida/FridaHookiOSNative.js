@@ -2,7 +2,7 @@
 	File: FridaHookiOSNative.js
 	Function: crifan's Frida hook iOS native related functions
 	Author: Crifan Li
-	Latest: https://github.com/crifan/JsFridaUtil/blob/master/frida/FridaHookiOSNative.js
+	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookiOSNative.js
 	Updated: 20241122
 */
 
