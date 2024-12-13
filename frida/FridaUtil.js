@@ -3,7 +3,7 @@
 	Function: crifan's common Frida util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaUtil.js
-	Updated: 20241211
+	Updated: 20241213
 */
 
 // Frida Common Util
@@ -203,6 +203,23 @@ class FridaUtil {
     console.log("dumpHexStr=\n" + dumpHexStr)
   }
 
+  static printInstructionInfo(instruction){
+    // Instruction: address=0x252c0edf8,toString()=br x10,next=0x4,size=4,mnemonic=br,opStr=x10,operands=[{"type":"reg","value":"x10","access":"r"}],regsAccessed={"read":["x10"],"written":[]},regsRead=[],regsWritten=[],groups=["jump"],toJSON()={"address":"0x252c0edf8","next":"0x4","size":4,"mnemonic":"br","opStr":"x10","operands":[{"type":"reg","value":"x10","access":"r"}],"regsAccessed":{"read":["x10"],"written":[]},"regsRead":[],"regsWritten":[],"groups":["jump"]}
+    console.log("Instruction: address=" + instruction.address
+      + ",toString()=" + instruction.toString()
+      + ",toJSON()=" + JSON.stringify(instruction.toJSON())
+      // + ",next=" + instruction.next
+      // + ",size=" + instruction.size
+      // + ",mnemonic=" + instruction.mnemonic
+      // + ",opStr=" + instruction.opStr
+      // + ",operands=" + JSON.stringify(instruction.operands)
+      // + ",regsAccessed=" + JSON.stringify(instruction.regsAccessed)
+      // + ",regsRead=" + JSON.stringify(instruction.regsRead)
+      // + ",regsWritten=" + JSON.stringify(instruction.regsWritten)
+      // + ",groups=" + JSON.stringify(instruction.groups)
+    )
+  }
+
   // Frida Stalker hoo unknown name native function
   static stalkerHookUnnameNative(moduleBaseAddress, funcRelativeStartAddr, functionSize, argNum, hookFuncMap){
     console.log("Frida Stalker hook: module: baseAddress=" + moduleBaseAddress)
@@ -268,20 +285,7 @@ class FridaUtil {
               do {
                 if (isAppCode) {
                   // is origal function code = which we focus on
-
-                  // console.log("instruction: address=" + instruction.address
-                  //     + ",next=" + instruction.next()
-                  //     + ",size=" + instruction.size
-                  //     + ",mnemonic=" + instruction.mnemonic
-                  //     + ",opStr=" + instruction.opStr
-                  //     + ",operands=" + JSON.stringify(instruction.operands)
-                  //     + ",regsAccessed=" + JSON.stringify(instruction.regsAccessed)
-                  //     + ",regsRead=" + JSON.stringify(instruction.regsRead)
-                  //     + ",regsWritten=" + JSON.stringify(instruction.regsWritten)
-                  //     + ",groups=" + JSON.stringify(instruction.groups)
-                  //     + ",toString()=" + instruction.toString()
-                  //     + ",toJSON()=" + instruction.toJSON()
-                  // );
+                  // FridaUtil.printInstructionInfo(instruction)
 
                   var curRealAddr = instruction.address
                   // console.log("curRealAddr=" + curRealAddr)
