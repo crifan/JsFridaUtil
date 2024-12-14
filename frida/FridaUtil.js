@@ -3,7 +3,7 @@
 	Function: crifan's common Frida util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaUtil.js
-	Updated: 20241213
+	Updated: 20241214
 */
 
 // Frida Common Util
@@ -203,6 +203,57 @@ class FridaUtil {
     console.log("dumpHexStr=\n" + dumpHexStr)
   }
 
+  // convert ByteArray to Opcode string
+  static byteArrayToOpcodeStr(byteArr){
+    var byteStrList = []
+    for(var i = 0; i < byteArr.length; i++) {
+      var curByte = byteArr[i]
+      // console.log("curByte=" + curByte)
+      var curByteStr = JsUtil.intToHexStr(curByte, "", true)
+      // console.log("curByteStr=" + curByteStr)
+      byteStrList.push(curByteStr)
+    }
+    // console.log("byteStrList=" + byteStrList)
+    var opcodeStr = byteStrList.join(" ")
+    // console.log("byteArr=" + byteArr + " -> opcodeStr=" + opcodeStr)
+    return opcodeStr
+  }
+
+  // read byte array from address
+  // Note: curAddress is NativePointer
+  static readAddressByteArray(curAddress, byteSize){
+    // console.log("curAddress=" + curAddress + ", byteSize=" + byteSize)
+    // var instructionByteArrBuffer = curAddress.readByteArray(byteSize)
+    var curByteArray = []
+    for(var i = 0; i < byteSize; i++){
+      var curAddr = curAddress.add(i)
+      // console.log("curAddr=" + curAddr)
+      var byteU8 = curAddr.readU8()
+      // console.log("byteU8=" + byteU8)
+      curByteArray.push(byteU8)
+    }
+    // console.log("curByteArray=" + curByteArray)
+    return curByteArray
+  }
+
+  static genInstructionOpcodeStr(instruction){
+    var instructionByteArr = FridaUtil.readAddressByteArray(instruction.address, instruction.size)
+    // console.log("instructionByteArr=" + instructionByteArr)
+
+    // var instructionOpcodeStr = hexdump(
+    //   instructionByteArr,
+    //   {
+    //     offset: 0, 
+    //     length: curInstructionSize,
+    //     header: false,
+    //     ansi: false
+    //   }
+    // )
+    var instructionOpcodeStr = FridaUtil.byteArrayToOpcodeStr(instructionByteArr)
+    // console.log("instructionOpcodeStr=" + instructionOpcodeStr)
+    return instructionOpcodeStr
+  }
+
   static printInstructionInfo(instruction){
     // Instruction: address=0x252c0edf8,toString()=br x10,next=0x4,size=4,mnemonic=br,opStr=x10,operands=[{"type":"reg","value":"x10","access":"r"}],regsAccessed={"read":["x10"],"written":[]},regsRead=[],regsWritten=[],groups=["jump"],toJSON()={"address":"0x252c0edf8","next":"0x4","size":4,"mnemonic":"br","opStr":"x10","operands":[{"type":"reg","value":"x10","access":"r"}],"regsAccessed":{"read":["x10"],"written":[]},"regsRead":[],"regsWritten":[],"groups":["jump"]}
     console.log("Instruction: address=" + instruction.address
@@ -299,7 +350,17 @@ class FridaUtil {
                   var instructionStr = instruction.toString()
                   // console.log("\t" + curRealAddr + ": " + instructionStr);
                   // console.log("\t" + curRealAddr + " <+" + curOffsetHexPtr + ">: " + instructionStr)
-                  console.log("\t" + curRealAddr + " <+" + curOffsetInt + ">: " + instructionStr)
+                  // console.log("\t" + curRealAddr + " <+" + curOffsetInt + ">: " + instructionStr)
+
+                  var isShowOpcode = true
+                  var opcodeStr = ""
+                  if (isShowOpcode) {
+                    opcodeStr = " " + FridaUtil.genInstructionOpcodeStr(instruction)
+                  }
+                  var instructionFullLogStr = "\t" + curRealAddr + " <+" + curOffsetInt + ">" + opcodeStr + ": " + instructionStr
+                  console.log(instructionFullLogStr)
+                  // 0x252c0edf8 <+356>: br x10
+                  // 0x22ac3f584 <+44> F9 03 02 AA: mov x25, x2
 
                   if (curOffsetInt in hookFuncMap){
                     console.log("offset: " + curOffsetHexPtr + "=" + curOffsetInt)
