@@ -3,11 +3,13 @@
 	Function: crifan's common Frida util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaUtil.js
-	Updated: 20241214
+	Updated: 20241216
 */
 
 // Frida Common Util
 class FridaUtil {
+  // for Stalker onEnter transform, is show opcode string or not
+  static isShowOpcode = true
 
   constructor() {
     console.log("FridaUtil constructor")
@@ -273,7 +275,7 @@ class FridaUtil {
 
   // Frida Stalker hoo unknown name native function
   static stalkerHookUnnameNative(moduleBaseAddress, funcRelativeStartAddr, functionSize, argNum, hookFuncMap){
-    console.log("Frida Stalker hook: module: baseAddress=" + moduleBaseAddress)
+    console.log("Frida Stalker hook: module: baseAddress=" + moduleBaseAddress + ", isShowOpcode=" + FridaUtil.isShowOpcode)
 
     var functionSizeHexStr = JsUtil.intToHexStr(functionSize)
     var funcRelativeStartAddrHexStr = JsUtil.intToHexStr(funcRelativeStartAddr)
@@ -352,15 +354,14 @@ class FridaUtil {
                   // console.log("\t" + curRealAddr + " <+" + curOffsetHexPtr + ">: " + instructionStr)
                   // console.log("\t" + curRealAddr + " <+" + curOffsetInt + ">: " + instructionStr)
 
-                  var isShowOpcode = true
                   var opcodeStr = ""
-                  if (isShowOpcode) {
+                  if (FridaUtil.isShowOpcode) {
                     opcodeStr = " " + FridaUtil.genInstructionOpcodeStr(instruction)
                   }
                   var instructionFullLogStr = "\t" + curRealAddr + " <+" + curOffsetInt + ">" + opcodeStr + ": " + instructionStr
                   console.log(instructionFullLogStr)
                   // 0x252c0edf8 <+356>: br x10
-                  // 0x22ac3f584 <+44> F9 03 02 AA: mov x25, x2
+                  // 0x252c0edf8 <+356> 40 01 1F D6: br x10
 
                   if (curOffsetInt in hookFuncMap){
                     console.log("offset: " + curOffsetHexPtr + "=" + curOffsetInt)
