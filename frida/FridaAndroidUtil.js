@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20241209
+	Updated: 20250213
 */
 
 // Frida Android Util
@@ -595,6 +595,15 @@ class FridaAndroidUtil {
     }
     // console.log("keyValStrList=" + keyValStrList)
     return keyValStrList
+  }
+
+  // cast current object to destination class instance
+  static castToJavaClass(curObj, toClassName){
+    const toClass = Java.use(toClassName)
+    // console.log("toClass=" + toClass)
+    var toClassObj = Java.cast(curObj, toClass)
+    // console.log("toClassObj=" + toClassObj)
+    return toClassObj
   }
 
   // convert (Java) map (java.util.HashMap) to string
