@@ -23,7 +23,7 @@ class FridaHookNative {
     console.log("FridaHookNative.free=" + FridaHookNative.free)
   }
 
-  static hookNative_commonFunc(funcName_native, funcParaList, libFullPath=null, funcName_log=null){
+  static hookNative_commonFunc(funcName_native, funcParaList, libFullPath=null, funcName_log=null, isPrintStack=true){
     console.log("hookNative_commonFunc: funcName_native=" + funcName_native + ", funcParaList=" + funcParaList + ", libFullPath=" + libFullPath + ", funcName_log=" + funcName_log)
 
     var foundNativeFunc = Module.findExportByName(libFullPath, funcName_native)
@@ -31,7 +31,11 @@ class FridaHookNative {
     if (null != foundNativeFunc) {
       Interceptor.attach(foundNativeFunc, {
         onEnter: function (args) {
-          console.log(funcName_log + " called")
+          if (isPrintStack){
+            FridaUtil.printFunctionCallStack_addr(this.context, funcName_log)
+          } else {
+            console.log(funcName_log + " called")
+          }
 
           // var logStr = funcName_log + ": [+] libFullPath=" + libFullPath
           var logStr = `${funcName_log}: [+] libFullPath=${libFullPath}`
