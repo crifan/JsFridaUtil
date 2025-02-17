@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common native related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookNative.js
-	Updated: 20241121
+	Updated: 20250217
 */
 
 // Frida hook common native functions
@@ -21,6 +21,40 @@ class FridaHookNative {
 
     FridaHookNative.free = FridaHookNative.genNativeFunc_free()
     console.log("FridaHookNative.free=" + FridaHookNative.free)
+  }
+
+  static hookNative_commonFunc(funcName_native, funcParaList, libFullPath=null, funcName_log=null){
+    console.log("hookNative_commonFunc: funcName_native=" + funcName_native + ", funcParaList=" + funcParaList + ", libFullPath=" + libFullPath + ", funcName_log=" + funcName_log)
+
+    var foundNativeFunc = Module.findExportByName(libFullPath, funcName_native)
+    console.log("foundNativeFunc=" + foundNativeFunc)
+    if (null != foundNativeFunc) {
+      Interceptor.attach(foundNativeFunc, {
+        onEnter: function (args) {
+          console.log(funcName_log + " called")
+
+          // var logStr = funcName_log + ": [+] libFullPath=" + libFullPath
+          var logStr = `${funcName_log}: [+] libFullPath=${libFullPath}`
+
+          // for(var curParaName in funcParaList){
+          for (let paraIdx = 0; paraIdx < funcParaList.length; paraIdx++) {
+            let curParaName = funcParaList[paraIdx]
+            let curParaValue = args[paraIdx]
+            console.log("[" + paraIdx + "] " + curParaName + "=" + curParaValue)
+
+            logStr = `${logStr}, ${curParaName}=` + curParaValue
+          }
+      
+          console.log(logStr)
+        },
+        onLeave: function (retval) {
+          console.log("\t " + funcName_log + " retval=" + retval)
+        }
+      })
+    } else {
+      console.error("Failed to find function " + funcName_log + " in lib " + libFullPath)
+    }
+  
   }
 
   static genNativeFunc_dladdr(){
