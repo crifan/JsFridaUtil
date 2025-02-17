@@ -42,11 +42,44 @@ class FridaHookNative {
 
           // for(var curParaName in funcParaList){
           for (let paraIdx = 0; paraIdx < funcParaList.length; paraIdx++) {
-            let curParaName = funcParaList[paraIdx]
-            let curParaValue = args[paraIdx]
-            console.log("[" + paraIdx + "] " + curParaName + "=" + curParaValue)
+            var curParaValue = args[paraIdx]
+            // console.log("curParaValue=" + curParaValue)
 
-            logStr = `${logStr}, ${curParaName}=` + curParaValue
+            let curParaCfg = funcParaList[paraIdx]
+            // console.log("curParaCfg=" + curParaCfg)
+            var curParaCfgType = typeof curParaCfg
+            // console.log("curParaCfgType=" + curParaCfgType)
+
+            var curParaLog = ""
+
+            var curParaName = null
+            if (curParaCfgType === "string"){
+              curParaName = curParaCfg
+
+              curParaLog = `${curParaName}=${curParaValue}`
+            } else {
+              curParaLog = `${curParaName}=${curParaValue}`
+
+              // is 'object' == dict = json
+              var curParaDict = curParaCfg
+              curParaName = curParaDict["paraName"]
+              // console.log("curParaName=" + curParaName)
+              var curParaType = curParaDict["paraType"]
+              // console.log("curParaType=" + curParaType)
+
+              if (curParaType == "string"){
+                // curParaValue = FridaUtil.ptrToUtf8Str(curParaValue)
+                var curParaValuePtr = curParaValue
+                curParaValue = FridaUtil.ptrToCStr(curParaValuePtr)
+                // console.log("curParaValue=" + curParaValue)
+
+                curParaLog = `${curParaName}=${curParaValuePtr}=${curParaValue}`
+              }
+            }
+
+            // console.log("[" + paraIdx + "] " + curParaName + "=" + curParaValue)
+
+            logStr = `${logStr}, ${curParaLog}`
           }
       
           console.log(logStr)
