@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250213
+	Updated: 20250220
 */
 
 // Frida Android Util
@@ -599,11 +599,19 @@ class FridaAndroidUtil {
 
   // cast current object to destination class instance
   static castToJavaClass(curObj, toClassName){
-    const toClass = Java.use(toClassName)
-    // console.log("toClass=" + toClass)
-    var toClassObj = Java.cast(curObj, toClass)
-    // console.log("toClassObj=" + toClassObj)
-    return toClassObj
+    if(curObj){
+      // // for debug
+      // var objClsName  =FridaAndroidUtil.getJavaClassName(curObj)
+      // console.log("objClsName=" + objClsName)
+
+      const toClass = Java.use(toClassName)
+      // console.log("toClass=" + toClass)
+      var toClassObj = Java.cast(curObj, toClass)
+      // console.log("toClassObj=" + toClassObj)
+      return toClassObj
+    } else{
+      return null
+    }
   }
 
   // convert (Java) map (java.util.HashMap) to string
@@ -698,7 +706,7 @@ class FridaAndroidUtil {
       prefix = prefix + " "
     }
     const linePrefix = "\n  "
-    var stackStr = prefix + "Stack:" + linePrefix + stackElements[0] //method//stackElements[0].getMethodName()
+    var stackStr = prefix + "java Stack:" + linePrefix + stackElements[0] //method//stackElements[0].getMethodName()
     for (var i = 1; i < stackElements.length; i++) {
       stackStr += linePrefix + "at " + stackElements[i]
     }
@@ -750,8 +758,9 @@ class FridaAndroidUtil {
   }
 
   // print Function call and stack trace string
-  static printFunctionCallAndStack(funcName, funcParaDict, filterList=undefined){
-    // console.log("filterList=" + filterList)
+  // static printFunctionCallAndStack(funcName, funcParaDict, filterList=undefined){
+  static printFunctionCallAndStack(funcName, funcParaDict, filterList=undefined, isPrintDelimiter=true){
+    // console.log("filterList=" + filterList + ", isPrintDelimiter=" + isPrintDelimiter)
 
     var needPrint = true
 
@@ -776,11 +785,29 @@ class FridaAndroidUtil {
     }
 
     if (needPrint) {
-      var functionCallAndStackStr = `${functionCallStr}\n${stackStr}`
+      var delimiterStr = ""
+      if(isPrintDelimiter){
+        var delimiterFuncName = funcName
+        const LineMaxSize = 80
+        // const LineMaxSize = 120
+        // const LineMaxSize = 160
+        if (funcName.length > LineMaxSize) {
+          // ConnectionsManager.init(version,layer,apiId,deviceModel,systemVersion,appVersion,langCode,systemLangCode,configPath,logPath,regId,cFingerprint,timezoneOffset,userId,userPremium,enablePushConnection) -> ConnectionsManager.init
+          // var shorFuncName = funcName.replace('/([\w\.\:]+)\(.+\)/', "$1")
+          var shorFuncName = funcName.replace(/([\w\.\:]+)\(.+\)/, "$1")
+          // console.log("shorFuncName=" + shorFuncName)
+          delimiterFuncName = shorFuncName
+        }
+        // JsUtil.logStr(delimiterFuncName)
+        delimiterStr = JsUtil.generateLineStr(delimiterFuncName, true, "=", LineMaxSize)
+        delimiterStr = delimiterStr + "\n"
+        // console.log("delimiterStr=" + delimiterStr)
+      }
+
+      var functionCallAndStackStr = `${delimiterStr}${functionCallStr}\n${stackStr}`
       // var functionCallAndStackStr = functionCallStr + "\n" + stackStr
-    
       // return functionCallAndStackStr
-      console.log(functionCallAndStackStr)  
+      console.log(functionCallAndStackStr)
     }
   }
 

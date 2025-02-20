@@ -3,7 +3,7 @@
 	Function: crifan's common Frida util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaUtil.js
-	Updated: 20241216
+	Updated: 20250220
 */
 
 // Frida Common Util
@@ -175,20 +175,32 @@ class FridaUtil {
   }
 
   // print function call and stack, output content type is: address
-  static printFunctionCallStack_addr(curContext, prefix=""){
-    var backtracerType = Backtracer.ACCURATE
-    // var backtracerType = Backtracer.FUZZY
-    if (!JsUtil.strIsEmpty(prefix)){
-      prefix = prefix + " "
+  static printFunctionCallStack_addr(curContext, prefix="", isPrintDelimiter=true){
+    var delimiterStr = ""
+    if(isPrintDelimiter){
+      // JsUtil.logStr(prefix)
+      delimiterStr = JsUtil.generateLineStr(prefix, true, "=", 80) + "\n"
     }
+
     // const linePrefix = "\n"
     // const linePrefix = "\n\t"
     const linePrefix = "\n  "
     // const linePrefix = "\n "
-    // const linePrefix = "\n"
-    console.log(prefix + 'Stack:' + linePrefix +
-      Thread.backtrace(curContext, backtracerType)
-      .map(DebugSymbol.fromAddress).join(linePrefix) + '\n');
+    var backtracerType = Backtracer.ACCURATE
+    // var backtracerType = Backtracer.FUZZY
+    var stackStr = Thread.backtrace(curContext, backtracerType).map(DebugSymbol.fromAddress).join(linePrefix)
+
+    var prefixStr = prefix
+    if (!JsUtil.strIsEmpty(prefix)){
+      prefixStr = prefix + " "
+    }
+    prefixStr = prefixStr + 'addr Stack:' + linePrefix
+
+    var endStr = "\n"
+
+    var fullStr = delimiterStr + prefixStr + stackStr + endStr
+
+    console.log(fullStr)
   }
 
   static dumpMemory(toDumpPtr, byteLen=128){

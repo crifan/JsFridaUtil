@@ -31,7 +31,17 @@ class FridaHookNative {
     if (null != foundNativeFunc) {
       Interceptor.attach(foundNativeFunc, {
         onEnter: function (args) {
+          // var curFuncName = ""
+          // if (funcName_log){
+          //   curFuncName = funcName_log
+          // } else {
+          //   curFuncName = funcName_native
+          // }
+          // console.log("curFuncName=" + curFuncName)
+          // JsUtil.logStr(curFuncName)
+
           if (isPrintStack){
+            // console.log("funcName_log=" + funcName_log)
             FridaUtil.printFunctionCallStack_addr(this.context, funcName_log)
           } else {
             console.log(funcName_log + " called")
