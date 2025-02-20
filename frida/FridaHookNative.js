@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common native related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookNative.js
-	Updated: 20250217
+	Updated: 20250220
 */
 
 // Frida hook common native functions
@@ -48,7 +48,8 @@ class FridaHookNative {
           }
 
           // var logStr = funcName_log + ": [+] libFullPath=" + libFullPath
-          var logStr = `${funcName_log}: [+] libFullPath=${libFullPath}`
+          // var logStr = `${funcName_log}: [+] libFullPath=${libFullPath}`
+          var logStr = `${funcName_log}: [+]`
 
           // for(var curParaName in funcParaList){
           for (let paraIdx = 0; paraIdx < funcParaList.length; paraIdx++) {
@@ -89,7 +90,11 @@ class FridaHookNative {
 
             // console.log("[" + paraIdx + "] " + curParaName + "=" + curParaValue)
 
-            logStr = `${logStr}, ${curParaLog}`
+            if (paraIdx == 0) {
+              logStr = `${logStr} ${curParaLog}`
+            } else {
+              logStr = `${logStr}, ${curParaLog}`
+            }
           }
       
           console.log(logStr)
