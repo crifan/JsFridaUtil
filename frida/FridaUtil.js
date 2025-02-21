@@ -3,7 +3,7 @@
 	Function: crifan's common Frida util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaUtil.js
-	Updated: 20250220
+	Updated: 20250221
 */
 
 // Frida Common Util
@@ -203,7 +203,8 @@ class FridaUtil {
     console.log(fullStr)
   }
 
-  static dumpMemory(toDumpPtr, byteLen=128){
+  // static dumpMemory(toDumpPtr, byteLen=128){
+  static dumpMemory(toDumpPtr, prefixStr="", byteLen=128){
     var buf = toDumpPtr.readByteArray(byteLen)
     var dumpHexStr = hexdump(
       buf,
@@ -214,7 +215,14 @@ class FridaUtil {
         ansi: true
       }
     )
-    console.log("dumpHexStr=\n" + dumpHexStr)
+
+    if (JsUtil.strIsEmpty(prefixStr)){
+      prefixStr = `[${toDumpPtr}] `
+    } else {
+      prefixStr = prefixStr + " "
+    }
+
+    console.log(prefixStr + "Dump Memory:\n" + dumpHexStr)
   }
 
   // convert ByteArray to Opcode string
