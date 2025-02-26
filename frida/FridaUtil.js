@@ -3,7 +3,7 @@
 	Function: crifan's common Frida util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaUtil.js
-	Updated: 20250221
+	Updated: 20250226
 */
 
 // Frida Common Util
@@ -11,6 +11,13 @@ class FridaUtil {
   // for Stalker onEnter transform, is show opcode string or not
   static isShowOpcode = true
 
+  static StringType = Object.freeze({
+  // const StringType = {
+    CString: "CString",
+    UTF8String: "UTF8String",
+    StdString: "StdString"
+  })
+  
   constructor() {
     console.log("FridaUtil constructor")
     console.log("FridaUtil Process.platform=" + Process.platform)
@@ -54,6 +61,26 @@ class FridaUtil {
     // var curCStr = curPtr.readUtf8String()
     // console.log("curCStr=" + curCStr)
     return curCStr
+  }
+
+  // Frida pointer to C++ std::string
+  static ptrToStdStr(stdStrPtr){
+    var realStrPtr = null
+    var firstU8 = stdStrPtr.readU8()
+    console.log("firstU8=" + firstU8)
+    const isTiny = (firstU8 & 1) === 0
+    console.log("isTiny=" + isTiny)
+    if (isTiny) {
+      realStrPtr = stdStrPtr.add(1)
+    } else {
+      var realStrPtrPtr = stdStrPtr.add(2 * Process.pointerSize)
+      console.log("realStrPtrPtr=" + realStrPtrPtr)
+      realStrPtr = realStrPtrPtr.readPointer()
+    }
+    console.log("realStrPtr=" + realStrPtr)
+    var stdUtf8Str = realStrPtr.readUtf8String()  
+    console.log("stdStrPtr=" + stdStrPtr + " -> stdUtf8Str=" + stdUtf8Str)
+    return stdUtf8Str
   }
 
   static genModuleInfoStr(foundModule){
