@@ -67,19 +67,19 @@ class FridaUtil {
   static ptrToStdStr(stdStrPtr){
     var realStrPtr = null
     var firstU8 = stdStrPtr.readU8()
-    console.log("firstU8=" + firstU8)
+    // console.log("firstU8=" + firstU8)
     const isTiny = (firstU8 & 1) === 0
-    console.log("isTiny=" + isTiny)
+    // console.log("isTiny=" + isTiny)
     if (isTiny) {
       realStrPtr = stdStrPtr.add(1)
     } else {
       var realStrPtrPtr = stdStrPtr.add(2 * Process.pointerSize)
-      console.log("realStrPtrPtr=" + realStrPtrPtr)
+      // console.log("realStrPtrPtr=" + realStrPtrPtr)
       realStrPtr = realStrPtrPtr.readPointer()
     }
-    console.log("realStrPtr=" + realStrPtr)
+    // console.log("realStrPtr=" + realStrPtr)
     var stdUtf8Str = realStrPtr.readUtf8String()  
-    console.log("stdStrPtr=" + stdStrPtr + " -> stdUtf8Str=" + stdUtf8Str)
+    // console.log("stdStrPtr=" + stdStrPtr + " -> stdUtf8Str=" + stdUtf8Str)
     return stdUtf8Str
   }
 
