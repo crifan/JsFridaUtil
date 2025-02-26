@@ -90,7 +90,7 @@ class FridaHookNative {
               } else if (curParaType == FridaUtil.StringType.StdString){
                 var curParaValuePtr = curParaValue
                 curParaValue = FridaUtil.ptrToStdStr(curParaValuePtr)
-                console.log("curParaValue=" + curParaValue)
+                // console.log("curParaValue=" + curParaValue)
 
                 curParaLog = `${curParaName}=${curParaValuePtr}=${curParaValue}`
               }
