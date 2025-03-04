@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250220
+	Updated: 20250304
 */
 
 // Frida Android Util
@@ -570,28 +570,48 @@ class FridaAndroidUtil {
     return isCls
   } 
 
-  // convert (Java) map (java.util.HashMap) key=value string list
+  // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to key=value string list
   static mapToKeyValueStrList(curMap){
     var keyValStrList = []
-    var HashMapNode = Java.use('java.util.HashMap$Node')
+    // var HashMapNode = Java.use('java.util.HashMap$Node')
     // console.log("HashMapNode=" + HashMapNode)
     if((null != curMap) && (curMap != undefined)) {
-      var mapEntrySet = curMap.entrySet()
+      // var mapEntrySet = curMap.entrySet()
       // console.log("mapEntrySet=" + mapEntrySet)
-      if (mapEntrySet != undefined) {
-        var iterator = mapEntrySet.iterator()
-        // console.log("iterator=" + iterator)
-        while (iterator.hasNext()) {
-          var entry = Java.cast(iterator.next(), HashMapNode)
-          // console.log("entry=" + entry)
-          var curKey = entry.getKey()
-          var curVal = entry.getValue()
-          // console.log("key=" + entry.getKey() + ", value=" + entry.getValue());
-          var keyValStr = `${curKey}=${curVal}`
-          // console.log("keyValStr=" + keyValStr);
-          keyValStrList.push(keyValStr)
-        }  
-      }  
+      // if (mapEntrySet != undefined) {
+      //   var iterator = mapEntrySet.iterator()
+      //   console.log("iterator=" + iterator)
+      //   while (iterator.hasNext()) {
+      //     var nextObj = iterator.next()
+      //     console.log("nextObj=" + nextObj)
+      //     // var entry = Java.cast(nextObj, HashMapNode)
+      //     var entry = nextObj
+      //     console.log("entry=" + entry)
+      //     var curKey = entry.getKey()
+      //     var curVal = entry.getValue()
+      //     console.log("key=" + entry.getKey() + ", value=" + entry.getValue());
+      //     var keyValStr = `${curKey}=${curVal}`
+      //     console.log("keyValStr=" + keyValStr);
+      //     keyValStrList.push(keyValStr)
+      //   }
+      // }
+          
+      // var curMapJavaClsName = FridaAndroidUtil.getJavaClassName(curMap)
+      // console.log("curMapJavaClsName=" + curMapJavaClsName)
+
+      var keys = curMap.keySet()
+      // console.log("keys=" + keys)
+      var keyIterator = keys.iterator()
+      // console.log("keyIterator=" + keyIterator)
+      while (keyIterator.hasNext()) {
+        var curKey = keyIterator.next()
+        // console.log("curKey=" + curKey)
+        var curValue = curMap.get(curKey)
+        // console.log("curValue=" + curValue)
+        var keyValStr = `${curKey}=${curValue}`
+        // console.log("keyValStr=" + keyValStr)
+        keyValStrList.push(keyValStr)
+      }
     }
     // console.log("keyValStrList=" + keyValStrList)
     return keyValStrList
@@ -614,7 +634,7 @@ class FridaAndroidUtil {
     }
   }
 
-  // convert (Java) map (java.util.HashMap) to string
+  // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to string
   //  curMap="<instance: java.util.Map, $className: java.util.HashMap>"
   static mapToStr(curMap){
     // return JSON.stringify(curMap, (key, value) => (value instanceof Map ? [...value] : value));
@@ -625,6 +645,11 @@ class FridaAndroidUtil {
     var mapStr = `[${mapStr}]`
     // console.log("mapStr=" + mapStr)
     return mapStr
+  }
+
+  // convert (Java) map (java.util.Map) to string
+  static collectionToStr(curCollection){
+
   }
 
   static describeJavaClass(className) {
