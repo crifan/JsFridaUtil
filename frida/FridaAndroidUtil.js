@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250304
+	Updated: 20250305
 */
 
 // Frida Android Util
@@ -32,6 +32,15 @@ class FridaAndroidUtil {
     "/system/bin/conbb",
     "/system/xbin/conbb",
   ]
+
+  // const
+  static clsName_HttpURLConnection            = "java.net.HttpURLConnection"
+  static clsName_URLConnection                = "java.net.URLConnection"
+  static clsName_HttpsURLConnection           = "javax.net.ssl.HttpsURLConnection"
+
+  static clsName_HttpURLConnectionImpl        = "com.android.okhttp.internal.huc.HttpURLConnectionImpl"
+  static clsName_DelegatingHttpsURLConnection = "com.android.okhttp.internal.huc.DelegatingHttpsURLConnection"
+  static clsName_HttpsURLConnectionImpl       = "com.android.okhttp.internal.huc.HttpsURLConnectionImpl"
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -70,6 +79,322 @@ class FridaAndroidUtil {
       console.log("FridaAndroidUtil.JavaObjArr=" + FridaAndroidUtil.JavaObjArr)  
     } else {
       console.warn("FridaAndroidUtil: Non Android platfrom, no need init Android related")
+    }
+  }
+
+  static isClass_HttpURLConnection(curObj){
+    var isClsHttpURLConnection = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_HttpURLConnection)
+    console.log("curObj=" + curObj + " -> isClsHttpURLConnection=" + isClsHttpURLConnection)
+    return isClsHttpURLConnection
+  }
+
+  static isClass_URLConnection(curObj){
+    var isClsURLConnection = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_URLConnection)
+    console.log("curObj=" + curObj + " -> isClsURLConnection=" + isClsURLConnection)
+    return isClsURLConnection
+  }
+
+  static isClass_HttpsURLConnection(curObj){
+    var isClsHttpsURLConnection = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_HttpsURLConnection)
+    console.log("curObj=" + curObj + " -> isClsHttpsURLConnection=" + isClsHttpsURLConnection)
+    return isClsHttpsURLConnection
+  }
+
+  static isClass_HttpURLConnectionImpl(curObj){
+    var isClsHttpURLConnectionImpl = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_HttpURLConnectionImpl)
+    console.log("curObj=" + curObj + " -> isClsHttpURLConnectionImpl=" + isClsHttpURLConnectionImpl)
+    return isClsHttpURLConnectionImpl
+  }
+
+  static isClass_DelegatingHttpsURLConnection(curObj){
+    var isClsDelegatingHttpsURLConnection = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_DelegatingHttpsURLConnection)
+    console.log("curObj=" + curObj + " -> isClsDelegatingHttpsURLConnection=" + isClsDelegatingHttpsURLConnection)
+    return isClsDelegatingHttpsURLConnection
+  }
+
+  static isClass_HttpsURLConnectionImpl(curObj){
+    var isClsHttpsURLConnectionImpl = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_HttpsURLConnectionImpl)
+    console.log("curObj=" + curObj + " -> isClsHttpsURLConnectionImpl=" + isClsHttpsURLConnectionImpl)
+    return isClsHttpsURLConnectionImpl
+  }
+
+  // java.net.URLConnection
+  // https://cs.android.com/android/platform/superproject/main/+/main:libcore/ojluni/src/main/java/java/net/URLConnection.java;drc=bd205f23c74d7498c9958d2bfa8622aacfe59517;l=161
+  static printClass_URLConnection(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_URLConnection)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
+      // console.log("URLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
+      // console.log("URLConnection: curClsName=" + curClsName)
+      var clsNameStr = "[" + curClsName + "]"
+
+      // if (FridaAndroidUtil.isClass_URLConnection(curObj)){
+        // console.log("URLConnection:"
+        //   + " url=" + curObj.url.value
+        //   + ", connected=" + curObj.connected.value
+        //   + ", doInput=" + curObj.doInput.value
+        //   + ", doOutput=" + curObj.doOutput.value
+        //   + ", allowUserInteraction=" + curObj.allowUserInteraction.value
+        //   + ", useCaches=" + curObj.useCaches.value
+        //   + ", ifModifiedSince=" + curObj.ifModifiedSince.value
+        //   + ", defaultAllowUserInteraction=" + curObj.defaultAllowUserInteraction.value
+        //   + ", defaultUseCaches=" + curObj.defaultUseCaches.value
+        //   + ", connectTimeout=" + curObj.connectTimeout.value
+        //   + ", readTimeout=" + curObj.readTimeout.value
+        //   + ", requests=" + curObj.requests.value
+        //   + ", fileNameMap=" + curObj.fileNameMap.value
+        // )
+
+        var url = curObj.getURL()
+        // console.log("url=" + url)
+        var doInput = curObj.getDoInput()
+        // console.log("doInput=" + doInput)
+        var doOutput = curObj.getDoOutput()
+        // console.log("doOutput=" + doOutput)
+        var allowUserInteraction = curObj.getAllowUserInteraction()
+        // console.log("allowUserInteraction=" + allowUserInteraction)
+        var useCaches = curObj.getUseCaches()
+        // console.log("useCaches=" + useCaches)
+        var ifModifiedSince = curObj.getIfModifiedSince()
+        // console.log("ifModifiedSince=" + ifModifiedSince)
+        
+        var requestHeaderMap = curObj.getRequestProperties() // this is request headers
+        // console.log("requestHeaderMap=" + requestHeaderMap)
+        var requestHeadersStr = FridaAndroidUtil.mapToStr(requestHeaderMap)
+        // console.log("requestHeadersStr=" + requestHeadersStr)
+
+        // // all following field is: response fields, NOT request fields
+        // var respHeaders_contentLength = curObj.getContentLength()
+        // console.log("respHeaders_contentLength=" + respHeaders_contentLength)
+        // var respHeaders_contentLengthLong = curObj.getContentLengthLong()
+        // console.log("respHeaders_contentLengthLong=" + respHeaders_contentLengthLong)
+        // var respHeaders_contentType = curObj.getContentType()
+        // console.log("respHeaders_contentType=" + respHeaders_contentType)
+        // var respHeaders_contentEncoding = curObj.getContentEncoding()
+        // console.log("respHeaders_contentEncoding=" + respHeaders_contentEncoding)
+        // var respHeaders_date = curObj.getDate()
+        // console.log("respHeaders_date=" + respHeaders_date)
+        // var respHeaders_lastModified = curObj.getLastModified()
+        // console.log("respHeaders_lastModified=" + respHeaders_lastModified)
+
+        var defaultAllowUserInteraction = curObj.getDefaultAllowUserInteraction()
+        // console.log("defaultAllowUserInteraction=" + defaultAllowUserInteraction)
+        var defaultUseCaches = curObj.getDefaultUseCaches()
+        // console.log("defaultUseCaches=" + defaultUseCaches)
+        var connectTimeout = curObj.getConnectTimeout()
+        // console.log("connectTimeout=" + connectTimeout)
+        var readTimeout = curObj.getReadTimeout()
+        // console.log("readTimeout=" + readTimeout)
+        var fileNameMap = curObj.getFileNameMap()
+        // console.log("fileNameMap=" + fileNameMap)
+        // var fileNameMapStr = FridaAndroidUtil.mapToStr(fileNameMap)
+        // console.log("fileNameMapStr=" + fileNameMapStr)
+
+        console.log("URLConnection:" + clsNameStr
+          + " url=" + url
+          + ", doInput=" + doInput
+          + ", doOutput=" + doOutput
+          + ", allowUserInteraction=" + allowUserInteraction
+          + ", useCaches=" + useCaches
+          + ", ifModifiedSince=" + ifModifiedSince
+          + ", requestHeadersStr=" + requestHeadersStr
+
+          // // response headers
+          // + ", respHeaders_contentLength=" + respHeaders_contentLength
+          // + ", respHeaders_contentLengthLong=" + respHeaders_contentLengthLong
+          // + ", respHeaders_contentType=" + respHeaders_contentType
+          // + ", respHeaders_contentEncoding=" + respHeaders_contentEncoding
+          // + ", respHeaders_date=" + respHeaders_date
+          // + ", respHeaders_lastModified=" + respHeaders_lastModified
+
+          + ", defaultAllowUserInteraction=" + defaultAllowUserInteraction
+          + ", defaultUseCaches=" + defaultUseCaches
+          + ", connectTimeout=" + connectTimeout
+          + ", readTimeout=" + readTimeout
+          + ", fileNameMap=" + fileNameMap
+        )
+
+        // } else {
+      //   console.warn(curObj + " is Not URLConnection")
+      // }
+    } else {
+      console.log("URLConnection: null")
+    }
+  }
+
+  // java.net.HttpURLConnection
+  static printClass_HttpURLConnection(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpURLConnection)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
+      // console.log("HttpURLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
+      // console.log("HttpURLConnection: curClsName=" + curClsName)
+      var clsNameStr = "[" + curClsName + "]"
+
+      // if (FridaAndroidUtil.isClass_HttpURLConnection(curObj)){
+        // var headerFields = curObj.getHeaderFields()
+        // console.log("HttpURLConnection: headerFields=" + headerFields)
+        // var reqMethod = curObj.getRequestMethod()
+        // console.log("HttpURLConnection: reqMethod=" + reqMethod)
+
+        // console.log("HttpURLConnection:"
+        //   + "  method=" + curObj.method.value
+        //   + ", chunkLength=" + curObj.chunkLength.value
+        //   + ", fixedContentLength=" + curObj.fixedContentLength.value
+        //   + ", fixedContentLengthLong=" + curObj.fixedContentLengthLong.value
+        //   + ", responseCode=" + curObj.responseCode.value
+        //   + ", responseMessage=" + curObj.responseMessage.value
+        //   + ", instanceFollowRedirects=" + curObj.instanceFollowRedirects.value
+        //   + ", followRedirects=" + curObj.followRedirects.value
+        // )
+
+        console.log("HttpURLConnection:" + clsNameStr
+          + " method=" + curObj.getRequestMethod()
+          // + ", responseCode=" + curObj.getResponseCode() // NOTE: will trigger send request !
+          // + ", responseMessage=" + curObj.getResponseMessage()  // NOTE: will trigger send request !
+          + ", instanceFollowRedirects=" + curObj.getInstanceFollowRedirects()
+          + ", followRedirects=" + curObj.getFollowRedirects()
+        )
+      // } else {
+      //   console.warn(curObj + " is Not HttpURLConnection")
+      // }
+
+      FridaAndroidUtil.printClass_URLConnection(curObj)
+    } else {
+      console.log("HttpURLConnection: null")
+    }
+  }
+
+  // javax.net.ssl.HttpsURLConnection
+  static printClass_HttpsURLConnection(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpsURLConnection)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
+      // console.log("HttpsURLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
+      // console.log("HttpsURLConnection: curClsName=" + curClsName)
+      var clsNameStr = "[" + curClsName + "]"
+
+      // if (FridaAndroidUtil.isClass_HttpsURLConnection(curObj)){
+        console.log("HttpsURLConnection: " + clsNameStr
+          + " no fields"
+        )
+      // } else {
+      //   console.warn(curObj + " is Not HttpsURLConnection")
+      // }
+
+      FridaAndroidUtil.printClass_HttpURLConnection(curObj)
+    } else {
+      console.log("HttpsURLConnection: null")
+    }
+  }
+
+  // com.android.okhttp.internal.huc.DelegatingHttpsURLConnection
+  static printClass_DelegatingHttpsURLConnection(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_DelegatingHttpsURLConnection)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
+      // console.log("DelegatingHttpsURLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
+      // console.log("DelegatingHttpsURLConnection: curClsName=" + curClsName)
+      var clsNameStr = "[" + curClsName + "]"
+
+      // if (FridaAndroidUtil.isClass_DelegatingHttpsURLConnection(curObj)){
+        console.log("DelegatingHttpsURLConnection:" + clsNameStr
+          + "  delegate=" + curObj.delegate.value
+        )
+      // } else {
+      //   console.warn(curObj + " is Not DelegatingHttpsURLConnection")
+      // }
+
+      FridaAndroidUtil.printClass_HttpsURLConnection(curObj)
+    } else {
+      console.log("DelegatingHttpsURLConnection: null")
+    }
+  }
+
+  // com.android.okhttp.internal.huc.HttpsURLConnectionImpl
+  static printClass_HttpsURLConnectionImpl(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpsURLConnectionImpl)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
+      // console.log("HttpsURLConnectionImpl: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
+      // console.log("HttpsURLConnectionImpl: curClsName=" + curClsName)
+      var clsNameStr = "[" + curClsName + "]"
+
+      // if (FridaAndroidUtil.isClass_HttpsURLConnectionImpl(curObj)){
+        console.log("HttpsURLConnectionImpl:" + clsNameStr
+          + "  delegate=" + curObj.delegate.value
+        )
+  
+        FridaAndroidUtil.printClass_DelegatingHttpsURLConnection(curObj)  
+      // } else {
+      //   console.warn(curObj + " is Not HttpsURLConnectionImpl")
+      // }
+    } else {
+      console.log("HttpsURLConnectionImpl: null")
+    }
+  }
+
+  // com.android.okhttp.internal.huc.HttpURLConnectionImpl
+  static printClass_HttpURLConnectionImpl(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpURLConnectionImpl)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
+      // console.log("HttpURLConnectionImpl: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
+      // console.log("HttpURLConnectionImpl: curClsName=" + curClsName)
+      var clsNameStr = "[" + curClsName + "]"
+
+      // if (FridaAndroidUtil.isClass_HttpURLConnectionImpl(curObj)){
+        console.log("HttpURLConnectionImpl:" + clsNameStr
+          + "  client=" + curObj.client.value
+          + ", requestHeaders=" + curObj.requestHeaders.value
+          + ", fixedContentLength=" + curObj.fixedContentLength.value
+          + ", followUpCount=" + curObj.followUpCount.value
+          + ", httpEngineFailure=" + curObj.httpEngineFailure.value
+          + ", httpEngine=" + curObj.httpEngine.value
+          + ", responseHeaders=" + curObj.responseHeaders.value
+          + ", route=" + curObj.route.value
+          + ", handshake=" + curObj.handshake.value
+          + ", urlFilter=" + curObj.urlFilter.value
+        )
+        FridaAndroidUtil.printClass_HttpURLConnection(curObj)
+      // } else {
+      //   console.warn(curObj + " is Not HttpURLConnectionImpl")
+      // }
+    } else {
+      console.log("HttpURLConnectionImpl: null")
+    }
+  }
+
+  // HTTP:  com.android.okhttp.internal.huc.HttpURLConnectionImpl
+  // HTTPS: com.android.okhttp.internal.huc.HttpsURLConnectionImpl
+  static printClass_HttpOrHttpsURLConnectionImpl(curObj){
+    if (FridaAndroidUtil.isClass_HttpURLConnectionImpl(curObj)){
+      FridaAndroidUtil.printClass_HttpURLConnectionImpl(curObj)
+    } else if (FridaAndroidUtil.isClass_HttpsURLConnectionImpl(curObj)){
+      FridaAndroidUtil.printClass_HttpsURLConnectionImpl(curObj)
+    } else {
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      console.log("curClsName=" + curClsName)
+
+      console.log("Unrecognized URLConnectionImpl class: " + curObj + ", curClsName=" + curClsName)
     }
   }
 
@@ -539,12 +864,10 @@ class FridaAndroidUtil {
       }
     }
 
-    var logPrefix = ""
-    if (isFoundCache){
-      logPrefix = "Cached: "
-    }
-
-    // console.log("className=" + className)
+    // var logPrefix = ""
+    // if (isFoundCache){
+    //   logPrefix = "Cached: "
+    // }
     // console.log(logPrefix + "clazz=" + clazz + "-> className=" + className)
     return className
   }
@@ -569,6 +892,23 @@ class FridaAndroidUtil {
     // console.log("isCls=" + isCls)
     return isCls
   } 
+
+  // cast current object to destination class instance
+  static castToJavaClass(curObj, toClassName){
+    if(curObj){
+      // // for debug
+      // var objClsName  =FridaAndroidUtil.getJavaClassName(curObj)
+      // console.log("objClsName=" + objClsName)
+
+      const toClass = Java.use(toClassName)
+      // console.log("toClass=" + toClass)
+      var toClassObj = Java.cast(curObj, toClass)
+      // console.log("toClassObj=" + toClassObj)
+      return toClassObj
+    } else{
+      return null
+    }
+  }
 
   // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to key=value string list
   static mapToKeyValueStrList(curMap){
@@ -617,26 +957,9 @@ class FridaAndroidUtil {
     return keyValStrList
   }
 
-  // cast current object to destination class instance
-  static castToJavaClass(curObj, toClassName){
-    if(curObj){
-      // // for debug
-      // var objClsName  =FridaAndroidUtil.getJavaClassName(curObj)
-      // console.log("objClsName=" + objClsName)
-
-      const toClass = Java.use(toClassName)
-      // console.log("toClass=" + toClass)
-      var toClassObj = Java.cast(curObj, toClass)
-      // console.log("toClassObj=" + toClassObj)
-      return toClassObj
-    } else{
-      return null
-    }
-  }
-
   // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to string
-  //  curMap="<instance: java.util.Map, $className: java.util.HashMap>"
   static mapToStr(curMap){
+    //  curMap="<instance: java.util.Map, $className: java.util.HashMap>"
     // return JSON.stringify(curMap, (key, value) => (value instanceof Map ? [...value] : value));
     // var keyValStrList = this.mapToKeyValueStrList(curMap)
     var keyValStrList = FridaAndroidUtil.mapToKeyValueStrList(curMap)
@@ -645,11 +968,6 @@ class FridaAndroidUtil {
     var mapStr = `[${mapStr}]`
     // console.log("mapStr=" + mapStr)
     return mapStr
-  }
-
-  // convert (Java) map (java.util.Map) to string
-  static collectionToStr(curCollection){
-
   }
 
   static describeJavaClass(className) {

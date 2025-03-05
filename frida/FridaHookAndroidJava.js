@@ -3,108 +3,13 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250304
+	Updated: 20250305
 */
 
 // Frida hook common Android/Java class
 class FridaHookAndroidJava {
   constructor() {
     console.log("FridaHookAndroidJava constructor")
-  }
-
-  static clsName_HttpURLConnection = "java.net.HttpURLConnection"
-  static clsName_URLConnection = "java.net.URLConnection"
-
-  static isClass_HttpURLConnection(curObj){
-    var isClsHttpURLConnection = FridaAndroidUtil.isJavaClass(curObj, FridaHookAndroidJava.clsName_HttpURLConnection)
-    console.log("curObj=" + curObj + " -> isClsHttpURLConnection=" + isClsHttpURLConnection)
-    return isClsHttpURLConnection
-  }
-
-  static isClass_URLConnection(curObj){
-    var isClsURLConnection = FridaAndroidUtil.isJavaClass(curObj, FridaHookAndroidJava.clsName_URLConnection)
-    console.log("curObj=" + curObj + " -> isClsURLConnection=" + isClsURLConnection)
-    return isClsURLConnection
-  }
-
-  // java.net.URLConnection
-  static printClass_URLConnection(inputObj){
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaHookAndroidJava.clsName_URLConnection)
-      console.log("curObj=" + curObj)
-
-      // for debug
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      console.log("URLConnection: curClsName=" + curClsName)
-
-      // if (FridaHookAndroidJava.isClass_URLConnection(curObj)){
-        console.log("URLConnection:"
-          + " url=" + curObj.url.value
-          + ", connected=" + curObj.connected.value
-          + ", doInput=" + curObj.doInput.value
-          + ", doOutput=" + curObj.doOutput.value
-          + ", allowUserInteraction=" + curObj.allowUserInteraction.value
-          + ", useCaches=" + curObj.useCaches.value
-          + ", ifModifiedSince=" + curObj.ifModifiedSince.value
-  
-          // extra fields for: Android / (java) private?
-          //  https://cs.android.com/android/platform/superproject/main/+/main:libcore/ojluni/src/main/java/java/net/URLConnection.java;drc=bd205f23c74d7498c9958d2bfa8622aacfe59517;l=161
-          + ", defaultAllowUserInteraction=" + curObj.defaultAllowUserInteraction.value
-          + ", defaultUseCaches=" + curObj.defaultUseCaches.value
-          + ", connectTimeout=" + curObj.connectTimeout.value
-          + ", readTimeout=" + curObj.readTimeout.value
-          + ", requests=" + curObj.requests.value
-          + ", fileNameMap=" + curObj.fileNameMap.value
-        )
-
-        // var curUrl = curObj.getURL()
-        // console.log("URLConnection: curUrl=" + curUrl)
-        // var curDoOutput = curObj.getDoOutput()
-        // console.log("URLConnection: curDoOutput=" + curDoOutput)
-
-        // } else {
-      //   console.warn(curObj + " is Not URLConnection")
-      // }
-    } else {
-      console.log("URLConnection: null")
-    }
-  }
-
-  // java.net.HttpURLConnection
-  static printClass_HttpURLConnection(inputObj){
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaHookAndroidJava.clsName_HttpURLConnection)
-      console.log("curObj=" + curObj)
-
-      // for debug
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      console.log("HttpURLConnection: curClsName=" + curClsName)
-
-      // if (FridaHookAndroidJava.isClass_HttpURLConnection(curObj)){
-        // var headerFields = curObj.getHeaderFields()
-        // console.log("HttpURLConnection: headerFields=" + headerFields)
-        // var reqMethod = curObj.getRequestMethod()
-        // console.log("HttpURLConnection: reqMethod=" + reqMethod)
-
-        console.log("HttpURLConnection:"
-          + "  method=" + curObj.method.value
-          + ", chunkLength=" + curObj.chunkLength.value
-          + ", fixedContentLength=" + curObj.fixedContentLength.value
-          + ", fixedContentLengthLong=" + curObj.fixedContentLengthLong.value
-          + ", responseCode=" + curObj.responseCode.value
-          + ", responseMessage=" + curObj.responseMessage.value
-          + ", instanceFollowRedirects=" + curObj.instanceFollowRedirects.value
-          + ", followRedirects=" + curObj.followRedirects.value
-        )
-
-      // } else {
-      //   console.warn(curObj + " is Not HttpURLConnection")
-      // }
-
-      FridaHookAndroidJava.printClass_URLConnection(curObj)
-    } else {
-      console.log("HttpURLConnection: null")
-    }
   }
 
   static JSONObject() {
@@ -716,9 +621,9 @@ class FridaHookAndroidJava {
 
 
   static HttpURLConnection() {
-    // FridaAndroidUtil.printClassAllMethodsFields(FridaHookAndroidJava.clsName_HttpURLConnection)
+    // FridaAndroidUtil.printClassAllMethodsFields(FridaAndroidUtil.clsName_HttpURLConnection)
 
-    var cls_HttpURLConnection = Java.use(FridaHookAndroidJava.clsName_HttpURLConnection)
+    var cls_HttpURLConnection = Java.use(FridaAndroidUtil.clsName_HttpURLConnection)
     console.log("cls_HttpURLConnection=" + cls_HttpURLConnection)
 
     
