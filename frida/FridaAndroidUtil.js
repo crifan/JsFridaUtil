@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250305
+	Updated: 20250318
 */
 
 // Frida Android Util
@@ -34,6 +34,9 @@ class FridaAndroidUtil {
   ]
 
   // const
+  static clsName_Message                      = "android.os.Message"
+  static clsName_Messenger                    = "android.os.Messenger"
+
   static clsName_HttpURLConnection            = "java.net.HttpURLConnection"
   static clsName_URLConnection                = "java.net.URLConnection"
   static clsName_HttpsURLConnection           = "javax.net.ssl.HttpsURLConnection"
@@ -116,6 +119,64 @@ class FridaAndroidUtil {
     var isClsHttpsURLConnectionImpl = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_HttpsURLConnectionImpl)
     console.log("curObj=" + curObj + " -> isClsHttpsURLConnectionImpl=" + isClsHttpsURLConnectionImpl)
     return isClsHttpsURLConnectionImpl
+  }
+
+  // android.os.Messenger
+  // https://developer.android.com/reference/android/os/Messenger
+  static printClass_Messenger(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Messenger)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      var clsNameStr = "[" + curClsName + "]"
+
+      var binder = curObj.getBinder()
+
+      console.log("Messenger:" + clsNameStr
+        + " CREATOR=" + curObj.CREATOR.value
+        + ", binder=" + binder
+      )
+    } else {
+      console.log("Messenger: null")
+    }
+  }
+
+  // android.os.Message
+  // https://developer.android.com/reference/android/os/Message
+  static printClass_Message(inputObj){
+    if (inputObj) {
+      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Message)
+      // console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      var clsNameStr = "[" + curClsName + "]"
+
+      var callback = curObj.getCallback()
+      var dataBundle = curObj.getData()
+      var targetHandler = curObj.getTarget()
+      var when = curObj.getWhen()
+      var isAsync = curObj.isAsynchronous()
+
+      console.log("Message:" + clsNameStr
+        + " arg1=" + curObj.arg1.value
+        + ", arg2=" + curObj.arg2.value
+        + ", obj=" + curObj.obj.value
+        + ", replyTo=" + curObj.replyTo.value
+        + ", sendingUid=" + curObj.sendingUid.value
+        + ", what=" + curObj.what.value
+
+        + ", callback=" + callback
+        + ", dataBundle=" + dataBundle
+        + ", targetHandler=" + targetHandler
+        + ", when=" + when
+        + ", isAsync=" + isAsync
+      )
+
+      FridaAndroidUtil.printClass_Messenger(curObj.replyTo.value)
+    } else {
+      console.log("Message: null")
+    }
   }
 
   // java.net.URLConnection
@@ -397,6 +458,14 @@ class FridaAndroidUtil {
       console.log("Unrecognized URLConnectionImpl class: " + curObj + ", curClsName=" + curClsName)
     }
   }
+
+  // static printRequestBodyInfo(urlConn){
+  //   console.log("printRequestBodyInfo: urlConn=" + urlConn)
+  //   var requestBody = urlConn.getOutputStream()
+  //   console.log("requestBody=" + requestBody)
+  //   var reqBodyClsName = FridaAndroidUtil.getJavaClassName(requestBody)
+  //   console.log("reqBodyClsName=" + reqBodyClsName)
+  // }
 
   static waitForLibLoading(libraryName, callback_afterLibLoaded=null){
     console.log("libraryName=" + libraryName + ", callback_afterLibLoaded=" + callback_afterLibLoaded)
@@ -990,7 +1059,7 @@ class FridaAndroidUtil {
   static enumMethods(targetClass) {
     var hook = Java.use(targetClass);
     var ownMethods = hook.class.getDeclaredMethods();
-    console.log("use getDeclaredMethods")
+    console.log("---use getDeclaredMethods---")
 
     // var ownMethods = hook.class.getMethods();
     // console.log("use getMethods")
@@ -1006,7 +1075,7 @@ class FridaAndroidUtil {
     // console.log("use getFields")
 
     var ownFields = hook.class.getDeclaredFields();
-    console.log("use getDeclaredFields")
+    console.log("---use getDeclaredFields---")
 
     hook.$dispose;
     return ownFields;
