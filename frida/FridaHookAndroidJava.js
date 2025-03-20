@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250311
+	Updated: 20250320
 */
 
 // Frida hook common Android/Java class
@@ -1707,8 +1707,8 @@ class FridaHookAndroidJava {
     console.log("cls_BaseBundle=" + cls_BaseBundle)
 
     
-    // boolean    containsKey(String key)
-    // 
+    // boolean containsKey(String key)
+    // public boolean android.os.BaseBundle.containsKey(java.lang.String)
     var func_BaseBundle_containsKey = cls_BaseBundle.containsKey
     console.log("func_BaseBundle_containsKey=" + func_BaseBundle_containsKey)
     if (func_BaseBundle_containsKey) {
@@ -1725,7 +1725,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // boolean    getBoolean(String key, boolean defaultValue)
+    // boolean getBoolean(String key, boolean defaultValue)
     // public boolean android.os.BaseBundle.getBoolean(java.lang.String,boolean)
     var func_BaseBundle_getBoolean_2pkd = cls_BaseBundle.getBoolean.overload("java.lang.String", "boolean")
     console.log("func_BaseBundle_getBoolean_2pkd=" + func_BaseBundle_getBoolean_2pkd)
@@ -1744,7 +1744,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // boolean    getBoolean(String key)
+    // boolean getBoolean(String key)
     // public boolean android.os.BaseBundle.getBoolean(java.lang.String)
     var func_BaseBundle_getBoolean_1pk = cls_BaseBundle.getBoolean.overload("java.lang.String")
     console.log("func_BaseBundle_getBoolean_1pk=" + func_BaseBundle_getBoolean_1pk)
@@ -1762,8 +1762,24 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    putBoolean(String key, boolean value)
-    // 
+    // void putAll(PersistableBundle bundle)
+    // public void android.os.BaseBundle.putAll(android.os.PersistableBundle)
+    var func_BaseBundle_putAll = cls_BaseBundle.putAll
+    console.log("func_BaseBundle_putAll=" + func_BaseBundle_putAll)
+    if (func_BaseBundle_putAll) {
+      func_BaseBundle_putAll.implementation = function (bundle) {
+        var funcName = "BaseBundle.putAll"
+        var funcParaDict = {
+          "bundle": bundle,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putAll(bundle)
+      }
+    }
+
+    // void putBoolean(String key, boolean value)
+    // public void android.os.BaseBundle.putBoolean(java.lang.String,boolean)
     var func_BaseBundle_putBoolean = cls_BaseBundle.putBoolean
     console.log("func_BaseBundle_putBoolean=" + func_BaseBundle_putBoolean)
     if (func_BaseBundle_putBoolean) {
@@ -1779,8 +1795,127 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    putString(String key, String value)
-    // 
+    // void putBooleanArray(String key, boolean[] value)
+    // public void android.os.BaseBundle.putBooleanArray(java.lang.String,boolean[])
+    var func_BaseBundle_putBooleanArray = cls_BaseBundle.putBooleanArray
+    console.log("func_BaseBundle_putBooleanArray=" + func_BaseBundle_putBooleanArray)
+    if (func_BaseBundle_putBooleanArray) {
+      func_BaseBundle_putBooleanArray.implementation = function (key, value) {
+        var funcName = "BaseBundle.putBooleanArray"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putBooleanArray(key, value)
+      }
+    }
+
+    // void putDouble(String key, double value)
+    // public void android.os.BaseBundle.putDouble(java.lang.String,double)
+    var func_BaseBundle_putDouble = cls_BaseBundle.putDouble
+    console.log("func_BaseBundle_putDouble=" + func_BaseBundle_putDouble)
+    if (func_BaseBundle_putDouble) {
+      func_BaseBundle_putDouble.implementation = function (key, value) {
+        var funcName = "BaseBundle.putDouble"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putDouble(key, value)
+      }
+    }
+
+    // void putDoubleArray(String key, double[] value)
+    // public void android.os.BaseBundle.putDoubleArray(java.lang.String,double[])
+    var func_BaseBundle_putDoubleArray = cls_BaseBundle.putDoubleArray
+    console.log("func_BaseBundle_putDoubleArray=" + func_BaseBundle_putDoubleArray)
+    if (func_BaseBundle_putDoubleArray) {
+      func_BaseBundle_putDoubleArray.implementation = function (key, value) {
+        var funcName = "BaseBundle.putDoubleArray"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putDoubleArray(key, value)
+      }
+    }
+
+    // void putInt(String key, int value)
+    // public void android.os.BaseBundle.putInt(java.lang.String,int)
+    var func_BaseBundle_putInt = cls_BaseBundle.putInt
+    console.log("func_BaseBundle_putInt=" + func_BaseBundle_putInt)
+    if (func_BaseBundle_putInt) {
+      func_BaseBundle_putInt.implementation = function (key, value) {
+        var funcName = "BaseBundle.putInt"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putInt(key, value)
+      }
+    }
+
+    // void putIntArray(String key, int[] value)
+    // public void android.os.BaseBundle.putIntArray(java.lang.String,int[])
+    var func_BaseBundle_putIntArray = cls_BaseBundle.putIntArray
+    console.log("func_BaseBundle_putIntArray=" + func_BaseBundle_putIntArray)
+    if (func_BaseBundle_putIntArray) {
+      func_BaseBundle_putIntArray.implementation = function (key, value) {
+        var funcName = "BaseBundle.putIntArray"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putIntArray(key, value)
+      }
+    }
+
+    // void putLong(String key, long value)
+    // public void android.os.BaseBundle.putLong(java.lang.String,long)
+    var func_BaseBundle_putLong = cls_BaseBundle.putLong
+    console.log("func_BaseBundle_putLong=" + func_BaseBundle_putLong)
+    if (func_BaseBundle_putLong) {
+      func_BaseBundle_putLong.implementation = function (key, value) {
+        var funcName = "BaseBundle.putLong"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putLong(key, value)
+      }
+    }
+
+    // void putLongArray(String key, long[] value)
+    // public void android.os.BaseBundle.putLongArray(java.lang.String,long[])
+    var func_BaseBundle_putLongArray = cls_BaseBundle.putLongArray
+    console.log("func_BaseBundle_putLongArray=" + func_BaseBundle_putLongArray)
+    if (func_BaseBundle_putLongArray) {
+      func_BaseBundle_putLongArray.implementation = function (key, value) {
+        var funcName = "BaseBundle.putLongArray"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putLongArray(key, value)
+      }
+    }
+
+    // void putString(String key, String value)
+    // public void android.os.BaseBundle.putString(java.lang.String,java.lang.String)
     var func_BaseBundle_putString = cls_BaseBundle.putString
     console.log("func_BaseBundle_putString=" + func_BaseBundle_putString)
     if (func_BaseBundle_putString) {
@@ -1796,8 +1931,25 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    remove(String key)
-    // 
+    // void putStringArray(String key, String[] value)
+    // public void android.os.BaseBundle.putStringArray(java.lang.String,java.lang.String[])
+    var func_BaseBundle_putStringArray = cls_BaseBundle.putStringArray
+    console.log("func_BaseBundle_putStringArray=" + func_BaseBundle_putStringArray)
+    if (func_BaseBundle_putStringArray) {
+      func_BaseBundle_putStringArray.implementation = function (key, value) {
+        var funcName = "BaseBundle.putStringArray"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putStringArray(key, value)
+      }
+    }
+
+    // void remove(String key)
+    // public void android.os.BaseBundle.remove(java.lang.String)
     var func_BaseBundle_remove = cls_BaseBundle.remove
     console.log("func_BaseBundle_remove=" + func_BaseBundle_remove)
     if (func_BaseBundle_remove) {
@@ -1809,6 +1961,79 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         return this.remove(key)
+      }
+    }
+
+    // Object get(String key)
+    // public java.lang.Object android.os.BaseBundle.get(java.lang.String)
+    var func_BaseBundle_get = cls_BaseBundle.get
+    console.log("func_BaseBundle_get=" + func_BaseBundle_get)
+    if (func_BaseBundle_get) {
+      func_BaseBundle_get.implementation = function (key) {
+        var funcName = "BaseBundle.get"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retObject = this.get(key)
+        console.log("BaseBundle.get => retObject=" + retObject)
+        return retObject
+      }
+    }
+
+    // String getString(String key)
+    // public java.lang.String android.os.BaseBundle.getString(java.lang.String)
+    var func_BaseBundle_getString_1pk = cls_BaseBundle.getString.overload("java.lang.String")
+    console.log("func_BaseBundle_getString_1pk=" + func_BaseBundle_getString_1pk)
+    if (func_BaseBundle_getString_1pk) {
+      func_BaseBundle_getString_1pk.implementation = function (key) {
+        var funcName = "BaseBundle.getString_1pk"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_1pk = this.getString(key)
+        console.log("BaseBundle.getString_1pk => retString_1pk=" + retString_1pk)
+        return retString_1pk
+      }
+    }
+
+    // String getString(String key, String defaultValue)
+    // public java.lang.String android.os.BaseBundle.getString(java.lang.String,java.lang.String)
+    var func_BaseBundle_getString_2pkd = cls_BaseBundle.getString.overload("java.lang.String", "java.lang.String")
+    console.log("func_BaseBundle_getString_2pkd=" + func_BaseBundle_getString_2pkd)
+    if (func_BaseBundle_getString_2pkd) {
+      func_BaseBundle_getString_2pkd.implementation = function (key, defaultValue) {
+        var funcName = "BaseBundle.getString_2pkd"
+        var funcParaDict = {
+          "key": key,
+          "defaultValue": defaultValue,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_2pkd = this.getString(key, defaultValue)
+        console.log("BaseBundle.getString_2pkd => retString_2pkd=" + retString_2pkd)
+        return retString_2pkd
+      }
+    }
+
+    // String[] getStringArray(String key)
+    // public java.lang.String[] android.os.BaseBundle.getStringArray(java.lang.String)
+    var func_BaseBundle_getStringArray = cls_BaseBundle.getStringArray
+    console.log("func_BaseBundle_getStringArray=" + func_BaseBundle_getStringArray)
+    if (func_BaseBundle_getStringArray) {
+      func_BaseBundle_getStringArray.implementation = function (key) {
+        var funcName = "BaseBundle.getStringArray"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retStringArray = this.getStringArray(key)
+        console.log("BaseBundle.getStringArray => retStringArray=" + retStringArray)
+        return retStringArray
       }
     }
   }
@@ -2110,7 +2335,7 @@ class FridaHookAndroidJava {
 
     // public Intent(String action)
     // 
-    var func_Intent_Intent_1pa = cls_Intent.$init.overload()
+    var func_Intent_Intent_1pa = cls_Intent.$init.overload("java.lang.String")
     console.log("func_Intent_Intent_1pa=" + func_Intent_Intent_1pa)
     if (func_Intent_Intent_1pa) {
       func_Intent_Intent_1pa.implementation = function (action) {
@@ -2128,7 +2353,7 @@ class FridaHookAndroidJava {
 
     // public Intent(String action, Uri uri)
     // 
-    var func_Intent_Intent_2pau = cls_Intent.$init.overload()
+    var func_Intent_Intent_2pau = cls_Intent.$init.overload("java.lang.String", "android.net.Uri")
     console.log("func_Intent_Intent_2pau=" + func_Intent_Intent_2pau)
     if (func_Intent_Intent_2pau) {
       func_Intent_Intent_2pau.implementation = function (action, uri) {
