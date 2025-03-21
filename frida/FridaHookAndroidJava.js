@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250320
+	Updated: 20250321
 */
 
 // Frida hook common Android/Java class
@@ -1647,23 +1647,79 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    remove(String key)
-    // public void android.os.Bundle.remove(java.lang.String)
-    var func_Bundle_remove = cls_Bundle.remove
-    console.log("func_Bundle_remove=" + func_Bundle_remove)
-    if (func_Bundle_remove) {
-      func_Bundle_remove.implementation = function (key) {
-        var funcName = "Bundle.remove"
+    // Bundle(Bundle b)
+    // Bundle(android.os.Bundle)
+    var func_Bundle_Bundle_1pb = cls_Bundle.$init.overload("android.os.Bundle")
+    console.log("func_Bundle_Bundle_1pb=" + func_Bundle_Bundle_1pb)
+    if (func_Bundle_Bundle_1pb) {
+      func_Bundle_Bundle_1pb.implementation = function (b) {
+        var funcName = "Bundle_1pb"
         var funcParaDict = {
-          "key": key,
+          "b": b,
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        return this.remove(key)
+        var newBundle_1pb = this.$init(b)
+        console.log("Bundle_1pb => newBundle_1pb=" + newBundle_1pb)
+        return newBundle_1pb
       }
     }
 
-    // Bundle    getBundle(String key)
+    // Bundle(PersistableBundle b)
+    // Bundle(android.os.PersistableBundle)
+    var func_Bundle_Bundle_1pb = cls_Bundle.$init.overload("android.os.PersistableBundle")
+    console.log("func_Bundle_Bundle_1pb=" + func_Bundle_Bundle_1pb)
+    if (func_Bundle_Bundle_1pb) {
+      func_Bundle_Bundle_1pb.implementation = function (b) {
+        var funcName = "Bundle_1pb"
+        var funcParaDict = {
+          "b": b,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newBundle_1pb = this.$init(b)
+        console.log("Bundle_1pb => newBundle_1pb=" + newBundle_1pb)
+        return newBundle_1pb
+      }
+    }
+
+    // Bundle(int capacity)
+    // Bundle(int)
+    var func_Bundle_Bundle_1pc = cls_Bundle.$init.overload("int")
+    console.log("func_Bundle_Bundle_1pc=" + func_Bundle_Bundle_1pc)
+    if (func_Bundle_Bundle_1pc) {
+      func_Bundle_Bundle_1pc.implementation = function (capacity) {
+        var funcName = "Bundle_1pc"
+        var funcParaDict = {
+          "capacity": capacity,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newBundle_1pc = this.$init(capacity)
+        console.log("Bundle_1pc => newBundle_1pc=" + newBundle_1pc)
+        return newBundle_1pc
+      }
+    }
+
+    // Bundle(ClassLoader loader)
+    // Bundle(java.lang.ClassLoader)
+    var func_Bundle_Bundle_1pl = cls_Bundle.$init.overload("java.lang.ClassLoader")
+    console.log("func_Bundle_Bundle_1pl=" + func_Bundle_Bundle_1pl)
+    if (func_Bundle_Bundle_1pl) {
+      func_Bundle_Bundle_1pl.implementation = function (loader) {
+        var funcName = "Bundle_1pl"
+        var funcParaDict = {
+          "loader": loader,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newBundle_1pl = this.$init(loader)
+        console.log("Bundle_1pl => newBundle_1pl=" + newBundle_1pl)
+        return newBundle_1pl
+      }
+    }
+
+    // Bundle getBundle(String key)
     // public android.os.Bundle android.os.Bundle.getBundle(java.lang.String)
     var func_Bundle_getBundle = cls_Bundle.getBundle
     console.log("func_Bundle_getBundle=" + func_Bundle_getBundle)
@@ -1681,7 +1737,131 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    putBundle(String key, Bundle value)
+    // IBinder getBinder(String key)
+    // public android.os.IBinder android.os.Bundle.getBinder(java.lang.String)
+    var func_Bundle_getBinder = cls_Bundle.getBinder
+    console.log("func_Bundle_getBinder=" + func_Bundle_getBinder)
+    if (func_Bundle_getBinder) {
+      func_Bundle_getBinder.implementation = function (key) {
+        var funcName = "Bundle.getBinder"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBinder = this.getBinder(key)
+        console.log("Bundle.getBinder => retBinder=" + retBinder)
+        return retBinder
+      }
+    }
+
+    // <T extends Parcelable>T getParcelable(String key)
+    // public android.os.Parcelable android.os.Bundle.getParcelable(java.lang.String)
+    var func_Bundle_getParcelable = cls_Bundle.getParcelable
+    console.log("func_Bundle_getParcelable=" + func_Bundle_getParcelable)
+    if (func_Bundle_getParcelable) {
+      func_Bundle_getParcelable.implementation = function (key) {
+        var funcName = "Bundle.getParcelable"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retParcelable = this.getParcelable(key)
+        console.log("Bundle.getParcelable => retParcelable=" + retParcelable)
+        return retParcelable
+      }
+    }
+
+    // Parcelable[] getParcelableArray(String key)
+    // public android.os.Parcelable[] android.os.Bundle.getParcelableArray(java.lang.String)
+    var func_Bundle_getParcelableArray = cls_Bundle.getParcelableArray
+    console.log("func_Bundle_getParcelableArray=" + func_Bundle_getParcelableArray)
+    if (func_Bundle_getParcelableArray) {
+      func_Bundle_getParcelableArray.implementation = function (key) {
+        var funcName = "Bundle.getParcelableArray"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retParcelableArray = this.getParcelableArray(key)
+        console.log("Bundle.getParcelableArray => retParcelableArray=" + retParcelableArray)
+        return retParcelableArray
+      }
+    }
+
+    // <T> ArrayList<T> getParcelableArrayList(String key, Class<? extends T> clazz)
+    // public java.lang.Object android.os.Bundle.getParcelable(java.lang.String,java.lang.Class)
+    var func_Bundle_getParcelableArrayList_2pkc = cls_Bundle.getParcelableArrayList.overload("java.lang.String", "java.lang.Class")
+    console.log("func_Bundle_getParcelableArrayList_2pkc=" + func_Bundle_getParcelableArrayList_2pkc)
+    if (func_Bundle_getParcelableArrayList_2pkc) {
+      func_Bundle_getParcelableArrayList_2pkc.implementation = function (key, clazz) {
+        var funcName = "Bundle.getParcelableArrayList_2pkc"
+        var funcParaDict = {
+          "key": key,
+          "clazz": clazz,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retParcelableArrayList_2pkc = this.getParcelableArrayList(key, clazz)
+        console.log("Bundle.getParcelableArrayList_2pkc => retParcelableArrayList_2pkc=" + retParcelableArrayList_2pkc)
+        return retParcelableArrayList_2pkc
+      }
+    }
+
+    // <T extends Parcelable> ArrayList<T> getParcelableArrayList(String key)
+    // public java.util.ArrayList android.os.Bundle.getParcelableArrayList(java.lang.String)
+    var func_Bundle_getParcelableArrayList_1pk = cls_Bundle.getParcelableArrayList.overload("java.lang.String")
+    console.log("func_Bundle_getParcelableArrayList_1pk=" + func_Bundle_getParcelableArrayList_1pk)
+    if (func_Bundle_getParcelableArrayList_1pk) {
+      func_Bundle_getParcelableArrayList_1pk.implementation = function (key) {
+        var funcName = "Bundle.getParcelableArrayList_1pk"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retParcelableArrayList_1pk = this.getParcelableArrayList(key)
+        console.log("Bundle.getParcelableArrayList_1pk => retParcelableArrayList_1pk=" + retParcelableArrayList_1pk)
+        return retParcelableArrayList_1pk
+      }
+    }
+
+    // void putAll(Bundle bundle)
+    // public void android.os.Bundle.putAll(android.os.Bundle)
+    var func_Bundle_putAll = cls_Bundle.putAll
+    console.log("func_Bundle_putAll=" + func_Bundle_putAll)
+    if (func_Bundle_putAll) {
+      func_Bundle_putAll.implementation = function (bundle) {
+        var funcName = "Bundle.putAll"
+        var funcParaDict = {
+          "bundle": bundle,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putAll(bundle)
+      }
+    }
+
+    // void putBinder(String key, IBinder value)
+    // public void android.os.Bundle.putBinder(java.lang.String,android.os.IBinder)
+    var func_Bundle_putBinder = cls_Bundle.putBinder
+    console.log("func_Bundle_putBinder=" + func_Bundle_putBinder)
+    if (func_Bundle_putBinder) {
+      func_Bundle_putBinder.implementation = function (key, value) {
+        var funcName = "Bundle.putBinder"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putBinder(key, value)
+      }
+    }
+
+    // void putBundle(String key, Bundle value)
     // public void android.os.Bundle.putBundle(java.lang.String,android.os.Bundle)
     var func_Bundle_putBundle = cls_Bundle.putBundle
     console.log("func_Bundle_putBundle=" + func_Bundle_putBundle)
@@ -1695,6 +1875,123 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         return this.putBundle(key, value)
+      }
+    }
+
+    // void putParcelable(String key, Parcelable value)
+    // public void android.os.Bundle.putParcelable(java.lang.String,android.os.Parcelable)
+    var func_Bundle_putParcelable = cls_Bundle.putParcelable
+    console.log("func_Bundle_putParcelable=" + func_Bundle_putParcelable)
+    if (func_Bundle_putParcelable) {
+      func_Bundle_putParcelable.implementation = function (key, value) {
+        var funcName = "Bundle.putParcelable"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putParcelable(key, value)
+      }
+    }
+
+    // void putParcelableArray(String key, Parcelable[] value)
+    // public void android.os.Bundle.putParcelableArray(java.lang.String,android.os.Parcelable[])
+    var func_Bundle_putParcelableArray = cls_Bundle.putParcelableArray
+    console.log("func_Bundle_putParcelableArray=" + func_Bundle_putParcelableArray)
+    if (func_Bundle_putParcelableArray) {
+      func_Bundle_putParcelableArray.implementation = function (key, value) {
+        var funcName = "Bundle.putParcelableArray"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putParcelableArray(key, value)
+      }
+    }
+
+    // void putParcelableArrayList(String key, ArrayList<? extends Parcelable> value)
+    // public void android.os.Bundle.putParcelableArrayList(java.lang.String,java.util.ArrayList)
+    var func_Bundle_putParcelableArrayList = cls_Bundle.putParcelableArrayList
+    console.log("func_Bundle_putParcelableArrayList=" + func_Bundle_putParcelableArrayList)
+    if (func_Bundle_putParcelableArrayList) {
+      func_Bundle_putParcelableArrayList.implementation = function (key, value) {
+        var funcName = "Bundle.putParcelableArrayList"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putParcelableArrayList(key, value)
+      }
+    }
+
+    // void putSparseParcelableArray(String key, SparseArray<? extends Parcelable> value)
+    // public void android.os.Bundle.putSparseParcelableArray(java.lang.String,android.util.SparseArray)
+    var func_Bundle_putSparseParcelableArray = cls_Bundle.putSparseParcelableArray
+    console.log("func_Bundle_putSparseParcelableArray=" + func_Bundle_putSparseParcelableArray)
+    if (func_Bundle_putSparseParcelableArray) {
+      func_Bundle_putSparseParcelableArray.implementation = function (key, value) {
+        var funcName = "Bundle.putSparseParcelableArray"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putSparseParcelableArray(key, value)
+      }
+    }
+
+    // void readFromParcel(Parcel parcel)
+    // public void android.os.Bundle.readFromParcel(android.os.Parcel)
+    var func_Bundle_readFromParcel = cls_Bundle.readFromParcel
+    console.log("func_Bundle_readFromParcel=" + func_Bundle_readFromParcel)
+    if (func_Bundle_readFromParcel) {
+      func_Bundle_readFromParcel.implementation = function (parcel) {
+        var funcName = "Bundle.readFromParcel"
+        var funcParaDict = {
+          "parcel": parcel,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.readFromParcel(parcel)
+      }
+    }
+
+    // void writeToParcel(Parcel parcel, int flags)
+    // public void android.os.Bundle.writeToParcel(android.os.Parcel,int)
+    var func_Bundle_writeToParcel = cls_Bundle.writeToParcel
+    console.log("func_Bundle_writeToParcel=" + func_Bundle_writeToParcel)
+    if (func_Bundle_writeToParcel) {
+      func_Bundle_writeToParcel.implementation = function (parcel, flags) {
+        var funcName = "Bundle.writeToParcel"
+        var funcParaDict = {
+          "parcel": parcel,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.writeToParcel(parcel, flags)
+      }
+    }
+
+    // void remove(String key)
+    // public void android.os.Bundle.remove(java.lang.String)
+    var func_Bundle_remove = cls_Bundle.remove
+    console.log("func_Bundle_remove=" + func_Bundle_remove)
+    if (func_Bundle_remove) {
+      func_Bundle_remove.implementation = function (key) {
+        var funcName = "Bundle.remove"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.remove(key)
       }
     }
   }
