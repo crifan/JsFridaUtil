@@ -1757,37 +1757,75 @@ class FridaHookAndroidJava {
 
     // <T extends Parcelable>T getParcelable(String key)
     // public android.os.Parcelable android.os.Bundle.getParcelable(java.lang.String)
-    var func_Bundle_getParcelable = cls_Bundle.getParcelable
-    console.log("func_Bundle_getParcelable=" + func_Bundle_getParcelable)
-    if (func_Bundle_getParcelable) {
-      func_Bundle_getParcelable.implementation = function (key) {
-        var funcName = "Bundle.getParcelable"
+    var func_Bundle_getParcelable_1pk = cls_Bundle.getParcelable.overload("java.lang.String")
+    console.log("func_Bundle_getParcelable_1pk=" + func_Bundle_getParcelable_1pk)
+    if (func_Bundle_getParcelable_1pk) {
+      func_Bundle_getParcelable_1pk.implementation = function (key) {
+        var funcName = "Bundle.getParcelable_1pk"
         var funcParaDict = {
           "key": key,
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var retParcelable = this.getParcelable(key)
-        console.log("Bundle.getParcelable => retParcelable=" + retParcelable)
-        return retParcelable
+        var retParcelable_1pk = this.getParcelable(key)
+        console.log("Bundle.getParcelable_1pk => retParcelable_1pk=" + retParcelable_1pk)
+        return retParcelable_1pk
+      }
+    }
+
+    // <T>T getParcelable(String key, Class<T> clazz)
+    // public java.lang.Object android.os.Bundle.getParcelable(java.lang.String,java.lang.Class)
+    var func_Bundle_getParcelable_2pkc = cls_Bundle.getParcelable.overload("java.lang.String", "java.lang.Class")
+    console.log("func_Bundle_getParcelable_2pkc=" + func_Bundle_getParcelable_2pkc)
+    if (func_Bundle_getParcelable_2pkc) {
+      func_Bundle_getParcelable_2pkc.implementation = function (key, clazz) {
+        var funcName = "Bundle.getParcelable_2pkc"
+        var funcParaDict = {
+          "key": key,
+          "clazz": clazz,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retParcelable_2pkc = this.getParcelable(key, clazz)
+        console.log("Bundle.getParcelable_2pkc => retParcelable_2pkc=" + retParcelable_2pkc)
+        return retParcelable_2pkc
       }
     }
 
     // Parcelable[] getParcelableArray(String key)
     // public android.os.Parcelable[] android.os.Bundle.getParcelableArray(java.lang.String)
-    var func_Bundle_getParcelableArray = cls_Bundle.getParcelableArray
-    console.log("func_Bundle_getParcelableArray=" + func_Bundle_getParcelableArray)
-    if (func_Bundle_getParcelableArray) {
-      func_Bundle_getParcelableArray.implementation = function (key) {
-        var funcName = "Bundle.getParcelableArray"
+    var func_Bundle_getParcelableArray_1pk = cls_Bundle.getParcelableArray.overload("java.lang.String")
+    console.log("func_Bundle_getParcelableArray_1pk=" + func_Bundle_getParcelableArray_1pk)
+    if (func_Bundle_getParcelableArray_1pk) {
+      func_Bundle_getParcelableArray_1pk.implementation = function (key) {
+        var funcName = "Bundle.getParcelableArray_1pk"
         var funcParaDict = {
           "key": key,
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var retParcelableArray = this.getParcelableArray(key)
-        console.log("Bundle.getParcelableArray => retParcelableArray=" + retParcelableArray)
-        return retParcelableArray
+        var retParcelableArray_1pk = this.getParcelableArray(key)
+        console.log("Bundle.getParcelableArray_1pk => retParcelableArray_1pk=" + retParcelableArray_1pk)
+        return retParcelableArray_1pk
+      }
+    }
+
+    // <T>T[] getParcelableArray(String key, Class<T> clazz)
+    // public java.lang.Object[] android.os.Bundle.getParcelableArray(java.lang.String,java.lang.Class)
+    var func_Bundle_getParcelableArray_2pkc = cls_Bundle.getParcelableArray.overload("java.lang.String", "java.lang.Class")
+    console.log("func_Bundle_getParcelableArray_2pkc=" + func_Bundle_getParcelableArray_2pkc)
+    if (func_Bundle_getParcelableArray_2pkc) {
+      func_Bundle_getParcelableArray_2pkc.implementation = function (key, clazz) {
+        var funcName = "Bundle.getParcelableArray_2pkc"
+        var funcParaDict = {
+          "key": key,
+          "clazz": clazz,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retParcelableArray_2pkc = this.getParcelableArray(key, clazz)
+        console.log("Bundle.getParcelableArray_2pkc => retParcelableArray_2pkc=" + retParcelableArray_2pkc)
+        return retParcelableArray_2pkc
       }
     }
 
@@ -2061,17 +2099,33 @@ class FridaHookAndroidJava {
 
     // void putAll(PersistableBundle bundle)
     // public void android.os.BaseBundle.putAll(android.os.PersistableBundle)
-    var func_BaseBundle_putAll = cls_BaseBundle.putAll
-    console.log("func_BaseBundle_putAll=" + func_BaseBundle_putAll)
-    if (func_BaseBundle_putAll) {
-      func_BaseBundle_putAll.implementation = function (bundle) {
-        var funcName = "BaseBundle.putAll"
+    var func_BaseBundle_putAll_1pb = cls_BaseBundle.putAll.overload("android.os.PersistableBundle")
+    console.log("func_BaseBundle_putAll_1pb=" + func_BaseBundle_putAll_1pb)
+    if (func_BaseBundle_putAll_1pb) {
+      func_BaseBundle_putAll_1pb.implementation = function (bundle) {
+        var funcName = "BaseBundle.putAll_1pb"
         var funcParaDict = {
           "bundle": bundle,
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         return this.putAll(bundle)
+      }
+    }
+
+    // void putAll(ArrayMap map)
+    // void android.os.BaseBundle.putAll(android.util.ArrayMap)
+    var func_BaseBundle_putAll_1pm = cls_BaseBundle.putAll.overload("android.util.ArrayMap")
+    console.log("func_BaseBundle_putAll_1pm=" + func_BaseBundle_putAll_1pm)
+    if (func_BaseBundle_putAll_1pm) {
+      func_BaseBundle_putAll_1pm.implementation = function (map) {
+        var funcName = "BaseBundle.putAll_1pm"
+        var funcParaDict = {
+          "map": map,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.putAll(map)
       }
     }
 
@@ -2263,19 +2317,38 @@ class FridaHookAndroidJava {
 
     // Object get(String key)
     // public java.lang.Object android.os.BaseBundle.get(java.lang.String)
-    var func_BaseBundle_get = cls_BaseBundle.get
-    console.log("func_BaseBundle_get=" + func_BaseBundle_get)
-    if (func_BaseBundle_get) {
-      func_BaseBundle_get.implementation = function (key) {
-        var funcName = "BaseBundle.get"
+    var func_BaseBundle_get_1pk = cls_BaseBundle.get.overload("java.lang.String")
+    console.log("func_BaseBundle_get_1pk=" + func_BaseBundle_get_1pk)
+    if (func_BaseBundle_get_1pk) {
+      func_BaseBundle_get_1pk.implementation = function (key) {
+        var funcName = "BaseBundle.get_1pk"
         var funcParaDict = {
           "key": key,
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var retObject = this.get(key)
-        console.log("BaseBundle.get => retObject=" + retObject)
-        return retObject
+        var retObject_1pk = this.get(key)
+        console.log("BaseBundle.get_1pk => retObject_1pk=" + retObject_1pk)
+        return retObject_1pk
+      }
+    }
+
+    // <T>T get(String key, Class<T> clazz)
+    // java.lang.Object android.os.BaseBundle.get(java.lang.String,java.lang.Class)
+    var func_BaseBundle_get_2pkc = cls_BaseBundle.get.overload("java.lang.String", "java.lang.Class")
+    console.log("func_BaseBundle_get_2pkc=" + func_BaseBundle_get_2pkc)
+    if (func_BaseBundle_get_2pkc) {
+      func_BaseBundle_get_2pkc.implementation = function (key, clazz) {
+        var funcName = "BaseBundle.get_2pkc"
+        var funcParaDict = {
+          "key": key,
+          "clazz": clazz,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var ret_T_T_2pkc = this.get(key, clazz)
+        console.log("BaseBundle.get_2pkc => ret_T_T_2pkc=" + ret_T_T_2pkc)
+        return ret_T_T_2pkc
       }
     }
 
