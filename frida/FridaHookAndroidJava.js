@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250321
+	Updated: 20250322
 */
 
 // Frida hook common Android/Java class
@@ -2546,9 +2546,9 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "message": message,
         }
+        FridaAndroidUtil.printClass_Message(message, funcName)
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        FridaAndroidUtil.printClass_Message(message)
 
         return this.send(message)
       }
@@ -2899,6 +2899,333 @@ class FridaHookAndroidJava {
         return retAction
       }
     }
+  }
+
+  static Handler(callback_isShowLog=null) {
+    var clsName_Handler = "android.os.Handler"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Handler)
+
+    var cls_Handler = Java.use(clsName_Handler)
+    console.log("cls_Handler=" + cls_Handler)
+
+    
+    // void dispatchMessage(Message msg)
+    // 
+    var func_Handler_dispatchMessage = cls_Handler.dispatchMessage
+    console.log("func_Handler_dispatchMessage=" + func_Handler_dispatchMessage)
+    if (func_Handler_dispatchMessage) {
+      func_Handler_dispatchMessage.implementation = function (msg) {
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(msg)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.dispatchMessage"
+          var funcParaDict = {
+            "msg": msg,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)  
+        }
+
+        return this.dispatchMessage(msg)
+      }
+    }
+
+    // String getMessageName(Message message)
+    // 
+    var func_Handler_getMessageName = cls_Handler.getMessageName
+    console.log("func_Handler_getMessageName=" + func_Handler_getMessageName)
+    if (func_Handler_getMessageName) {
+      func_Handler_getMessageName.implementation = function (message) {
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(message)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.getMessageName"
+          var funcParaDict = {
+            "message": message,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        }
+
+        var retMessageName = this.getMessageName(message)
+        console.log("Handler.getMessageName => retMessageName=" + retMessageName)
+        return retMessageName
+      }
+    }
+
+    // void handleMessage(Message msg)
+    // 
+    var func_Handler_handleMessage = cls_Handler.handleMessage
+    console.log("func_Handler_handleMessage=" + func_Handler_handleMessage)
+    if (func_Handler_handleMessage) {
+      func_Handler_handleMessage.implementation = function (msg) {
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(msg)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.handleMessage"
+          var funcParaDict = {
+            "msg": msg,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        }
+
+        return this.handleMessage(msg)
+      }
+    }
+
+    // final boolean sendMessage(Message msg)
+    // 
+    var func_Handler_sendMessage = cls_Handler.sendMessage
+    console.log("func_Handler_sendMessage=" + func_Handler_sendMessage)
+    if (func_Handler_sendMessage) {
+      func_Handler_sendMessage.implementation = function (msg) {
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(msg)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.sendMessage"
+          var funcParaDict = {
+            "msg": msg,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        }
+
+        var retBoolean = this.sendMessage(msg)
+        console.log("Handler.sendMessage => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // final boolean sendMessageAtFrontOfQueue(Message msg)
+    // 
+    var func_Handler_sendMessageAtFrontOfQueue = cls_Handler.sendMessageAtFrontOfQueue
+    console.log("func_Handler_sendMessageAtFrontOfQueue=" + func_Handler_sendMessageAtFrontOfQueue)
+    if (func_Handler_sendMessageAtFrontOfQueue) {
+      func_Handler_sendMessageAtFrontOfQueue.implementation = function (msg) {
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(msg)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.sendMessageAtFrontOfQueue"
+          var funcParaDict = {
+            "msg": msg,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        }
+
+        var retBoolean = this.sendMessageAtFrontOfQueue(msg)
+        console.log("Handler.sendMessageAtFrontOfQueue => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // boolean sendMessageAtTime(Message msg, long uptimeMillis)
+    // 
+    var func_Handler_sendMessageAtTime = cls_Handler.sendMessageAtTime
+    console.log("func_Handler_sendMessageAtTime=" + func_Handler_sendMessageAtTime)
+    if (func_Handler_sendMessageAtTime) {
+      func_Handler_sendMessageAtTime.implementation = function (msg, uptimeMillis) {
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(msg)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.sendMessageAtTime"
+          var funcParaDict = {
+            "msg": msg,
+            "uptimeMillis": uptimeMillis,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        }
+
+        var retBoolean = this.sendMessageAtTime(msg, uptimeMillis)
+        console.log("Handler.sendMessageAtTime => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // final boolean sendMessageDelayed(Message msg, long delayMillis)
+    // 
+    var func_Handler_sendMessageDelayed = cls_Handler.sendMessageDelayed
+    console.log("func_Handler_sendMessageDelayed=" + func_Handler_sendMessageDelayed)
+    if (func_Handler_sendMessageDelayed) {
+      func_Handler_sendMessageDelayed.implementation = function (msg, delayMillis) {
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(msg)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.sendMessageDelayed"
+          var funcParaDict = {
+            "msg": msg,
+            "delayMillis": delayMillis,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)  
+        }
+
+        var retBoolean = this.sendMessageDelayed(msg, delayMillis)
+        console.log("Handler.sendMessageDelayed => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // final Message obtainMessage(int what, Object obj)
+    // public final android.os.Message android.os.Handler.obtainMessage(int,java.lang.Object)
+    var func_Handler_obtainMessage_2pwo = cls_Handler.obtainMessage.overload("int", "java.lang.Object")
+    console.log("func_Handler_obtainMessage_2pwo=" + func_Handler_obtainMessage_2pwo)
+    if (func_Handler_obtainMessage_2pwo) {
+      func_Handler_obtainMessage_2pwo.implementation = function (what, obj) {
+
+        var retMessage_2pwo = this.obtainMessage(what, obj)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(retMessage_2pwo)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.obtainMessage_2pwo"
+          var funcParaDict = {
+            "what": what,
+            "obj": obj,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+          console.log("Handler.obtainMessage_2pwo => retMessage_2pwo=" + retMessage_2pwo)
+        }
+
+        return retMessage_2pwo
+      }
+    }
+
+    // final Message obtainMessage()
+    // public final android.os.Message android.os.Handler.obtainMessage()
+    var func_Handler_obtainMessage_0p = cls_Handler.obtainMessage.overload()
+    console.log("func_Handler_obtainMessage_0p=" + func_Handler_obtainMessage_0p)
+    if (func_Handler_obtainMessage_0p) {
+      func_Handler_obtainMessage_0p.implementation = function () {
+
+        var retMessage_0p = this.obtainMessage()
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(retMessage_0p)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.obtainMessage_0p"
+          var funcParaDict = {}
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+  
+          console.log("Handler.obtainMessage_0p => retMessage_0p=" + retMessage_0p)
+        }
+
+        return retMessage_0p
+      }
+    }
+
+    // final Message obtainMessage(int what, int arg1, int arg2)
+    // public final android.os.Message android.os.Handler.obtainMessage(int,int,int)
+    var func_Handler_obtainMessage_3pwaa = cls_Handler.obtainMessage.overload("int", "int", "int")
+    console.log("func_Handler_obtainMessage_3pwaa=" + func_Handler_obtainMessage_3pwaa)
+    if (func_Handler_obtainMessage_3pwaa) {
+      func_Handler_obtainMessage_3pwaa.implementation = function (what, arg1, arg2) {
+
+        var retMessage_3pwaa = this.obtainMessage(what, arg1, arg2)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(retMessage_3pwaa)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.obtainMessage_3pwaa"
+          var funcParaDict = {
+            "what": what,
+            "arg1": arg1,
+            "arg2": arg2,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+  
+          console.log("Handler.obtainMessage_3pwaa => retMessage_3pwaa=" + retMessage_3pwaa)
+        }
+
+        return retMessage_3pwaa
+      }
+    }
+
+    // final Message obtainMessage(int what, int arg1, int arg2, Object obj)
+    // public final android.os.Message android.os.Handler.obtainMessage(int,int,int,java.lang.Object)
+    var func_Handler_obtainMessage_4pwaao = cls_Handler.obtainMessage.overload("int", "int", "int", "java.lang.Object")
+    console.log("func_Handler_obtainMessage_4pwaao=" + func_Handler_obtainMessage_4pwaao)
+    if (func_Handler_obtainMessage_4pwaao) {
+      func_Handler_obtainMessage_4pwaao.implementation = function (what, arg1, arg2, obj) {
+
+        var retMessage_4pwaao = this.obtainMessage(what, arg1, arg2, obj)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(retMessage_4pwaao)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.obtainMessage_4pwaao"
+          var funcParaDict = {
+            "what": what,
+            "arg1": arg1,
+            "arg2": arg2,
+            "obj": obj,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+  
+          console.log("Handler.obtainMessage_4pwaao => retMessage_4pwaao=" + retMessage_4pwaao)
+        }
+
+        return retMessage_4pwaao
+      }
+    }
+
+    // final Message obtainMessage(int what)
+    // public final android.os.Message android.os.Handler.obtainMessage(int)
+    var func_Handler_obtainMessage_1pw = cls_Handler.obtainMessage.overload("int")
+    console.log("func_Handler_obtainMessage_1pw=" + func_Handler_obtainMessage_1pw)
+    if (func_Handler_obtainMessage_1pw) {
+      func_Handler_obtainMessage_1pw.implementation = function (what) {
+
+        var retMessage_1pw = this.obtainMessage(what)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(retMessage_1pw)
+        }
+
+        if (isShowLog){
+          var funcName = "Handler.obtainMessage_1pw"
+          var funcParaDict = {
+            "what": what,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+    
+          console.log("Handler.obtainMessage_1pw => retMessage_1pw=" + retMessage_1pw)
+        }
+
+        return retMessage_1pw
+      }
+    }
+
   }
 
 }

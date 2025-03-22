@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250318
+	Updated: 20250322
 */
 
 // Frida Android Util
@@ -144,7 +144,7 @@ class FridaAndroidUtil {
 
   // android.os.Message
   // https://developer.android.com/reference/android/os/Message
-  static printClass_Message(inputObj){
+  static printClass_Message(inputObj, caller=""){
     if (inputObj) {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Message)
       // console.log("curObj=" + curObj)
@@ -157,8 +157,9 @@ class FridaAndroidUtil {
       var targetHandler = curObj.getTarget()
       var when = curObj.getWhen()
       var isAsync = curObj.isAsynchronous()
+      var callerStr = "[caller=" + caller + "] "
 
-      console.log("Message:" + clsNameStr
+      console.log(callerStr + "Message:" + clsNameStr
         + " arg1=" + curObj.arg1.value
         + ", arg2=" + curObj.arg2.value
         + ", obj=" + curObj.obj.value
