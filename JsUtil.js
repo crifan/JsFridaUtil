@@ -3,7 +3,7 @@
 	Function: crifan's common Javascript related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/JsUtil.js
-	Updated: 20241214
+	Updated: 20250325
 */
 
 // pure JavaScript utils
@@ -92,6 +92,19 @@ class JsUtil {
     }
     return jsonStr
     // return curObj.toString()
+  }
+
+  static objToStr(curObj){
+    // var objJson = JSON.stringify(curObj)
+    // console.log("objJson=" + objJson + ", type=" + (typeof objJson))
+    var objStr = curObj.toString()
+    // console.log("objStr=" + objStr + ", type=" + (typeof objStr))
+    // var objTemplateStr = `${curObj}`
+    // console.log("objTemplateStr=" + objTemplateStr + ", type=" + (typeof objTemplateStr))
+    // var objString = String(curObj)
+    // console.log("objString=" + objString + ", type=" + (typeof objString))
+
+    return objStr
   }
 
   /*---------- List ----------*/
