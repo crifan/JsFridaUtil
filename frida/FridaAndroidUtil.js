@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250322
+	Updated: 20250326
 */
 
 // Frida Android Util
@@ -56,6 +56,34 @@ class FridaAndroidUtil {
 
   static JavaByteArr = null
   static JavaObjArr = null
+
+  // https://source.android.com/docs/core/runtime/dex-format?hl=zh-cn
+  // https://cmrodriguez.me/blog/methods/
+  static FridaDexTypeMapppingDict = {
+    "void":     "V",
+
+    "boolean":  "Z",
+    "char":     "C",
+    "byte":     "B",
+    "short":    "S",
+    "int":      "I",
+    "long":     "J",
+    "float":    "F",
+    "double":   "D",
+
+    "char":     "[C",
+    "byte[]":   "[B",
+    "short[]":  "[S",
+    "int[]":    "[I",
+    "long[]":   "[J",
+    "float[]":  "[F",
+    "double[]": "[D",
+
+    "String[]": "[Ljava/lang/String;",
+    "Object[]": "[Ljava/lang/Object;",
+
+    // TODO: add more type
+  }
 
   constructor() {
     console.log("FridaAndroidUtil constructor")
@@ -1250,6 +1278,52 @@ class FridaAndroidUtil {
       },
       onComplete: function() {}
     });
+  }
+
+
+  static findOverloadFunction(overloads, argTypeList, retType=null){
+    var foundOverloadFunc = null
+
+    var argTypeNum = argTypeList.length
+    // console.log("argTypeNum=" + argTypeNum)
+
+    overloads.find( function(curOverloadFunc) {
+      var overloadArgTypeList = curOverloadFunc.argumentTypes
+      // console.log("overloadArgTypeList=" + overloadArgTypeList)
+      if ((overloadArgTypeList) && (argTypeNum == overloadArgTypeList.length)){
+        var argsFromOverload = curOverloadFunc.argumentTypes.map(argType => argType.className)
+        // console.log("argsFromOverload=" + argsFromOverload)
+        var overloadArgListJsonStr = JSON.stringify(argsFromOverload)
+        // console.log("overloadArgListJsonStr=" + overloadArgListJsonStr)
+        var inputArgListJsonStr = JSON.stringify(argTypeList)
+        // console.log("inputArgListJsonStr=" + inputArgListJsonStr)
+        var isArgsSame = overloadArgListJsonStr === inputArgListJsonStr
+        // console.log("isArgsSame=" + isArgsSame)
+        if (isArgsSame){
+          if (retType){
+            var mappedTypeStr = retType
+            if (mappedTypeStr in FridaAndroidUtil.FridaDexTypeMapppingDict){
+              mappedTypeStr = FridaAndroidUtil.FridaDexTypeMapppingDict[mappedTypeStr]
+              // console.log("mapped mappedTypeStr=" + mappedTypeStr)
+            }
+
+            var overloadFuncRetType = curOverloadFunc.returnType
+            // console.log("overloadFuncRetType=" + overloadFuncRetType)
+            var overloadFuncRetTypeStr = overloadFuncRetType.toString()
+            // console.log("overloadFuncRetTypeStr=" + overloadFuncRetTypeStr)
+            if (mappedTypeStr === overloadFuncRetTypeStr){
+              foundOverloadFunc = curOverloadFunc
+              return foundOverloadFunc
+            } else {
+              // console.log("returnType not same: mapped=" + mappedTypeStr + " != current=" + overloadFuncRetTypeStr)
+            }
+          }
+        }
+      }
+    })
+
+    // console.log("foundOverloadFunc=" + foundOverloadFunc)
+    return foundOverloadFunc
   }
 
 }
