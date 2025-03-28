@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250322
+	Updated: 20250328
 */
 
 // Frida hook common Android/Java class
@@ -1639,7 +1639,8 @@ class FridaHookAndroidJava {
       func_Bundle_Bundle_0p.implementation = function () {
         var funcName = "Bundle_0p"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         var newBundle_0p = this.$init()
         console.log("Bundle_0p => newBundle_0p=" + newBundle_0p)
@@ -1765,7 +1766,8 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         var retParcelable_1pk = this.getParcelable(key)
         console.log("Bundle.getParcelable_1pk => retParcelable_1pk=" + retParcelable_1pk)
@@ -1927,7 +1929,8 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         return this.putParcelable(key, value)
       }
@@ -2362,7 +2365,8 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         var retString_1pk = this.getString(key)
         console.log("BaseBundle.getString_1pk => retString_1pk=" + retString_1pk)
@@ -2621,7 +2625,8 @@ class FridaHookAndroidJava {
       func_Message_obtain_0p.implementation = function () {
         var funcName = "Message.obtain_0p"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         var retMessage_0p = this.obtain()
         console.log("Message.obtain_0p => retMessage_0p=" + retMessage_0p)
@@ -2639,7 +2644,8 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "data": data,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         return this.setData(data)
       }
@@ -2768,7 +2774,8 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "action": action,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         var retIntent = this.setAction(action)
         console.log("Intent.setAction => retIntent=" + retIntent)
@@ -2892,7 +2899,8 @@ class FridaHookAndroidJava {
       func_Intent_getAction.implementation = function () {
         var funcName = "Intent.getAction"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
 
         var retAction = this.getAction()
         console.log("Intent.getAction => retAction=" + retAction)
@@ -3226,6 +3234,812 @@ class FridaHookAndroidJava {
       }
     }
 
+  }
+
+  static Uri_Builder() {
+    var clsName_Uri_Builder = "android.net.Uri$Builder"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Uri_Builder)
+
+    var cls_Uri_Builder = Java.use(clsName_Uri_Builder)
+    console.log("cls_Uri_Builder=" + cls_Uri_Builder)
+
+    
+    // public Uri build()
+    // public android.net.Uri android.net.Uri$Builder.build()
+    var func_Uri_Builder_build = cls_Uri_Builder.build
+    console.log("func_Uri_Builder_build=" + func_Uri_Builder_build)
+    if (func_Uri_Builder_build) {
+      func_Uri_Builder_build.implementation = function () {
+        var funcName = "Uri$Builder.build"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retUri = this.build()
+        console.log(funcName + " => retUri=" + retUri)
+        return retUri
+      }
+    }
+
+    // public Uri.Builder appendQueryParameter(String key, String value)
+    // public android.net.Uri$Builder android.net.Uri$Builder.appendQueryParameter(java.lang.String,java.lang.String)
+    var func_Uri_Builder_appendQueryParameter = cls_Uri_Builder.appendQueryParameter
+    console.log("func_Uri_Builder_appendQueryParameter=" + func_Uri_Builder_appendQueryParameter)
+    if (func_Uri_Builder_appendQueryParameter) {
+      func_Uri_Builder_appendQueryParameter.implementation = function (key, value) {
+        var funcName = "Uri$Builder.appendQueryParameter"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retUri_Builder = this.appendQueryParameter(key, value)
+        console.log(funcName + " => retUri_Builder=" + retUri_Builder)
+        return retUri_Builder
+      }
+    }
+
+    // // 
+    // // 
+    // var func_Uri_Builder_getEncodedQuery = cls_Uri_Builder.getEncodedQuery
+    // console.log("func_Uri_Builder_getEncodedQuery=" + func_Uri_Builder_getEncodedQuery) // func_Uri_Builder_getEncodedQuery=undefined
+    // if (func_Uri_Builder_getEncodedQuery) {
+    //   func_Uri_Builder_getEncodedQuery.implementation = function () {
+    //     var funcName = "Uri$Builder.getEncodedQuery"
+    //     var funcParaDict = {}
+    //     FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+    //     var retEncodedQuery_ub = this.getEncodedQuery()
+    //     console.log(funcName + " => retEncodedQuery_ub=" + retEncodedQuery_ub)
+    //     return retEncodedQuery_ub
+    //   }
+    // }
+
+  }
+
+
+  static Uri() {
+    var clsName_Uri = "android.net.Uri"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Uri)
+
+    var cls_Uri = Java.use(clsName_Uri)
+    console.log("cls_Uri=" + cls_Uri)
+
+    // public abstract String getEncodedQuery()
+    // public abstract java.lang.String android.net.Uri.getEncodedQuery()
+    var func_Uri_getEncodedQuery = cls_Uri.getEncodedQuery
+    console.log("func_Uri_getEncodedQuery=" + func_Uri_getEncodedQuery)
+    if (func_Uri_getEncodedQuery) {
+      func_Uri_getEncodedQuery.implementation = function () {
+        var funcName = "Uri.getEncodedQuery"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retEncodedQuery = this.getEncodedQuery()
+        console.log(funcName + " => retEncodedQuery=" + retEncodedQuery)
+        return retEncodedQuery
+      }
+    }
+
+  }
+
+  // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
+  static CronetUrlRequest() {
+    var clsName_CronetUrlRequest = "org.chromium.net.impl.CronetUrlRequest"
+    FridaAndroidUtil.printClassAllMethodsFields(clsName_CronetUrlRequest)
+
+    var cls_CronetUrlRequest = Java.use(clsName_CronetUrlRequest)
+    console.log("cls_CronetUrlRequest=" + cls_CronetUrlRequest)
+
+    
+    /* CronetUrlRequest(
+            CronetUrlRequestContext requestContext,
+            String url,
+            int priority,
+            UrlRequest.Callback callback,
+            Executor executor,
+            Collection<Object> requestAnnotations,
+            boolean disableCache,
+            boolean disableConnectionMigration,
+            boolean allowDirectExecutor,
+            boolean trafficStatsTagSet,
+            int trafficStatsTag,
+            boolean trafficStatsUidSet,
+            int trafficStatsUid,
+            RequestFinishedInfo.Listener requestFinishedListener,
+            int idempotency,
+            long networkHandle,
+            String method,
+            ArrayList<Map.Entry<String, String>> requestHeaders,
+            UploadDataProvider uploadDataProvider,
+            Executor uploadDataProviderExecutor,
+            byte[] dictionarySha256Hash,
+            ByteBuffer dictionary,
+            @NonNull String dictionaryId) {
+    */
+    // 
+    var func_CronetUrlRequest_ctor = cls_CronetUrlRequest.$init
+    console.log("func_CronetUrlRequest_ctor=" + func_CronetUrlRequest_ctor)
+    if (func_CronetUrlRequest_ctor) {
+      func_CronetUrlRequest_ctor.implementation = function (requestContext, url, priority, callback, executor, requestAnnotations, disableCache, disableConnectionMigration, allowDirectExecutor, trafficStatsTagSet, trafficStatsTag, trafficStatsUidSet, trafficStatsUid, requestFinishedListener, idempotency, networkHandle, method, requestHeaders, uploadDataProvider, uploadDataProviderExecutor, dictionarySha256Hash, dictionary, dictionaryId) {
+        var funcName = "CronetUrlRequest"
+        var funcParaDict = {
+          "requestContext": requestContext,
+          "url": url,
+          "priority": priority,
+          "callback": callback,
+          "executor": executor,
+          "requestAnnotations": requestAnnotations,
+          "disableCache": disableCache,
+          "disableConnectionMigration": disableConnectionMigration,
+          "allowDirectExecutor": allowDirectExecutor,
+          "trafficStatsTagSet": trafficStatsTagSet,
+          "trafficStatsTag": trafficStatsTag,
+          "trafficStatsUidSet": trafficStatsUidSet,
+          "trafficStatsUid": trafficStatsUid,
+          "requestFinishedListener": requestFinishedListener,
+          "idempotency": idempotency,
+          "networkHandle": networkHandle,
+          "method": method,
+          "requestHeaders": requestHeaders,
+          "uploadDataProvider": uploadDataProvider,
+          "uploadDataProviderExecutor": uploadDataProviderExecutor,
+          "dictionarySha256Hash": dictionarySha256Hash,
+          "dictionary": dictionary,
+          "dictionaryId": dictionaryId,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newCronetUrlRequest = this.$init(requestContext, url, priority, callback, executor, requestAnnotations, disableCache, disableConnectionMigration, allowDirectExecutor, trafficStatsTagSet, trafficStatsTag, trafficStatsUidSet, trafficStatsUid, requestFinishedListener, idempotency, networkHandle, method, requestHeaders, uploadDataProvider, uploadDataProviderExecutor, dictionarySha256Hash, dictionary, dictionaryId)
+        console.log(funcName + " => newCronetUrlRequest=" + newCronetUrlRequest)
+        return newCronetUrlRequest
+      }
+    }
+
+    // public void start() {
+    // 
+    var func_CronetUrlRequest_start = cls_CronetUrlRequest.start
+    console.log("func_CronetUrlRequest_start=" + func_CronetUrlRequest_start)
+    if (func_CronetUrlRequest_start) {
+      func_CronetUrlRequest_start.implementation = function () {
+        var funcName = "CronetUrlRequest.start"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.start()
+      }
+    }
+
+    // private void startInternalLocked() {
+    // 
+    var func_CronetUrlRequest_startInternalLocked = cls_CronetUrlRequest.startInternalLocked
+    console.log("func_CronetUrlRequest_startInternalLocked=" + func_CronetUrlRequest_startInternalLocked)
+    if (func_CronetUrlRequest_startInternalLocked) {
+      func_CronetUrlRequest_startInternalLocked.implementation = function () {
+        var funcName = "CronetUrlRequest.startInternalLocked"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.startInternalLocked()
+      }
+    }
+
+    // public void followRedirect() {
+    // 
+    var func_CronetUrlRequest_followRedirect = cls_CronetUrlRequest.followRedirect
+    console.log("func_CronetUrlRequest_followRedirect=" + func_CronetUrlRequest_followRedirect)
+    if (func_CronetUrlRequest_followRedirect) {
+      func_CronetUrlRequest_followRedirect.implementation = function () {
+        var funcName = "CronetUrlRequest.followRedirect"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.followRedirect()
+      }
+    }
+
+    // public void read(ByteBuffer buffer) {
+    // 
+    var func_CronetUrlRequest_read = cls_CronetUrlRequest.read
+    console.log("func_CronetUrlRequest_read=" + func_CronetUrlRequest_read)
+    if (func_CronetUrlRequest_read) {
+      func_CronetUrlRequest_read.implementation = function (buffer) {
+        var funcName = "CronetUrlRequest.read"
+        var funcParaDict = {
+          "buffer": buffer,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.read(buffer)
+      }
+    }
+
+    // public void cancel() {
+    // 
+    var func_CronetUrlRequest_cancel = cls_CronetUrlRequest.cancel
+    console.log("func_CronetUrlRequest_cancel=" + func_CronetUrlRequest_cancel)
+    if (func_CronetUrlRequest_cancel) {
+      func_CronetUrlRequest_cancel.implementation = function () {
+        var funcName = "CronetUrlRequest.cancel"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.cancel()
+      }
+    }
+
+    // public boolean isDone() {
+    // 
+    var func_CronetUrlRequest_isDone = cls_CronetUrlRequest.isDone
+    console.log("func_CronetUrlRequest_isDone=" + func_CronetUrlRequest_isDone)
+    if (func_CronetUrlRequest_isDone) {
+      func_CronetUrlRequest_isDone.implementation = function () {
+        var funcName = "CronetUrlRequest.isDone"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.isDone()
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // private boolean isDoneLocked() {
+    // 
+    var func_CronetUrlRequest_isDoneLocked = cls_CronetUrlRequest.isDoneLocked
+    console.log("func_CronetUrlRequest_isDoneLocked=" + func_CronetUrlRequest_isDoneLocked)
+    if (func_CronetUrlRequest_isDoneLocked) {
+      func_CronetUrlRequest_isDoneLocked.implementation = function () {
+        var funcName = "CronetUrlRequest.isDoneLocked"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.isDoneLocked()
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // public void getStatus(UrlRequest.StatusListener unsafeListener) {
+    // 
+    var func_CronetUrlRequest_getStatus = cls_CronetUrlRequest.getStatus
+    console.log("func_CronetUrlRequest_getStatus=" + func_CronetUrlRequest_getStatus)
+    if (func_CronetUrlRequest_getStatus) {
+      func_CronetUrlRequest_getStatus.implementation = function (unsafeListener) {
+        var funcName = "CronetUrlRequest.getStatus"
+        var funcParaDict = {
+          "unsafeListener": unsafeListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.getStatus(unsafeListener)
+      }
+    }
+
+    // public void setOnDestroyedCallbackForTesting(Runnable onDestroyedCallbackForTesting) {
+    // 
+    var func_CronetUrlRequest_setOnDestroyedCallbackForTesting = cls_CronetUrlRequest.setOnDestroyedCallbackForTesting
+    console.log("func_CronetUrlRequest_setOnDestroyedCallbackForTesting=" + func_CronetUrlRequest_setOnDestroyedCallbackForTesting)
+    if (func_CronetUrlRequest_setOnDestroyedCallbackForTesting) {
+      func_CronetUrlRequest_setOnDestroyedCallbackForTesting.implementation = function (onDestroyedCallbackForTesting) {
+        var funcName = "CronetUrlRequest.setOnDestroyedCallbackForTesting"
+        var funcParaDict = {
+          "onDestroyedCallbackForTesting": onDestroyedCallbackForTesting,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.setOnDestroyedCallbackForTesting(onDestroyedCallbackForTesting)
+      }
+    }
+
+    /* public void setOnDestroyedUploadCallbackForTesting(
+            Runnable onDestroyedUploadCallbackForTesting) {
+    */
+    // 
+    var func_CronetUrlRequest_setOnDestroyedUploadCallbackForTesting = cls_CronetUrlRequest.setOnDestroyedUploadCallbackForTesting
+    console.log("func_CronetUrlRequest_setOnDestroyedUploadCallbackForTesting=" + func_CronetUrlRequest_setOnDestroyedUploadCallbackForTesting)
+    if (func_CronetUrlRequest_setOnDestroyedUploadCallbackForTesting) {
+      func_CronetUrlRequest_setOnDestroyedUploadCallbackForTesting.implementation = function (onDestroyedUploadCallbackForTesting) {
+        var funcName = "CronetUrlRequest.setOnDestroyedUploadCallbackForTesting"
+        var funcParaDict = {
+          "onDestroyedUploadCallbackForTesting": onDestroyedUploadCallbackForTesting,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.setOnDestroyedUploadCallbackForTesting(onDestroyedUploadCallbackForTesting)
+      }
+    }
+
+    // public long getUrlRequestAdapterForTesting() {
+    // 
+    var func_CronetUrlRequest_getUrlRequestAdapterForTesting = cls_CronetUrlRequest.getUrlRequestAdapterForTesting
+    console.log("func_CronetUrlRequest_getUrlRequestAdapterForTesting=" + func_CronetUrlRequest_getUrlRequestAdapterForTesting)
+    if (func_CronetUrlRequest_getUrlRequestAdapterForTesting) {
+      func_CronetUrlRequest_getUrlRequestAdapterForTesting.implementation = function () {
+        var funcName = "CronetUrlRequest.getUrlRequestAdapterForTesting"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retUrlRequestAdapterForTesting = this.getUrlRequestAdapterForTesting()
+        console.log(funcName + " => retUrlRequestAdapterForTesting=" + retUrlRequestAdapterForTesting)
+        return retUrlRequestAdapterForTesting
+      }
+    }
+
+    // private void postTaskToExecutor(Runnable task, String name) {
+    // 
+    var func_CronetUrlRequest_postTaskToExecutor = cls_CronetUrlRequest.postTaskToExecutor
+    console.log("func_CronetUrlRequest_postTaskToExecutor=" + func_CronetUrlRequest_postTaskToExecutor)
+    if (func_CronetUrlRequest_postTaskToExecutor) {
+      func_CronetUrlRequest_postTaskToExecutor.implementation = function (task, name) {
+        var funcName = "CronetUrlRequest.postTaskToExecutor"
+        var funcParaDict = {
+          "task": task,
+          "name": name,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.postTaskToExecutor(task, name)
+      }
+    }
+
+    // private static int convertRequestPriority(int priority) {
+    // 
+    var func_CronetUrlRequest_convertRequestPriority = cls_CronetUrlRequest.convertRequestPriority
+    console.log("func_CronetUrlRequest_convertRequestPriority=" + func_CronetUrlRequest_convertRequestPriority)
+    if (func_CronetUrlRequest_convertRequestPriority) {
+      func_CronetUrlRequest_convertRequestPriority.implementation = function (priority) {
+        var funcName = "CronetUrlRequest.convertRequestPriority"
+        var funcParaDict = {
+          "priority": priority,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retInt = this.convertRequestPriority(priority)
+        console.log(funcName + " => retInt=" + retInt)
+        return retInt
+      }
+    }
+
+    // private static int convertIdempotency(int idempotency) {
+    // 
+    var func_CronetUrlRequest_convertIdempotency = cls_CronetUrlRequest.convertIdempotency
+    console.log("func_CronetUrlRequest_convertIdempotency=" + func_CronetUrlRequest_convertIdempotency)
+    if (func_CronetUrlRequest_convertIdempotency) {
+      func_CronetUrlRequest_convertIdempotency.implementation = function (idempotency) {
+        var funcName = "CronetUrlRequest.convertIdempotency"
+        var funcParaDict = {
+          "idempotency": idempotency,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retInt = this.convertIdempotency(idempotency)
+        console.log(funcName + " => retInt=" + retInt)
+        return retInt
+      }
+    }
+
+    /* private UrlResponseInfoImpl prepareResponseInfoOnNetworkThread(
+            int httpStatusCode,
+            String httpStatusText,
+            String[] headers,
+            boolean wasCached,
+            String negotiatedProtocol,
+            String proxyServer,
+            long receivedByteCount) {
+    */
+    // 
+    var func_CronetUrlRequest_prepareResponseInfoOnNetworkThread = cls_CronetUrlRequest.prepareResponseInfoOnNetworkThread
+    console.log("func_CronetUrlRequest_prepareResponseInfoOnNetworkThread=" + func_CronetUrlRequest_prepareResponseInfoOnNetworkThread)
+    if (func_CronetUrlRequest_prepareResponseInfoOnNetworkThread) {
+      func_CronetUrlRequest_prepareResponseInfoOnNetworkThread.implementation = function (httpStatusCode, httpStatusText, headers, wasCached, negotiatedProtocol, proxyServer, receivedByteCount) {
+        var funcName = "CronetUrlRequest.prepareResponseInfoOnNetworkThread"
+        var funcParaDict = {
+          "httpStatusCode": httpStatusCode,
+          "httpStatusText": httpStatusText,
+          "headers": headers,
+          "wasCached": wasCached,
+          "negotiatedProtocol": negotiatedProtocol,
+          "proxyServer": proxyServer,
+          "receivedByteCount": receivedByteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retUrlResponseInfoImpl = this.prepareResponseInfoOnNetworkThread(httpStatusCode, httpStatusText, headers, wasCached, negotiatedProtocol, proxyServer, receivedByteCount)
+        console.log(funcName + " => retUrlResponseInfoImpl=" + retUrlResponseInfoImpl)
+        return retUrlResponseInfoImpl
+      }
+    }
+
+    // private void checkNotStarted() {
+    // 
+    var func_CronetUrlRequest_checkNotStarted = cls_CronetUrlRequest.checkNotStarted
+    console.log("func_CronetUrlRequest_checkNotStarted=" + func_CronetUrlRequest_checkNotStarted)
+    if (func_CronetUrlRequest_checkNotStarted) {
+      func_CronetUrlRequest_checkNotStarted.implementation = function () {
+        var funcName = "CronetUrlRequest.checkNotStarted"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.checkNotStarted()
+      }
+    }
+
+    /* private void destroyRequestAdapterLocked(
+            @RequestFinishedInfoImpl.FinishedReason int finishedReason) {
+    */
+    // 
+    var func_CronetUrlRequest_destroyRequestAdapterLocked = cls_CronetUrlRequest.destroyRequestAdapterLocked
+    console.log("func_CronetUrlRequest_destroyRequestAdapterLocked=" + func_CronetUrlRequest_destroyRequestAdapterLocked)
+    if (func_CronetUrlRequest_destroyRequestAdapterLocked) {
+      func_CronetUrlRequest_destroyRequestAdapterLocked.implementation = function (finishedReason) {
+        var funcName = "CronetUrlRequest.destroyRequestAdapterLocked"
+        var funcParaDict = {
+          "finishedReason": finishedReason,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.destroyRequestAdapterLocked(finishedReason)
+      }
+    }
+
+    // private void onNonfinalCallbackException(Exception e) {
+    // 
+    var func_CronetUrlRequest_onNonfinalCallbackException = cls_CronetUrlRequest.onNonfinalCallbackException
+    console.log("func_CronetUrlRequest_onNonfinalCallbackException=" + func_CronetUrlRequest_onNonfinalCallbackException)
+    if (func_CronetUrlRequest_onNonfinalCallbackException) {
+      func_CronetUrlRequest_onNonfinalCallbackException.implementation = function (e) {
+        var funcName = "CronetUrlRequest.onNonfinalCallbackException"
+        var funcParaDict = {
+          "e": e,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onNonfinalCallbackException(e)
+      }
+    }
+
+    // private void onFinalCallbackException(String method, Exception e) {
+    // 
+    var func_CronetUrlRequest_onFinalCallbackException = cls_CronetUrlRequest.onFinalCallbackException
+    console.log("func_CronetUrlRequest_onFinalCallbackException=" + func_CronetUrlRequest_onFinalCallbackException)
+    if (func_CronetUrlRequest_onFinalCallbackException) {
+      func_CronetUrlRequest_onFinalCallbackException.implementation = function (method, e) {
+        var funcName = "CronetUrlRequest.onFinalCallbackException"
+        var funcParaDict = {
+          "method": method,
+          "e": e,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onFinalCallbackException(method, e)
+      }
+    }
+
+    // void onUploadException(Throwable e) {
+    // 
+    var func_CronetUrlRequest_onUploadException = cls_CronetUrlRequest.onUploadException
+    console.log("func_CronetUrlRequest_onUploadException=" + func_CronetUrlRequest_onUploadException)
+    if (func_CronetUrlRequest_onUploadException) {
+      func_CronetUrlRequest_onUploadException.implementation = function (e) {
+        var funcName = "CronetUrlRequest.onUploadException"
+        var funcParaDict = {
+          "e": e,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onUploadException(e)
+      }
+    }
+
+    // private void failWithException(final CronetException exception) {
+    // 
+    var func_CronetUrlRequest_failWithException = cls_CronetUrlRequest.failWithException
+    console.log("func_CronetUrlRequest_failWithException=" + func_CronetUrlRequest_failWithException)
+    if (func_CronetUrlRequest_failWithException) {
+      func_CronetUrlRequest_failWithException.implementation = function (exception) {
+        var funcName = "CronetUrlRequest.failWithException"
+        var funcParaDict = {
+          "exception": exception,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.failWithException(exception)
+      }
+    }
+
+    /* private void onRedirectReceived(
+            final String newLocation,
+            int httpStatusCode,
+            String httpStatusText,
+            String[] headers,
+            boolean wasCached,
+            String negotiatedProtocol,
+            String proxyServer,
+            long receivedByteCount) {
+    */
+    // 
+    var func_CronetUrlRequest_onRedirectReceived = cls_CronetUrlRequest.onRedirectReceived
+    console.log("func_CronetUrlRequest_onRedirectReceived=" + func_CronetUrlRequest_onRedirectReceived)
+    if (func_CronetUrlRequest_onRedirectReceived) {
+      func_CronetUrlRequest_onRedirectReceived.implementation = function (newLocation, httpStatusCode, httpStatusText, headers, wasCached, negotiatedProtocol, proxyServer, receivedByteCount) {
+        var funcName = "CronetUrlRequest.onRedirectReceived"
+        var funcParaDict = {
+          "newLocation": newLocation,
+          "httpStatusCode": httpStatusCode,
+          "httpStatusText": httpStatusText,
+          "headers": headers,
+          "wasCached": wasCached,
+          "negotiatedProtocol": negotiatedProtocol,
+          "proxyServer": proxyServer,
+          "receivedByteCount": receivedByteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onRedirectReceived(newLocation, httpStatusCode, httpStatusText, headers, wasCached, negotiatedProtocol, proxyServer, receivedByteCount)
+      }
+    }
+
+    /* private void onResponseStarted(
+            int httpStatusCode,
+            String httpStatusText,
+            String[] headers,
+            boolean wasCached,
+            String negotiatedProtocol,
+            String proxyServer,
+            long receivedByteCount) {
+    */
+    // 
+    var func_CronetUrlRequest_onResponseStarted = cls_CronetUrlRequest.onResponseStarted
+    console.log("func_CronetUrlRequest_onResponseStarted=" + func_CronetUrlRequest_onResponseStarted)
+    if (func_CronetUrlRequest_onResponseStarted) {
+      func_CronetUrlRequest_onResponseStarted.implementation = function (httpStatusCode, httpStatusText, headers, wasCached, negotiatedProtocol, proxyServer, receivedByteCount) {
+        var funcName = "CronetUrlRequest.onResponseStarted"
+        var funcParaDict = {
+          "httpStatusCode": httpStatusCode,
+          "httpStatusText": httpStatusText,
+          "headers": headers,
+          "wasCached": wasCached,
+          "negotiatedProtocol": negotiatedProtocol,
+          "proxyServer": proxyServer,
+          "receivedByteCount": receivedByteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onResponseStarted(httpStatusCode, httpStatusText, headers, wasCached, negotiatedProtocol, proxyServer, receivedByteCount)
+      }
+    }
+
+    /* private void onReadCompleted(
+            final ByteBuffer byteBuffer,
+            int bytesRead,
+            int initialPosition,
+            int initialLimit,
+            long receivedByteCount) {
+    */
+    // 
+    var func_CronetUrlRequest_onReadCompleted = cls_CronetUrlRequest.onReadCompleted
+    console.log("func_CronetUrlRequest_onReadCompleted=" + func_CronetUrlRequest_onReadCompleted)
+    if (func_CronetUrlRequest_onReadCompleted) {
+      func_CronetUrlRequest_onReadCompleted.implementation = function (byteBuffer, bytesRead, initialPosition, initialLimit, receivedByteCount) {
+        var funcName = "CronetUrlRequest.onReadCompleted"
+        var funcParaDict = {
+          "byteBuffer": byteBuffer,
+          "bytesRead": bytesRead,
+          "initialPosition": initialPosition,
+          "initialLimit": initialLimit,
+          "receivedByteCount": receivedByteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onReadCompleted(byteBuffer, bytesRead, initialPosition, initialLimit, receivedByteCount)
+      }
+    }
+
+    // private void onSucceeded(long receivedByteCount) {
+    // 
+    var func_CronetUrlRequest_onSucceeded = cls_CronetUrlRequest.onSucceeded
+    console.log("func_CronetUrlRequest_onSucceeded=" + func_CronetUrlRequest_onSucceeded)
+    if (func_CronetUrlRequest_onSucceeded) {
+      func_CronetUrlRequest_onSucceeded.implementation = function (receivedByteCount) {
+        var funcName = "CronetUrlRequest.onSucceeded"
+        var funcParaDict = {
+          "receivedByteCount": receivedByteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onSucceeded(receivedByteCount)
+      }
+    }
+
+    /* private void onError(
+            int errorCode,
+            int nativeError,
+            int nativeQuicError,
+            @ConnectionCloseSource int source,
+            String errorString,
+            long receivedByteCount) {
+    */
+    // 
+    var func_CronetUrlRequest_onError = cls_CronetUrlRequest.onError
+    console.log("func_CronetUrlRequest_onError=" + func_CronetUrlRequest_onError)
+    if (func_CronetUrlRequest_onError) {
+      func_CronetUrlRequest_onError.implementation = function (errorCode, nativeError, nativeQuicError, source, errorString, receivedByteCount) {
+        var funcName = "CronetUrlRequest.onError"
+        var funcParaDict = {
+          "errorCode": errorCode,
+          "nativeError": nativeError,
+          "nativeQuicError": nativeQuicError,
+          "source": source,
+          "errorString": errorString,
+          "receivedByteCount": receivedByteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onError(errorCode, nativeError, nativeQuicError, source, errorString, receivedByteCount)
+      }
+    }
+
+    // private void onCanceled() {
+    // 
+    var func_CronetUrlRequest_onCanceled = cls_CronetUrlRequest.onCanceled
+    console.log("func_CronetUrlRequest_onCanceled=" + func_CronetUrlRequest_onCanceled)
+    if (func_CronetUrlRequest_onCanceled) {
+      func_CronetUrlRequest_onCanceled.implementation = function () {
+        var funcName = "CronetUrlRequest.onCanceled"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onCanceled()
+      }
+    }
+
+    /* private void onStatus(
+            final VersionSafeCallbacks.UrlRequestStatusListener listener, final int loadState) {
+    */
+    // 
+    var func_CronetUrlRequest_onStatus = cls_CronetUrlRequest.onStatus
+    console.log("func_CronetUrlRequest_onStatus=" + func_CronetUrlRequest_onStatus)
+    if (func_CronetUrlRequest_onStatus) {
+      func_CronetUrlRequest_onStatus.implementation = function (listener, loadState) {
+        var funcName = "CronetUrlRequest.onStatus"
+        var funcParaDict = {
+          "listener": listener,
+          "loadState": loadState,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onStatus(listener, loadState)
+      }
+    }
+
+    /* private void onMetricsCollected(
+            long requestStartMs,
+            long dnsStartMs,
+            long dnsEndMs,
+            long connectStartMs,
+            long connectEndMs,
+            long sslStartMs,
+            long sslEndMs,
+            long sendingStartMs,
+            long sendingEndMs,
+            long pushStartMs,
+            long pushEndMs,
+            long responseStartMs,
+            long requestEndMs,
+            boolean socketReused,
+            long sentByteCount,
+            long receivedByteCount,
+            boolean quicConnectionMigrationAttempted,
+            boolean quicConnectionMigrationSuccessful) {
+    */
+    // 
+    var func_CronetUrlRequest_onMetricsCollected = cls_CronetUrlRequest.onMetricsCollected
+    console.log("func_CronetUrlRequest_onMetricsCollected=" + func_CronetUrlRequest_onMetricsCollected)
+    if (func_CronetUrlRequest_onMetricsCollected) {
+      func_CronetUrlRequest_onMetricsCollected.implementation = function (requestStartMs, dnsStartMs, dnsEndMs, connectStartMs, connectEndMs, sslStartMs, sslEndMs, sendingStartMs, sendingEndMs, pushStartMs, pushEndMs, responseStartMs, requestEndMs, socketReused, sentByteCount, receivedByteCount, quicConnectionMigrationAttempted, quicConnectionMigrationSuccessful) {
+        var funcName = "CronetUrlRequest.onMetricsCollected"
+        var funcParaDict = {
+          "requestStartMs": requestStartMs,
+          "dnsStartMs": dnsStartMs,
+          "dnsEndMs": dnsEndMs,
+          "connectStartMs": connectStartMs,
+          "connectEndMs": connectEndMs,
+          "sslStartMs": sslStartMs,
+          "sslEndMs": sslEndMs,
+          "sendingStartMs": sendingStartMs,
+          "sendingEndMs": sendingEndMs,
+          "pushStartMs": pushStartMs,
+          "pushEndMs": pushEndMs,
+          "responseStartMs": responseStartMs,
+          "requestEndMs": requestEndMs,
+          "socketReused": socketReused,
+          "sentByteCount": sentByteCount,
+          "receivedByteCount": receivedByteCount,
+          "quicConnectionMigrationAttempted": quicConnectionMigrationAttempted,
+          "quicConnectionMigrationSuccessful": quicConnectionMigrationSuccessful,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onMetricsCollected(requestStartMs, dnsStartMs, dnsEndMs, connectStartMs, connectEndMs, sslStartMs, sslEndMs, sendingStartMs, sendingEndMs, pushStartMs, pushEndMs, responseStartMs, requestEndMs, socketReused, sentByteCount, receivedByteCount, quicConnectionMigrationAttempted, quicConnectionMigrationSuccessful)
+      }
+    }
+
+    // private void onNativeAdapterDestroyed() {
+    // 
+    var func_CronetUrlRequest_onNativeAdapterDestroyed = cls_CronetUrlRequest.onNativeAdapterDestroyed
+    console.log("func_CronetUrlRequest_onNativeAdapterDestroyed=" + func_CronetUrlRequest_onNativeAdapterDestroyed)
+    if (func_CronetUrlRequest_onNativeAdapterDestroyed) {
+      func_CronetUrlRequest_onNativeAdapterDestroyed.implementation = function () {
+        var funcName = "CronetUrlRequest.onNativeAdapterDestroyed"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.onNativeAdapterDestroyed()
+      }
+    }
+
+    // void checkCallingThread() {
+    // 
+    var func_CronetUrlRequest_checkCallingThread = cls_CronetUrlRequest.checkCallingThread
+    console.log("func_CronetUrlRequest_checkCallingThread=" + func_CronetUrlRequest_checkCallingThread)
+    if (func_CronetUrlRequest_checkCallingThread) {
+      func_CronetUrlRequest_checkCallingThread.implementation = function () {
+        var funcName = "CronetUrlRequest.checkCallingThread"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.checkCallingThread()
+      }
+    }
+
+    // private int mapUrlRequestErrorToApiErrorCode(int errorCode) {
+    // 
+    var func_CronetUrlRequest_mapUrlRequestErrorToApiErrorCode = cls_CronetUrlRequest.mapUrlRequestErrorToApiErrorCode
+    console.log("func_CronetUrlRequest_mapUrlRequestErrorToApiErrorCode=" + func_CronetUrlRequest_mapUrlRequestErrorToApiErrorCode)
+    if (func_CronetUrlRequest_mapUrlRequestErrorToApiErrorCode) {
+      func_CronetUrlRequest_mapUrlRequestErrorToApiErrorCode.implementation = function (errorCode) {
+        var funcName = "CronetUrlRequest.mapUrlRequestErrorToApiErrorCode"
+        var funcParaDict = {
+          "errorCode": errorCode,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retInt = this.mapUrlRequestErrorToApiErrorCode(errorCode)
+        console.log(funcName + " => retInt=" + retInt)
+        return retInt
+      }
+    }
+
+    // private CronetTrafficInfo buildCronetTrafficInfo() {
+    // 
+    var func_CronetUrlRequest_buildCronetTrafficInfo = cls_CronetUrlRequest.buildCronetTrafficInfo
+    console.log("func_CronetUrlRequest_buildCronetTrafficInfo=" + func_CronetUrlRequest_buildCronetTrafficInfo)
+    if (func_CronetUrlRequest_buildCronetTrafficInfo) {
+      func_CronetUrlRequest_buildCronetTrafficInfo.implementation = function () {
+        var funcName = "CronetUrlRequest.buildCronetTrafficInfo"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retCronetTrafficInfo = this.buildCronetTrafficInfo()
+        console.log(funcName + " => retCronetTrafficInfo=" + retCronetTrafficInfo)
+        return retCronetTrafficInfo
+      }
+    }
+
+    // private void maybeReportMetrics() {
+    // 
+    var func_CronetUrlRequest_maybeReportMetrics = cls_CronetUrlRequest.maybeReportMetrics
+    console.log("func_CronetUrlRequest_maybeReportMetrics=" + func_CronetUrlRequest_maybeReportMetrics)
+    if (func_CronetUrlRequest_maybeReportMetrics) {
+      func_CronetUrlRequest_maybeReportMetrics.implementation = function () {
+        var funcName = "CronetUrlRequest.maybeReportMetrics"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.maybeReportMetrics()
+      }
+    }
   }
 
 }
