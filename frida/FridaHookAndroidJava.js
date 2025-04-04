@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250328
+	Updated: 20250401
 */
 
 // Frida hook common Android/Java class
@@ -1640,7 +1640,7 @@ class FridaHookAndroidJava {
         var funcName = "Bundle_0p"
         var funcParaDict = {}
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var newBundle_0p = this.$init()
         console.log("Bundle_0p => newBundle_0p=" + newBundle_0p)
@@ -1767,7 +1767,7 @@ class FridaHookAndroidJava {
           "key": key,
         }
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retParcelable_1pk = this.getParcelable(key)
         console.log("Bundle.getParcelable_1pk => retParcelable_1pk=" + retParcelable_1pk)
@@ -1930,7 +1930,7 @@ class FridaHookAndroidJava {
           "value": value,
         }
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         return this.putParcelable(key, value)
       }
@@ -2030,7 +2030,8 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         return this.remove(key)
       }
@@ -2366,7 +2367,7 @@ class FridaHookAndroidJava {
           "key": key,
         }
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retString_1pk = this.getString(key)
         console.log("BaseBundle.getString_1pk => retString_1pk=" + retString_1pk)
@@ -2626,7 +2627,7 @@ class FridaHookAndroidJava {
         var funcName = "Message.obtain_0p"
         var funcParaDict = {}
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retMessage_0p = this.obtain()
         console.log("Message.obtain_0p => retMessage_0p=" + retMessage_0p)
@@ -2645,7 +2646,7 @@ class FridaHookAndroidJava {
           "data": data,
         }
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         return this.setData(data)
       }
@@ -2775,7 +2776,7 @@ class FridaHookAndroidJava {
           "action": action,
         }
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retIntent = this.setAction(action)
         console.log("Intent.setAction => retIntent=" + retIntent)
@@ -2900,7 +2901,7 @@ class FridaHookAndroidJava {
         var funcName = "Intent.getAction"
         var funcParaDict = {}
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        console.log(FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict))
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retAction = this.getAction()
         console.log("Intent.getAction => retAction=" + retAction)
@@ -3323,15 +3324,10 @@ class FridaHookAndroidJava {
 
   }
 
-  // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
-  static CronetUrlRequest() {
-    var clsName_CronetUrlRequest = "org.chromium.net.impl.CronetUrlRequest"
-    FridaAndroidUtil.printClassAllMethodsFields(clsName_CronetUrlRequest)
-
-    var cls_CronetUrlRequest = Java.use(clsName_CronetUrlRequest)
-    console.log("cls_CronetUrlRequest=" + cls_CronetUrlRequest)
-
+  static CronetUrlRequest_origCode(cls_CronetUrlRequest) {
     
+    // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
+
     /* CronetUrlRequest(
             CronetUrlRequestContext requestContext,
             String url,
@@ -4040,6 +4036,18 @@ class FridaHookAndroidJava {
         return this.maybeReportMetrics()
       }
     }
+
+  }
+
+  static CronetUrlRequest() {
+    var clsName_CronetUrlRequest = "org.chromium.net.impl.CronetUrlRequest"
+    FridaAndroidUtil.updateClassLoader(clsName_CronetUrlRequest)
+    FridaAndroidUtil.printClassAllMethodsFields(clsName_CronetUrlRequest)
+
+    var cls_CronetUrlRequest = Java.use(clsName_CronetUrlRequest)
+    console.log("cls_CronetUrlRequest=" + cls_CronetUrlRequest)
+
+    FridaHookAndroidJava.CronetUrlRequest_origCode(cls_CronetUrlRequest)
   }
 
 }

@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250326
+	Updated: 20250329
 */
 
 // Frida Android Util
@@ -44,6 +44,8 @@ class FridaAndroidUtil {
   static clsName_HttpURLConnectionImpl        = "com.android.okhttp.internal.huc.HttpURLConnectionImpl"
   static clsName_DelegatingHttpsURLConnection = "com.android.okhttp.internal.huc.DelegatingHttpsURLConnection"
   static clsName_HttpsURLConnectionImpl       = "com.android.okhttp.internal.huc.HttpsURLConnectionImpl"
+
+  static clsName_CronetUrlRequest             = "org.chromium.net.impl.CronetUrlRequest"
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -147,6 +149,35 @@ class FridaAndroidUtil {
     var isClsHttpsURLConnectionImpl = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_HttpsURLConnectionImpl)
     console.log("curObj=" + curObj + " -> isClsHttpsURLConnectionImpl=" + isClsHttpsURLConnectionImpl)
     return isClsHttpsURLConnectionImpl
+  }
+
+  // org.chromium.net.impl.CronetUrlRequest
+  // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
+  static printClass_CronetUrlRequest(inputObj){
+    if (inputObj) {
+      // var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_CronetUrlRequest)
+      // console.log("curObj=" + curObj)
+
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      var clsNameStr = "[" + curClsName + "]"
+
+      console.log("CronetUrlRequest:" + clsNameStr
+        + " mInitialUrl=" + curObj.mInitialUrl.value
+        + " mInitialMethod=" + curObj.mInitialMethod.value
+        + " mRequestHeaders=" + curObj.mRequestHeaders.value
+        + " mUploadDataStream=" + curObj.mUploadDataStream.value
+        + " mRequestContext=" + curObj.mRequestContext.value
+        + " mNetworkHandle=" + curObj.mNetworkHandle.value
+        + " mPriority=" + curObj.mPriority.value
+        + " mStarted=" + curObj.mStarted.value
+        + " mDisableCache=" + curObj.mDisableCache.value
+      )
+    } else {
+      console.log("CronetUrlRequest: null")
+    }
   }
 
   // android.os.Messenger
@@ -1324,6 +1355,48 @@ class FridaAndroidUtil {
 
     // console.log("foundOverloadFunc=" + foundOverloadFunc)
     return foundOverloadFunc
+  }
+
+  static findClassLoader(className){
+    var foundClassLoader = null
+
+    const classLoaders = Java.enumerateClassLoadersSync()
+    // console.log("classLoaders=" + classLoaders + ", type=" + (typeof classLoaders))
+
+    for (const loaderIdx in classLoaders) {
+      var curClassLoader = classLoaders[loaderIdx]
+      // var loaderClsName = FridaAndroidUtil.getJavaClassName(curClassLoader)
+      // console.log(`[${loaderIdx}] loaderClsName=${loaderClsName}, curClassLoader=${curClassLoader}`)
+
+      try {
+        if (curClassLoader.findClass(className)){
+          // console.log(`Found ${className} in loader ${curClassLoader}`)
+          // Found org.chromium.net.impl.CronetUrlRequest in loader dalvik.system.DelegateLastClassLoader[DexPathList[[zip file "/data/user_de/0/com.google.android.gms/app_chimera/m/00000013/CronetDynamite.apk"],nativeLibraryDirectories=[/data/user_de/0/com.google.android.gms/app_chimera/m/00000013/CronetDynamite.apk!/lib/arm64-v8a, /system/lib64, /system_ext/lib64]]]
+          foundClassLoader = curClassLoader
+          break
+        }
+      } catch (err){
+        // console.log(`${err}`)
+      }
+    }
+
+    // console.log(`findClassLoader: className=${className} => foundClassLoader=${foundClassLoader}`)
+    return foundClassLoader
+  }
+
+  static setClassLoder(newClassLoader){
+    // var oldClassLoader = Java.classFactory.loader
+    // console.log(`oldClassLoader=${oldClassLoader}`)
+    Java.classFactory.loader = newClassLoader
+    console.log(`Set ClassLoader to ${newClassLoader}`)
+  }
+
+  static updateClassLoader(className){
+    var foundClassLoader = FridaAndroidUtil.findClassLoader(className)
+    // console.log(`foundClassLoader=${foundClassLoader}`)
+    if(foundClassLoader) {
+      FridaAndroidUtil.setClassLoder(foundClassLoader)
+    }
   }
 
 }
