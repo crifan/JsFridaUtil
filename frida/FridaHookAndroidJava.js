@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250401
+	Updated: 20250404
 */
 
 // Frida hook common Android/Java class
@@ -508,41 +508,41 @@ class FridaHookAndroidJava {
     var cls_PackageManager = Java.use(className_PackageManager)
     console.log("cls_PackageManager=" + cls_PackageManager)
 
-    // // Note: Xiaomi8 not exist: getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager$ApplicationInfoFlags')
-    // // public ApplicationInfo getApplicationInfo(String packageName, PackageManager.ApplicationInfoFlags flags)
-    // // public android.content.pm.ApplicationInfo android.content.pm.PackageManager.getApplicationInfo(java.lang.String,android.content.pm.PackageManager$ApplicationInfoFlags) throws android.content.pm.PackageManager$NameNotFoundException
-    // // var func_PackageManager_getApplicationInfo = cls_PackageManager.getApplicationInfo
-    // var func_PackageManager_getApplicationInfo = cls_PackageManager.getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager$ApplicationInfoFlags')
-    // // var func_PackageManager_getApplicationInfo = cls_PackageManager.getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager.ApplicationInfoFlags')
-    // console.log("func_PackageManager_getApplicationInfo=" + func_PackageManager_getApplicationInfo)
-    // if (func_PackageManager_getApplicationInfo) {
-    //   func_PackageManager_getApplicationInfo.implementation = function (packageName, flags) {
-    //     var funcName = "PackageManager.getApplicationInfo(packageName,flags)"
-    //     var funcParaDict = {
-    //       "packageName": packageName,
-    //       "flags": flags,
-    //     }
+    // Note: Xiaomi8 not exist: getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager$ApplicationInfoFlags')
+    // public ApplicationInfo getApplicationInfo(String packageName, PackageManager.ApplicationInfoFlags flags)
+    // public android.content.pm.ApplicationInfo android.content.pm.PackageManager.getApplicationInfo(java.lang.String,android.content.pm.PackageManager$ApplicationInfoFlags) throws android.content.pm.PackageManager$NameNotFoundException
+    // var func_PackageManager_getApplicationInfo = cls_PackageManager.getApplicationInfo
+    var func_PackageManager_getApplicationInfo = cls_PackageManager.getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager$ApplicationInfoFlags')
+    // var func_PackageManager_getApplicationInfo = cls_PackageManager.getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager.ApplicationInfoFlags')
+    console.log("func_PackageManager_getApplicationInfo=" + func_PackageManager_getApplicationInfo)
+    if (func_PackageManager_getApplicationInfo) {
+      func_PackageManager_getApplicationInfo.implementation = function (packageName, flags) {
+        var funcName = "PackageManager.getApplicationInfo(packageName,flags)"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
 
-    //     var retAppInfo = this.getApplicationInfo(packageName, flags)
+        var retAppInfo = this.getApplicationInfo(packageName, flags)
 
-    //     var isMatch = false
-    //     if (null != PackageManager_getApplicationInfo){
-    //       isMatch = PackageManager_getApplicationInfo(packageName)
-    //     }
+        var isMatch = false
+        if (null != PackageManager_getApplicationInfo){
+          isMatch = PackageManager_getApplicationInfo(packageName)
+        }
 
-    //     if (isMatch){
-    //       FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        if (isMatch){
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-    //       // do hook bypass
-    //       retAppInfo = ApplicationInfo()
-    //     } else {
-    //       // no hook
-    //     }
+          // do hook bypass
+          retAppInfo = ApplicationInfo()
+        } else {
+          // no hook
+        }
 
-    //     console.log("retAppInfo=" + retAppInfo)
-    //     return retAppInfo
-    //   }
-    // }
+        console.log("retAppInfo=" + retAppInfo)
+        return retAppInfo
+      }
+    }
 
     // public abstract ApplicationInfo getApplicationInfo (String packageName, int flags)
     // public abstract android.content.pm.ApplicationInfo android.content.pm.PackageManager.getApplicationInfo(java.lang.String,int) throws android.content.pm.PackageManager$NameNotFoundException
@@ -574,6 +574,45 @@ class FridaHookAndroidJava {
 
         console.log("retAppInfo_abstract=" + retAppInfo_abstract)
         return retAppInfo_abstract
+      }
+    }
+
+
+    // abstract PackageInfo getPackageInfo(String packageName, int flags)
+    // public abstract android.content.pm.PackageInfo android.content.pm.PackageManager.getPackageInfo(java.lang.String,int) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_PackageManager_getPackageInfo_2psi = cls_PackageManager.getPackageInfo.overload('java.lang.String', 'int')
+    console.log("func_PackageManager_getPackageInfo_2psi=" + func_PackageManager_getPackageInfo_2psi)
+    if (func_PackageManager_getPackageInfo_2psi) {
+      func_PackageManager_getPackageInfo_2psi.implementation = function (packageName, flags) {
+        var funcName = "PackageManager.getPackageInfo_2psi"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPackageInfo_2psi = this.getPackageInfo(packageName, flags)
+        console.log(funcName + " => retPackageInfo_2psi=" + retPackageInfo_2psi)
+        return retPackageInfo_2psi
+      }
+    }
+
+    // PackageInfo getPackageInfo(String packageName, PackageManager.PackageInfoFlags flags)
+    // public android.content.pm.PackageInfo android.content.pm.PackageManager.getPackageInfo(java.lang.String,android.content.pm.PackageManager$PackageInfoFlags) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_PackageManager_getPackageInfo_2ppf = cls_PackageManager.getPackageInfo.overload('java.lang.String', 'android.content.pm.PackageManager$PackageInfoFlags')
+    console.log("func_PackageManager_getPackageInfo_2ppf=" + func_PackageManager_getPackageInfo_2ppf)
+    if (func_PackageManager_getPackageInfo_2ppf) {
+      func_PackageManager_getPackageInfo_2ppf.implementation = function (packageName, flags) {
+        var funcName = "PackageManager.getPackageInfo_2ppf"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPackageInfo_2ppf = this.getPackageInfo(packageName, flags)
+        console.log(funcName + " => retPackageInfo_2ppf=" + retPackageInfo_2ppf)
+        return retPackageInfo_2ppf
       }
     }
 
@@ -4042,12 +4081,88 @@ class FridaHookAndroidJava {
   static CronetUrlRequest() {
     var clsName_CronetUrlRequest = "org.chromium.net.impl.CronetUrlRequest"
     FridaAndroidUtil.updateClassLoader(clsName_CronetUrlRequest)
-    FridaAndroidUtil.printClassAllMethodsFields(clsName_CronetUrlRequest)
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_CronetUrlRequest)
 
     var cls_CronetUrlRequest = Java.use(clsName_CronetUrlRequest)
     console.log("cls_CronetUrlRequest=" + cls_CronetUrlRequest)
 
     FridaHookAndroidJava.CronetUrlRequest_origCode(cls_CronetUrlRequest)
+  }
+
+  static UUID() {
+    var clsName_UUID = "java.util.UUID"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_UUID)
+
+    var cls_UUID = Java.use(clsName_UUID)
+    console.log("cls_UUID=" + cls_UUID)
+
+    
+    // UUID(long mostSigBits, long leastSigBits)
+    // 
+    var func_UUID_ctor_2pll = cls_UUID.$init.overload('long', 'long')
+    console.log("func_UUID_ctor_2pll=" + func_UUID_ctor_2pll)
+    if (func_UUID_ctor_2pll) {
+      func_UUID_ctor_2pll.implementation = function (mostSigBits, leastSigBits) {
+        var funcName = "UUID(long,long)"
+        var funcParaDict = {
+          "mostSigBits": mostSigBits,
+          "leastSigBits": leastSigBits,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newUUID = this.$init(mostSigBits, leastSigBits)
+        console.log(funcName + " => newUUID=" + newUUID)
+        return newUUID
+      }
+    }
+
+    // long getLeastSignificantBits()
+    // 
+    var func_UUID_getLeastSignificantBits = cls_UUID.getLeastSignificantBits
+    console.log("func_UUID_getLeastSignificantBits=" + func_UUID_getLeastSignificantBits)
+    if (func_UUID_getLeastSignificantBits) {
+      func_UUID_getLeastSignificantBits.implementation = function () {
+        var funcName = "UUID.getLeastSignificantBits"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retLeastSignificantBits = this.getLeastSignificantBits()
+        console.log(funcName + " => retLeastSignificantBits=" + retLeastSignificantBits)
+        return retLeastSignificantBits
+      }
+    }
+
+    // long getMostSignificantBits()
+    // 
+    var func_UUID_getMostSignificantBits = cls_UUID.getMostSignificantBits
+    console.log("func_UUID_getMostSignificantBits=" + func_UUID_getMostSignificantBits)
+    if (func_UUID_getMostSignificantBits) {
+      func_UUID_getMostSignificantBits.implementation = function () {
+        var funcName = "UUID.getMostSignificantBits"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retMostSignificantBits = this.getMostSignificantBits()
+        console.log(funcName + " => retMostSignificantBits=" + retMostSignificantBits)
+        return retMostSignificantBits
+      }
+    }
+
+    // static UUID randomUUID()
+    // 
+    var func_UUID_randomUUID = cls_UUID.randomUUID
+    console.log("func_UUID_randomUUID=" + func_UUID_randomUUID)
+    if (func_UUID_randomUUID) {
+      func_UUID_randomUUID.implementation = function () {
+        var funcName = "UUID.randomUUID"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retUUID = this.randomUUID()
+        console.log(funcName + " => retUUID=" + retUUID)
+        return retUUID
+      }
+    }
   }
 
 }
