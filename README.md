@@ -1,6 +1,6 @@
 # JsFridaUtil
 
-* Update: `20241211`
+* Update: `20250404`
 
 ## Function
 
@@ -31,6 +31,14 @@ JS and Frida Util functions
       * Hook
         * Native
           * [FridaHookiOSNative.js](https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookiOSNative.js)
+
+### Tools
+
+#### FridaJsSyncWithFridaUtil
+
+* `tools/syncCode/FridaJsSyncWithFridaUtil.py`
+  * auto sync to latest code between FridaUtil and HookJs
+    * readme: `tools/syncCode/README.md`
 
 ## Usage
 
