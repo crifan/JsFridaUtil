@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250329
+	Updated: 20250409
 */
 
 // Frida Android Util
@@ -59,6 +59,8 @@ class FridaAndroidUtil {
   static JavaByteArr = null
   static JavaObjArr = null
 
+  static StandardCharsets = null
+
   // https://source.android.com/docs/core/runtime/dex-format?hl=zh-cn
   // https://cmrodriguez.me/blog/methods/
   static FridaDexTypeMapppingDict = {
@@ -109,7 +111,10 @@ class FridaAndroidUtil {
       console.log("FridaAndroidUtil.JavaByteArr=" + FridaAndroidUtil.JavaByteArr)
       // var JavaObjArr = Java.use("[Ljava.lang.Object")
       FridaAndroidUtil.JavaObjArr = Java.use("[Ljava.lang.Object;")
-      console.log("FridaAndroidUtil.JavaObjArr=" + FridaAndroidUtil.JavaObjArr)  
+      console.log("FridaAndroidUtil.JavaObjArr=" + FridaAndroidUtil.JavaObjArr)
+      
+      FridaAndroidUtil.StandardCharsets = Java.use("java.nio.charset.StandardCharsets")
+      console.log("FridaAndroidUtil.StandardCharsets=" + FridaAndroidUtil.StandardCharsets)
     } else {
       console.warn("FridaAndroidUtil: Non Android platfrom, no need init Android related")
     }
@@ -793,7 +798,6 @@ class FridaAndroidUtil {
   }
 
   /* print detail of JNINativeMethod:
-
     typedef struct {
       const char* name;
       const char* signature;
@@ -878,7 +882,6 @@ class FridaAndroidUtil {
 
   }
 
-  // java byte array to js byte array
   static javaByteArrToJsByteArr(javaByteArr){
     // var javaByteArrLen = javaByteArr.length
     // console.log("javaByteArrLen=" + javaByteArrLen) // javaByteArrLen=undefined
@@ -896,13 +899,40 @@ class FridaAndroidUtil {
     return jsByteArr
   }
 
-  // java array/list (byte array / List<Integer> )to string
+  // java ArrayList (byte array / List<Integer> / ArrayList<Map.Entry<String, String>> ) to string
   static javaArrayListToStr(javaArraryList){
-    var jsArrayList = FridaAndroidUtil.javaByteArrToJsByteArr(javaArraryList)
-    console.log("jsArrayList=" + jsArrayList)
-    var jsArrayListStr = jsArrayList.toString()
-    console.log("jsArrayListStr=" + jsArrayListStr)
-    return jsArrayListStr
+    // var jsArrayList = FridaAndroidUtil.javaByteArrToJsByteArr(javaArraryList)
+    // console.log("jsArrayList=" + jsArrayList)
+    // var jsArrayListStr = jsArrayList.toString()
+    // console.log("jsArrayListStr=" + jsArrayListStr)
+    // return jsArrayListStr
+
+    var javaObjList = javaArraryList.toArray()
+    console.log("javaObjList=" +  javaObjList)
+    var javaObjListStr = javaObjList.toString()
+    console.log("javaObjListStr=" +  javaObjListStr)
+    return javaObjListStr
+  }
+
+  // java ByteBuffer to String
+  static javaByteBufferToStr(byteBufer, isFlip=true){
+    // console.log(`javaByteBufferToStr: byteBufer=${byteBufer}`)
+    // javaByteBufferToStr: byteBufer=java.nio.DirectByteBuffer[pos=793 lim=16375 cap=16375]
+    if(isFlip){
+      byteBufer.flip() // rewind to start position
+      console.log(`after flip: ${byteBufer}`)
+      // after java.nio.DirectByteBuffer[pos=0 lim=793 cap=16375] flip
+    }
+    // var utf8CharBuffer = FridaAndroidUtil.StandardCharsets.UTF_8.decode(byteBufer)
+    // var charsetUtf8 = FridaAndroidUtil.StandardCharsets.UTF_8
+    var charsetUtf8 = FridaAndroidUtil.StandardCharsets.UTF_8.value
+    // console.log("charsetUtf8=" + charsetUtf8)
+    // charsetUtf8=UTF-8
+    var utf8CharBuffer = charsetUtf8.decode(byteBufer)
+    // console.log("utf8CharBuffer=" + utf8CharBuffer)
+    var utf8BufStr = utf8CharBuffer.toString()
+    // console.log("utf8BufStr=" + utf8BufStr)
+    return utf8BufStr
   }
 
   // get java class name from clazz
@@ -1229,26 +1259,52 @@ class FridaAndroidUtil {
     console.log(functionCallStr)
   }
 
+  // generate function call and stack string
+  static genFunctionCallAndStack(funcName, funcParaDict, isPrintDelimiter=true){
+    // console.log(`funcName=${funcName}, funcParaDict=${funcParaDict}, isPrintDelimiter=${isPrintDelimiter}`)
+    var functionCallAndStackStr = ""
+
+    var functionCallStr = FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict)
+
+    var stackStr = FridaAndroidUtil.genStackStr(funcName)
+
+    var delimiterStr = ""
+    if(isPrintDelimiter){
+      var delimiterFuncName = funcName
+      const LineMaxSize = 80
+      // const LineMaxSize = 120
+      // const LineMaxSize = 160
+      if (funcName.length > LineMaxSize) {
+        // ConnectionsManager.init(version,layer,apiId,deviceModel,systemVersion,appVersion,langCode,systemLangCode,configPath,logPath,regId,cFingerprint,timezoneOffset,userId,userPremium,enablePushConnection) -> ConnectionsManager.init
+        // var shortFuncName = funcName.replace('/([\w\.\:]+)\(.+\)/', "$1")
+        var shortFuncName = funcName.replace(/([\w\.\:]+)\(.+\)/, "$1")
+        // console.log("shortFuncName=" + shortFuncName)
+        delimiterFuncName = shortFuncName
+      }
+      // JsUtil.logStr(delimiterFuncName)
+      delimiterStr = JsUtil.generateLineStr(delimiterFuncName, true, "=", LineMaxSize)
+      delimiterStr = delimiterStr + "\n"
+      // console.log("delimiterStr=" + delimiterStr)
+    }
+
+    var functionCallAndStackStr = `${delimiterStr}${functionCallStr}\n${stackStr}`
+    return functionCallAndStackStr
+  }
+
   // print Function call and stack trace string
-  // static printFunctionCallAndStack(funcName, funcParaDict, filterList=undefined){
-  static printFunctionCallAndStack(funcName, funcParaDict, filterList=undefined, isPrintDelimiter=true){
-    // console.log("filterList=" + filterList + ", isPrintDelimiter=" + isPrintDelimiter)
+  static printFunctionCallAndStack(funcName, funcParaDict, whiteList=undefined, isPrintDelimiter=true){
+    // console.log("whiteList=" + whiteList + ", isPrintDelimiter=" + isPrintDelimiter)
+
+    var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict, isPrintDelimiter)
 
     var needPrint = true
 
-    // var functionCallStr = this.genFunctionCallStr(funcName, funcParaDict)
-    var functionCallStr = FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict)
-
-    // var stackStr = this.genStackStr()
-    // var stackStr = FridaAndroidUtil.genStackStr()
-    var stackStr = FridaAndroidUtil.genStackStr(funcName)
-
-    if (filterList != undefined) {
+    if (whiteList != undefined) {
       needPrint = false
 
-      for (const curFilter of filterList) {
+      for (const curFilter of whiteList) {
         // console.log("curFilter=" + curFilter)
-        if (stackStr.includes(curFilter)) {
+        if (funcCallAndStackStr.includes(curFilter)) {
           needPrint = true
           // console.log("needPrint=" + needPrint)
           break
@@ -1257,29 +1313,7 @@ class FridaAndroidUtil {
     }
 
     if (needPrint) {
-      var delimiterStr = ""
-      if(isPrintDelimiter){
-        var delimiterFuncName = funcName
-        const LineMaxSize = 80
-        // const LineMaxSize = 120
-        // const LineMaxSize = 160
-        if (funcName.length > LineMaxSize) {
-          // ConnectionsManager.init(version,layer,apiId,deviceModel,systemVersion,appVersion,langCode,systemLangCode,configPath,logPath,regId,cFingerprint,timezoneOffset,userId,userPremium,enablePushConnection) -> ConnectionsManager.init
-          // var shorFuncName = funcName.replace('/([\w\.\:]+)\(.+\)/', "$1")
-          var shorFuncName = funcName.replace(/([\w\.\:]+)\(.+\)/, "$1")
-          // console.log("shorFuncName=" + shorFuncName)
-          delimiterFuncName = shorFuncName
-        }
-        // JsUtil.logStr(delimiterFuncName)
-        delimiterStr = JsUtil.generateLineStr(delimiterFuncName, true, "=", LineMaxSize)
-        delimiterStr = delimiterStr + "\n"
-        // console.log("delimiterStr=" + delimiterStr)
-      }
-
-      var functionCallAndStackStr = `${delimiterStr}${functionCallStr}\n${stackStr}`
-      // var functionCallAndStackStr = functionCallStr + "\n" + stackStr
-      // return functionCallAndStackStr
-      console.log(functionCallAndStackStr)
+      console.log(funcCallAndStackStr)
     }
   }
 
@@ -1380,7 +1414,7 @@ class FridaAndroidUtil {
       }
     }
 
-    // console.log(`findClassLoader: className=${className} => foundClassLoader=${foundClassLoader}`)
+    console.log(`findClassLoader: className=${className} => foundClassLoader=${foundClassLoader}`)
     return foundClassLoader
   }
 
@@ -1393,9 +1427,11 @@ class FridaAndroidUtil {
 
   static updateClassLoader(className){
     var foundClassLoader = FridaAndroidUtil.findClassLoader(className)
-    // console.log(`foundClassLoader=${foundClassLoader}`)
+    console.log(`foundClassLoader=${foundClassLoader}`)
     if(foundClassLoader) {
       FridaAndroidUtil.setClassLoder(foundClassLoader)
+    } else {
+      console.error(`Fail to find classLoader for ${className}`)
     }
   }
 

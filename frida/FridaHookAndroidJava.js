@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250404
+	Updated: 20250409
 */
 
 // Frida hook common Android/Java class
@@ -33,57 +33,6 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         return this.put(str, obj)
-      }
-    }
-
-  }
-
-  static String(callback_String_equals=null) {
-    /******************** java.lang.String ********************/
-    var className_String = "java.lang.String"
-    // FridaAndroidUtil.printClassAllMethodsFields(className_String)
-
-    var cls_String = Java.use(className_String)
-    console.log("cls_String=" + cls_String)
-
-    // public String(String original)
-    var func_String_ctor = cls_String.$init.overload('java.lang.String')
-    // var func_String_ctor = cls_String.getInstance.overload('java.lang.String')
-    // var func_String_ctor = cls_String.$new.overload('java.lang.String')
-    console.log("func_String_ctor=" + func_String_ctor)
-    if (func_String_ctor) {
-      func_String_ctor.implementation = function (original) {
-        var funcName = "String(orig)"
-        var funcParaDict = {
-          "original": original,
-        }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-        return this.$init(original)
-      }
-    }
-
-    // public boolean equals(Object anObject)
-    // public boolean java.lang.String.equals(java.lang.Object)
-    var func_String_equals = cls_String.equals
-    console.log("func_String_equals=" + func_String_equals)
-    if (func_String_equals) {
-      func_String_equals.implementation = function (anObject) {
-        var funcName = "String.equals(anObject)"
-        var funcParaDict = {
-          "anObject": anObject,
-        }
-
-        var isPrintStack = false
-        if(null != callback_String_equals) {
-          isPrintStack = callback_String_equals(anObject)
-        }
-
-        if(isPrintStack){
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
-
-        return this.equals(anObject)
       }
     }
 
@@ -294,68 +243,6 @@ class FridaHookAndroidJava {
     //     return newBuilder_req
     //   }
     // }
-
-  }
-
-  static File(callback_File_ctor_str=null) {
-    var className_File = "java.io.File"
-    // FridaAndroidUtil.printClassAllMethodsFields(className_File)
-
-    var cls_File = Java.use(className_File)
-    console.log("cls_File=" + cls_File)
-
-    // File(String pathname)
-    var func_File_ctor_path = cls_File.$init.overload('java.lang.String')
-    console.log("func_File_ctor_path=" + func_File_ctor_path)
-    if (func_File_ctor_path) {
-      func_File_ctor_path.implementation = function (pathname) {
-        var funcName = "File(pathname)"
-        var funcParaDict = {
-          "pathname": pathname,
-        }
-
-        var isMatch = false
-        if (null != callback_File_ctor_str){
-          isMatch = callback_File_ctor_str(pathname)
-        }
-
-        if (isMatch){
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
-
-        // tmp use previould check to bypass new File
-        // if (isMatch) {
-        //   // return null
-        //   pathname = "" // hook bypass return empty File by empty filename
-        // }
-
-        var retFile_ctor_path = this.$init(pathname)
-
-        // if (isMatch) {
-          console.log("pathname=" + pathname + " => retFile_ctor_path=" + retFile_ctor_path)
-        // }
-
-        return retFile_ctor_path
-      }
-    }
-
-    // public boolean exists ()
-    var func_File_exists = cls_File.exists
-    console.log("func_File_exists=" + func_File_exists)
-    if (func_File_exists) {
-      func_File_exists.implementation = function () {
-        var funcName = "File.exists()"
-        var funcParaDict = {
-        }
-
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-        var retBool_File_exists = this.exists()
-        var fileAbsPath = this.getAbsolutePath()
-        console.log("fileAbsPath=" + fileAbsPath + " => retBool_File_exists=" + retBool_File_exists)
-        return retBool_File_exists
-      }
-    }
 
   }
 
@@ -4163,6 +4050,417 @@ class FridaHookAndroidJava {
         return retUUID
       }
     }
+  }
+
+  static Context() {
+    var clsName_Context = "android.content.Context"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Context)
+
+    var cls_Context = Java.use(clsName_Context)
+    console.log("cls_Context=" + cls_Context)
+
+    
+    // public abstract SharedPreferences getSharedPreferences(String name, int mode)
+    // public abstract android.content.SharedPreferences android.content.Context.getSharedPreferences(java.lang.String,int)
+    var func_Context_getSharedPreferences_2psi = cls_Context.getSharedPreferences.overload('java.lang.String', 'int')
+    console.log("func_Context_getSharedPreferences_2psi=" + func_Context_getSharedPreferences_2psi)
+    if (func_Context_getSharedPreferences_2psi) {
+      func_Context_getSharedPreferences_2psi.implementation = function (name, mode) {
+        var funcName = "Context.getSharedPreferences_2psi"
+        var funcParaDict = {
+          "name": name,
+          "mode": mode,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retSharedPreferences_2psi = this.getSharedPreferences(name, mode)
+        console.log(funcName + " => retSharedPreferences_2psi=" + retSharedPreferences_2psi)
+        return retSharedPreferences_2psi
+      }
+    }
+
+    // public abstract FileInputStream openFileInput(String name)
+    // 
+    var func_Context_openFileInput = cls_Context.openFileInput
+    console.log("func_Context_openFileInput=" + func_Context_openFileInput)
+    if (func_Context_openFileInput) {
+      func_Context_openFileInput.implementation = function (name) {
+        var funcName = "Context.openFileInput"
+        var funcParaDict = {
+          "name": name,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retFileInputStream = this.openFileInput(name)
+        console.log(funcName + " => retFileInputStream=" + retFileInputStream)
+        return retFileInputStream
+      }
+    }
+
+    // public abstract File getDir(String name, int mode)
+    // 
+    var func_Context_getDir = cls_Context.getDir
+    console.log("func_Context_getDir=" + func_Context_getDir)
+    if (func_Context_getDir) {
+      func_Context_getDir.implementation = function (name, mode) {
+        var funcName = "Context.getDir"
+        var funcParaDict = {
+          "name": name,
+          "mode": mode,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retDir = this.getDir(name, mode)
+        console.log(funcName + " => retDir=" + retDir)
+        return retDir
+      }
+    }
+  }
+
+  static File(func_isShowLog=null) {
+    var className_File = "java.io.File"
+    // FridaAndroidUtil.printClassAllMethodsFields(className_File)
+
+    var cls_File = Java.use(className_File)
+    console.log("cls_File=" + cls_File)
+
+    // Error: File(): specified argument types do not match any of:
+    // .overload('java.lang.String')
+    // .overload('java.net.URI')
+    // .overload('java.io.File', 'java.lang.String')
+    // .overload('java.lang.String', 'int')
+    // .overload('java.lang.String', 'java.io.File')
+    // .overload('java.lang.String', 'java.lang.String')
+
+    // File(String pathname)
+    var func_File_ctor_1pp = cls_File.$init.overload('java.lang.String')
+    console.log("func_File_ctor_1pp=" + func_File_ctor_1pp)
+    if (func_File_ctor_1pp) {
+      func_File_ctor_1pp.implementation = function (pathname) {
+        var funcName = "File_1pp"
+        var funcParaDict = {
+          "pathname": pathname,
+        }
+
+        var isShowLog = true
+
+        if (null != func_isShowLog){
+          isShowLog = func_isShowLog(pathname)
+        }
+
+        if (isShowLog){
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        }
+
+        // // for debug: tmp use previould check to bypass new File
+        // pathname = "" // hook bypass return empty File by empty filename
+
+        var newFile_1pp = this.$init(pathname)
+        if (isShowLog) {
+          console.log(`${funcName}(${pathname}) => newFile_1pp=${newFile_1pp}`)
+        }
+        return newFile_1pp
+      }
+    }
+
+    // File(URI uri)
+    // 
+    var func_File_ctor_1pu = cls_File.$init.overload('java.net.URI')
+    console.log("func_File_ctor_1pu=" + func_File_ctor_1pu)
+    if (func_File_ctor_1pu) {
+      func_File_ctor_1pu.implementation = function (uri) {
+        var funcName = "File_1pu"
+        var funcParaDict = {
+          "uri": uri,
+        }
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+
+        var newFile_1pu = this.$init(uri)
+        console.log(funcName + " => newFile_1pu=" + newFile_1pu)
+        return newFile_1pu
+      }
+    }
+
+    // String getAbsolutePath()
+    // 
+    var func_File_getAbsolutePath = cls_File.getAbsolutePath
+    console.log("func_File_getAbsolutePath=" + func_File_getAbsolutePath)
+    if (func_File_getAbsolutePath) {
+      func_File_getAbsolutePath.implementation = function () {
+        var funcName = "File.getAbsolutePath"
+        var funcParaDict = {}
+
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var retAbsolutePath = this.getAbsolutePath()
+
+        var isShowLog = true
+
+        if(func_isShowLog != null){
+          var fullStr = funcCallAndStackStr + retAbsolutePath
+          isShowLog = func_isShowLog(fullStr)
+        }
+
+        if(isShowLog){
+          // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+          // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+          console.log(funcCallAndStackStr)
+  
+          console.log(funcName + " => retAbsolutePath=" + retAbsolutePath)
+        }
+
+        return retAbsolutePath
+      }
+    }
+
+    // File getParentFile()
+    // 
+    var func_File_getParentFile = cls_File.getParentFile
+    console.log("func_File_getParentFile=" + func_File_getParentFile)
+    if (func_File_getParentFile) {
+      func_File_getParentFile.implementation = function () {
+        var funcName = "File.getParentFile"
+        var funcParaDict = {}
+
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retParentFile = this.getParentFile()
+        
+        var isShowLog = true
+        if(func_isShowLog != null){
+          var fullStr = funcCallAndStackStr + retParentFile
+          isShowLog = func_isShowLog(fullStr)
+        }
+
+        if(isShowLog){
+          console.log(funcCallAndStackStr)
+          console.log(funcName + " => retParentFile=" + retParentFile)
+        }
+
+        return retParentFile
+      }
+    }
+
+    // public boolean exists()
+    // 
+    var func_File_exists = cls_File.exists
+    console.log("func_File_exists=" + func_File_exists)
+    if (func_File_exists) {
+      func_File_exists.implementation = function () {
+        var funcName = "File.exists"
+        var funcParaDict = {}
+
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var fileAbsPath = this.getAbsolutePath()
+
+        var isShowLog = true
+
+        if(func_isShowLog != null){
+          var fullStr = funcCallAndStackStr + fileAbsPath
+          isShowLog = func_isShowLog(fullStr)
+        }
+
+        if(isShowLog){
+          // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+          // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+          console.log(funcCallAndStackStr)
+        }
+        
+        var retBoolean = this.exists()
+
+        if(isShowLog){
+          console.log(funcName + " => retBoolean=" + retBoolean + ",  fileAbsPath=" + fileAbsPath)
+        }
+
+        return retBoolean
+      }
+    }
+
+  }
+
+  static String(func_isShowLog=null) {
+    /******************** java.lang.String ********************/
+    var className_String = "java.lang.String"
+    FridaAndroidUtil.printClassAllMethodsFields(className_String)
+
+    var cls_String = Java.use(className_String)
+    console.log("cls_String=" + cls_String)
+
+    // public String(String original)
+    var func_String_ctor = cls_String.$init.overload('java.lang.String')
+    // var func_String_ctor = cls_String.getInstance.overload('java.lang.String')
+    // var func_String_ctor = cls_String.$new.overload('java.lang.String')
+    console.log("func_String_ctor=" + func_String_ctor)
+    if (func_String_ctor) {
+      func_String_ctor.implementation = function (original) {
+        var funcName = "String(orig)"
+        var funcParaDict = {
+          "original": original,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.$init(original)
+      }
+    }
+
+    // String(byte[] bytes, Charset charset)
+    // 
+    var func_String_ctor_2pbc = cls_String.$init.overload('[B', 'java.nio.charset.Charset')
+    console.log("func_String_ctor_2pbc=" + func_String_ctor_2pbc)
+    if (func_String_ctor_2pbc) {
+      func_String_ctor_2pbc.implementation = function (bytes, charset) {
+        var funcName = "String(bytes,charset)"
+        var funcParaDict = {
+          "bytes": bytes,
+          "charset": charset,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newString_2pbc = this.$init(bytes, charset)
+        console.log(funcName + " => newString_2pbc=" + newString_2pbc)
+        return newString_2pbc
+      }
+    }
+
+    // String(byte[] bytes, String charsetName)
+    // 
+    var func_String_ctor_2pbs = cls_String.$init.overload('[B', 'java.lang.String')
+    console.log("func_String_ctor_2pbs=" + func_String_ctor_2pbs)
+    if (func_String_ctor_2pbs) {
+      func_String_ctor_2pbs.implementation = function (bytes, charsetName) {
+        var funcName = "String(bytes,charsetName)"
+        var funcParaDict = {
+          "bytes": bytes,
+          "charsetName": charsetName,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newString_2pbs = this.$init(bytes, charsetName)
+        console.log(funcName + " => newString_2pbs=" + newString_2pbs)
+        return newString_2pbs
+      }
+    }
+
+    // // public boolean equals(Object anObject)
+    // // public boolean java.lang.String.equals(java.lang.Object)
+    // var func_String_equals = cls_String.equals
+    // console.log("func_String_equals=" + func_String_equals)
+    // if (func_String_equals) {
+    //   func_String_equals.implementation = function (anObject) {
+    //     var funcName = "String.equals(anObject)"
+    //     var funcParaDict = {
+    //       "anObject": anObject,
+    //     }
+
+    //     var isPrintStack = false
+    //     if(null != callback_String_equals) {
+    //       isPrintStack = callback_String_equals(anObject)
+    //     }
+
+    //     if(isPrintStack){
+    //       FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+    //     }
+
+    //     return this.equals(anObject)
+    //   }
+    // }
+
+    // static String format(Locale l, String format, Object... args)
+    // public static java.lang.String java.lang.String.format(java.util.Locale,java.lang.String,java.lang.Object[])
+    var func_String_format_3plfa = cls_String.format.overload('java.util.Locale', 'java.lang.String', '[Ljava.lang.Object;')
+    console.log("func_String_format_3plfa=" + func_String_format_3plfa)
+    if (func_String_format_3plfa) {
+      func_String_format_3plfa.implementation = function (l, format, args) {
+        var funcName = "String.format_3plfa"
+        var funcParaDict = {
+          "l": l,
+          "format": format,
+          "args": args,
+        }
+
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_3plfa = this.format(l, format, args)
+
+        var isShowLog = true
+
+        if(func_isShowLog != null) {
+          isShowLog = func_isShowLog(retString_3plfa)
+          // isShowLog = func_isShowLog(format)
+        }
+
+        if (isShowLog){
+          // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+          // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)  
+        }
+
+        if (isShowLog){
+          console.log(funcCallAndStackStr)
+          console.log(funcName + " => retString_3plfa=" + retString_3plfa)
+        }
+
+        return retString_3plfa
+      }
+    }
+
+    // static String format(String format, Object... args)
+    // public static java.lang.String java.lang.String.format(java.lang.String,java.lang.Object[])
+    var func_String_format_2pfa = cls_String.format.overload('java.lang.String', '[Ljava.lang.Object;')
+    console.log("func_String_format_2pfa=" + func_String_format_2pfa)
+    if (func_String_format_2pfa) {
+      func_String_format_2pfa.implementation = function (format, args) {
+        var funcName = "String.format_2pfa"
+        var funcParaDict = {
+          "format": format,
+          "args": args,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_2pfa = this.format(format, args)
+        console.log(funcName + " => retString_2pfa=" + retString_2pfa)
+        return retString_2pfa
+      }
+    }
+
+    // String[] split(String regex)
+    // public java.lang.String[] java.lang.String.split(java.lang.String)
+    var func_String_split_1pr = cls_String.split.overload('java.lang.String')
+    console.log("func_String_split_1pr=" + func_String_split_1pr)
+    if (func_String_split_1pr) {
+      func_String_split_1pr.implementation = function (regex) {
+        var funcName = "String.split_1pr"
+        var funcParaDict = {
+          "regex": regex,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_1pr = this.split(regex)
+        console.log(funcName + " => retString_1pr=" + retString_1pr)
+        return retString_1pr
+      }
+    }
+
+    // static String valueOf(long l)
+    // public static java.lang.String java.lang.String.valueOf(long)
+    var func_String_valueOf_1pl = cls_String.valueOf.overload('long')
+    console.log("func_String_valueOf_1pl=" + func_String_valueOf_1pl)
+    if (func_String_valueOf_1pl) {
+      func_String_valueOf_1pl.implementation = function (l) {
+        var funcName = "String.valueOf_1pl"
+        var funcParaDict = {
+          "l": l,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_1pl = this.valueOf(l)
+        console.log(funcName + " => retString_1pl=" + retString_1pl)
+        return retString_1pl
+      }
+    }
+
   }
 
 }
