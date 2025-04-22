@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250409
+	Updated: 20250422
 */
 
 // Frida hook common Android/Java class
@@ -36,38 +36,6 @@ class FridaHookAndroidJava {
       }
     }
 
-  }
-
-  static URL(callback_isPrintStack_URL_init=null) {
-    var className_URL = "java.net.URL"
-    // FridaAndroidUtil.printClassAllMethodsFields(className_URL)
-
-    var cls_URL = Java.use(className_URL)
-    console.log("cls_URL=" + cls_URL)
-
-    // public URL(String url)
-    // var func_URL_init = cls_URL.$init
-    var func_URL_init = cls_URL.$init.overload('java.lang.String')
-    console.log("func_URL_init=" + func_URL_init)
-    if (func_URL_init) {
-      func_URL_init.implementation = function (url) {
-        var funcName = "URL(url)"
-        var funcParaDict = {
-          "url": url,
-        }
-
-        var isPrintStack = false
-        if (null != callback_isPrintStack_URL_init){
-          isPrintStack = callback_isPrintStack_URL_init(url)
-        }
-
-        if (isPrintStack){
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
-
-        return this.$init(url)
-      }
-    }
   }
 
   static HashMap(callback_isPrintStack_put=null, callback_isPrintStack_putAll=null, callback_isPrintStack_get=null) {
@@ -553,7 +521,7 @@ class FridaHookAndroidJava {
     console.log("cls_HttpURLConnection=" + cls_HttpURLConnection)
 
     
-    // abstract void    disconnect()
+    // abstract void disconnect()
     // public abstract void java.net.HttpURLConnection.disconnect()
     var func_HttpURLConnection_disconnect = cls_HttpURLConnection.disconnect
     console.log("func_HttpURLConnection_disconnect=" + func_HttpURLConnection_disconnect)
@@ -567,7 +535,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // InputStream    getErrorStream()
+    // InputStream getErrorStream()
     // public java.io.InputStream java.net.HttpURLConnection.getErrorStream()
     var func_HttpURLConnection_getErrorStream = cls_HttpURLConnection.getErrorStream
     console.log("func_HttpURLConnection_getErrorStream=" + func_HttpURLConnection_getErrorStream)
@@ -583,7 +551,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // static boolean    getFollowRedirects()
+    // static boolean getFollowRedirects()
     // public static boolean java.net.HttpURLConnection.getFollowRedirects()
     var func_HttpURLConnection_getFollowRedirects = cls_HttpURLConnection.getFollowRedirects
     console.log("func_HttpURLConnection_getFollowRedirects=" + func_HttpURLConnection_getFollowRedirects)
@@ -599,7 +567,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // String    getHeaderField(int n)
+    // String getHeaderField(int n)
     // public java.lang.String java.net.HttpURLConnection.getHeaderField(int)
     var func_HttpURLConnection_getHeaderField = cls_HttpURLConnection.getHeaderField
     console.log("func_HttpURLConnection_getHeaderField=" + func_HttpURLConnection_getHeaderField)
@@ -617,7 +585,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // long    getHeaderFieldDate(String name, long Default)
+    // long getHeaderFieldDate(String name, long Default)
     // public long java.net.HttpURLConnection.getHeaderFieldDate(java.lang.String,long)
     var func_HttpURLConnection_getHeaderFieldDate = cls_HttpURLConnection.getHeaderFieldDate
     console.log("func_HttpURLConnection_getHeaderFieldDate=" + func_HttpURLConnection_getHeaderFieldDate)
@@ -636,7 +604,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // String    getHeaderFieldKey(int n)
+    // String getHeaderFieldKey(int n)
     // public java.lang.String java.net.HttpURLConnection.getHeaderFieldKey(int)
     var func_HttpURLConnection_getHeaderFieldKey = cls_HttpURLConnection.getHeaderFieldKey
     console.log("func_HttpURLConnection_getHeaderFieldKey=" + func_HttpURLConnection_getHeaderFieldKey)
@@ -654,7 +622,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // boolean    getInstanceFollowRedirects()
+    // boolean getInstanceFollowRedirects()
     // public boolean java.net.HttpURLConnection.getInstanceFollowRedirects()
     var func_HttpURLConnection_getInstanceFollowRedirects = cls_HttpURLConnection.getInstanceFollowRedirects
     console.log("func_HttpURLConnection_getInstanceFollowRedirects=" + func_HttpURLConnection_getInstanceFollowRedirects)
@@ -670,7 +638,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // Permission    getPermission()
+    // Permission getPermission()
     // public java.security.Permission java.net.HttpURLConnection.getPermission() throws java.io.IOException
     var func_HttpURLConnection_getPermission = cls_HttpURLConnection.getPermission
     console.log("func_HttpURLConnection_getPermission=" + func_HttpURLConnection_getPermission)
@@ -686,7 +654,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // String    getRequestMethod()
+    // String getRequestMethod()
     // public java.lang.String java.net.HttpURLConnection.getRequestMethod()
     var func_HttpURLConnection_getRequestMethod = cls_HttpURLConnection.getRequestMethod
     console.log("func_HttpURLConnection_getRequestMethod=" + func_HttpURLConnection_getRequestMethod)
@@ -702,7 +670,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // int    getResponseCode()
+    // int getResponseCode()
     // public int java.net.HttpURLConnection.getResponseCode() throws java.io.IOException
     var func_HttpURLConnection_getResponseCode = cls_HttpURLConnection.getResponseCode
     console.log("func_HttpURLConnection_getResponseCode=" + func_HttpURLConnection_getResponseCode)
@@ -718,7 +686,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // String    getResponseMessage()
+    // String getResponseMessage()
     // public java.lang.String java.net.HttpURLConnection.getResponseMessage() throws java.io.IOException
     var func_HttpURLConnection_getResponseMessage = cls_HttpURLConnection.getResponseMessage
     console.log("func_HttpURLConnection_getResponseMessage=" + func_HttpURLConnection_getResponseMessage)
@@ -734,7 +702,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    setChunkedStreamingMode(int chunklen)
+    // void setChunkedStreamingMode(int chunklen)
     // public void java.net.HttpURLConnection.setChunkedStreamingMode(int)
     var func_HttpURLConnection_setChunkedStreamingMode = cls_HttpURLConnection.setChunkedStreamingMode
     console.log("func_HttpURLConnection_setChunkedStreamingMode=" + func_HttpURLConnection_setChunkedStreamingMode)
@@ -750,7 +718,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    setFixedLengthStreamingMode(int contentLength)
+    // void setFixedLengthStreamingMode(int contentLength)
     // public void java.net.HttpURLConnection.setFixedLengthStreamingMode(int)
     var func_HttpURLConnection_setFixedLengthStreamingMode = cls_HttpURLConnection.setFixedLengthStreamingMode.overload("int")
     console.log("func_HttpURLConnection_setFixedLengthStreamingMode=" + func_HttpURLConnection_setFixedLengthStreamingMode)
@@ -766,7 +734,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    setFixedLengthStreamingMode(long contentLength)
+    // void setFixedLengthStreamingMode(long contentLength)
     // public void java.net.HttpURLConnection.setFixedLengthStreamingMode(long)
     var func_HttpURLConnection_setFixedLengthStreamingMode = cls_HttpURLConnection.setFixedLengthStreamingMode.overload("long")
     console.log("func_HttpURLConnection_setFixedLengthStreamingMode=" + func_HttpURLConnection_setFixedLengthStreamingMode)
@@ -782,7 +750,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // static void    setFollowRedirects(boolean set)
+    // static void setFollowRedirects(boolean set)
     // public static void java.net.HttpURLConnection.setFollowRedirects(boolean)
     var func_HttpURLConnection_setFollowRedirects = cls_HttpURLConnection.setFollowRedirects
     console.log("func_HttpURLConnection_setFollowRedirects=" + func_HttpURLConnection_setFollowRedirects)
@@ -798,7 +766,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    setInstanceFollowRedirects(boolean followRedirects)
+    // void setInstanceFollowRedirects(boolean followRedirects)
     // public void java.net.HttpURLConnection.setInstanceFollowRedirects(boolean)
     var func_HttpURLConnection_setInstanceFollowRedirects = cls_HttpURLConnection.setInstanceFollowRedirects
     console.log("func_HttpURLConnection_setInstanceFollowRedirects=" + func_HttpURLConnection_setInstanceFollowRedirects)
@@ -814,7 +782,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // void    setRequestMethod(String method)
+    // void setRequestMethod(String method)
     // public void java.net.HttpURLConnection.setRequestMethod(java.lang.String) throws java.net.ProtocolException
     var func_HttpURLConnection_setRequestMethod = cls_HttpURLConnection.setRequestMethod
     console.log("func_HttpURLConnection_setRequestMethod=" + func_HttpURLConnection_setRequestMethod)
@@ -830,7 +798,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // abstract boolean    usingProxy()
+    // abstract boolean usingProxy()
     // public abstract boolean java.net.HttpURLConnection.usingProxy()
     var func_HttpURLConnection_usingProxy = cls_HttpURLConnection.usingProxy
     console.log("func_HttpURLConnection_usingProxy=" + func_HttpURLConnection_usingProxy)
@@ -845,6 +813,7 @@ class FridaHookAndroidJava {
         return retBoolean
       }
     }
+
   }
 
   static IOException() {
@@ -2612,14 +2581,14 @@ class FridaHookAndroidJava {
     }
   }
 
-  static Intent() {
+  static Intent(callback_isShowLog=null) {
     var clsName_Intent = "android.content.Intent"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_Intent)
 
     var cls_Intent = Java.use(clsName_Intent)
     console.log("cls_Intent=" + cls_Intent)
 
-    
+
     // public Intent()
     // 
     var func_Intent_Intent_0p = cls_Intent.$init.overload()
@@ -2673,7 +2642,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // Intent    setPackage(String packageName)
+    // Intent setPackage(String packageName)
     // public android.content.Intent android.content.Intent.setPackage(java.lang.String)
     var func_Intent_setPackage = cls_Intent.setPackage
     console.log("func_Intent_setPackage=" + func_Intent_setPackage)
@@ -2697,12 +2666,20 @@ class FridaHookAndroidJava {
     console.log("func_Intent_setAction=" + func_Intent_setAction)
     if (func_Intent_setAction) {
       func_Intent_setAction.implementation = function (action) {
-        var funcName = "Intent.setAction"
-        var funcParaDict = {
-          "action": action,
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(action)
         }
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+
+        if (isShowLog){
+          var funcName = "Intent.setAction"
+          var funcParaDict = {
+            "action": action,
+          }
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        } else {
+          FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+        }
 
         var retIntent = this.setAction(action)
         console.log("Intent.setAction => retIntent=" + retIntent)
@@ -2710,7 +2687,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // Intent    putExtras(Intent srcIntent)
+    // Intent putExtras(Intent srcIntent)
     // public android.content.Intent android.content.Intent.putExtras(android.content.Intent)
     var func_Intent_putExtras_1ps = cls_Intent.putExtras.overload("android.content.Intent")
     console.log("func_Intent_putExtras_1ps=" + func_Intent_putExtras_1ps)
@@ -2728,7 +2705,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // Intent    putExtras(Bundle extrasBundle)
+    // Intent putExtras(Bundle extrasBundle)
     // public android.content.Intent android.content.Intent.putExtras(android.os.Bundle)
     var func_Intent_putExtras_1pe = cls_Intent.putExtras.overload("android.os.Bundle")
     console.log("func_Intent_putExtras_1pe=" + func_Intent_putExtras_1pe)
@@ -2746,7 +2723,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // Intent    putExtra(String name, Parcelable value)
+    // Intent putExtra(String name, Parcelable value)
     // public android.content.Intent android.content.Intent.putExtra(java.lang.String,android.os.Parcelable)
     var func_Intent_putExtra_2pnv = cls_Intent.putExtra.overload("java.lang.String", "android.os.Parcelable")
     console.log("func_Intent_putExtra_2pnv=" + func_Intent_putExtra_2pnv)
@@ -2765,7 +2742,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // Intent    putExtra(String name, String value)
+    // Intent putExtra(String name, String value)
     // public android.content.Intent android.content.Intent.putExtra(java.lang.String,java.lang.String)
     var func_Intent_putExtra_2pnv = cls_Intent.putExtra.overload("java.lang.String", "java.lang.String")
     console.log("func_Intent_putExtra_2pnv=" + func_Intent_putExtra_2pnv)
@@ -2784,7 +2761,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // Bundle    getExtras()
+    // Bundle getExtras()
     // public android.os.Bundle android.content.Intent.getExtras()
     var func_Intent_getExtras = cls_Intent.getExtras
     console.log("func_Intent_getExtras=" + func_Intent_getExtras)
@@ -2800,7 +2777,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // String    getStringExtra(String name)
+    // String getStringExtra(String name)
     // public java.lang.String android.content.Intent.getStringExtra(java.lang.String)
     var func_Intent_getStringExtra = cls_Intent.getStringExtra
     console.log("func_Intent_getStringExtra=" + func_Intent_getStringExtra)
@@ -2818,22 +2795,31 @@ class FridaHookAndroidJava {
       }
     }
 
-    // String    getAction()
+    // String getAction()
     // public java.lang.String android.content.Intent.getAction()
     var func_Intent_getAction = cls_Intent.getAction
     console.log("func_Intent_getAction=" + func_Intent_getAction)
     if (func_Intent_getAction) {
       func_Intent_getAction.implementation = function () {
-        var funcName = "Intent.getAction"
-        var funcParaDict = {}
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(action)
+        }
+
+        if (isShowLog){
+          var funcName = "Intent.getAction"
+          var funcParaDict = {}
+          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+          } else {
+          FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+        }
 
         var retAction = this.getAction()
         console.log("Intent.getAction => retAction=" + retAction)
         return retAction
       }
     }
+
   }
 
   static Handler(callback_isShowLog=null) {
@@ -4284,7 +4270,7 @@ class FridaHookAndroidJava {
   static String(func_isShowLog=null) {
     /******************** java.lang.String ********************/
     var className_String = "java.lang.String"
-    FridaAndroidUtil.printClassAllMethodsFields(className_String)
+    // FridaAndroidUtil.printClassAllMethodsFields(className_String)
 
     var cls_String = Java.use(className_String)
     console.log("cls_String=" + cls_String)
@@ -4461,6 +4447,159 @@ class FridaHookAndroidJava {
       }
     }
 
+  }
+
+  static URL() {
+    var clsName_URL = "java.net.URL"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_URL)
+
+    var cls_URL = Java.use(clsName_URL)
+    console.log("cls_URL=" + cls_URL)
+
+    
+    // public URL(String spec)
+    // 
+    var func_URL_ctor_1ps = cls_URL.$init.overload('java.lang.String')
+    console.log("func_URL_ctor_1ps=" + func_URL_ctor_1ps)
+    if (func_URL_ctor_1ps) {
+      func_URL_ctor_1ps.implementation = function (spec) {
+        var funcName = "URL_1ps"
+        var funcParaDict = {
+          "spec": spec,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newURL_1ps = this.$init(spec)
+        console.log(funcName + " => newURL_1ps=" + newURL_1ps)
+        return newURL_1ps
+      }
+    }
+
+    // String getHost()
+    // 
+    var func_URL_getHost = cls_URL.getHost
+    console.log("func_URL_getHost=" + func_URL_getHost)
+    if (func_URL_getHost) {
+      func_URL_getHost.implementation = function () {
+        var funcName = "URL.getHost"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retHost = this.getHost()
+        console.log(funcName + " => retHost=" + retHost)
+        return retHost
+      }
+    }
+
+    // String getPath()
+    // 
+    var func_URL_getPath = cls_URL.getPath
+    console.log("func_URL_getPath=" + func_URL_getPath)
+    if (func_URL_getPath) {
+      func_URL_getPath.implementation = function () {
+        var funcName = "URL.getPath"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPath = this.getPath()
+        console.log(funcName + " => retPath=" + retPath)
+        return retPath
+      }
+    }
+
+    // int getPort()
+    // 
+    var func_URL_getPort = cls_URL.getPort
+    console.log("func_URL_getPort=" + func_URL_getPort)
+    if (func_URL_getPort) {
+      func_URL_getPort.implementation = function () {
+        var funcName = "URL.getPort"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPort = this.getPort()
+        console.log(funcName + " => retPort=" + retPort)
+        return retPort
+      }
+    }
+
+    // String getProtocol()
+    // 
+    var func_URL_getProtocol = cls_URL.getProtocol
+    console.log("func_URL_getProtocol=" + func_URL_getProtocol)
+    if (func_URL_getProtocol) {
+      func_URL_getProtocol.implementation = function () {
+        var funcName = "URL.getProtocol"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retProtocol = this.getProtocol()
+        console.log(funcName + " => retProtocol=" + retProtocol)
+        return retProtocol
+      }
+    }
+
+    // String getQuery()
+    // 
+    var func_URL_getQuery = cls_URL.getQuery
+    console.log("func_URL_getQuery=" + func_URL_getQuery)
+    if (func_URL_getQuery) {
+      func_URL_getQuery.implementation = function () {
+        var funcName = "URL.getQuery"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retQuery = this.getQuery()
+        console.log(funcName + " => retQuery=" + retQuery)
+        return retQuery
+      }
+    }
+
+  }
+
+  static GZIPOutputStream() {
+    var clsName_GZIPOutputStream = "java.util.zip.GZIPOutputStream"
+    FridaAndroidUtil.printClassAllMethodsFields(clsName_GZIPOutputStream)
+
+    var cls_GZIPOutputStream = Java.use(clsName_GZIPOutputStream)
+    console.log("cls_GZIPOutputStream=" + cls_GZIPOutputStream)
+
+    
+    // GZIPOutputStream(OutputStream out)
+    // 
+    var func_GZIPOutputStream_ctor_1po = cls_GZIPOutputStream.$init.overload('java.io.OutputStream')
+    console.log("func_GZIPOutputStream_ctor_1po=" + func_GZIPOutputStream_ctor_1po)
+    if (func_GZIPOutputStream_ctor_1po) {
+      func_GZIPOutputStream_ctor_1po.implementation = function (out) {
+        var funcName = "GZIPOutputStream_1po"
+        var funcParaDict = {
+          "out": out,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var newGZIPOutputStream_1po = this.$init(out)
+        console.log(funcName + " => newGZIPOutputStream_1po=" + newGZIPOutputStream_1po)
+        return newGZIPOutputStream_1po
+      }
+    }
+
+    // void write(byte[] buf, int off, int len)
+    // 
+    var func_GZIPOutputStream_write = cls_GZIPOutputStream.write
+    console.log("func_GZIPOutputStream_write=" + func_GZIPOutputStream_write)
+    if (func_GZIPOutputStream_write) {
+      func_GZIPOutputStream_write.implementation = function (buf, off, len) {
+        var funcName = "GZIPOutputStream.write"
+        var funcParaDict = {
+          "buf": buf,
+          "off": off,
+          "len": len,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.write(buf, off, len)
+      }
+    }
   }
 
 }
