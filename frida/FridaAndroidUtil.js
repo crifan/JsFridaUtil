@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250409
+	Updated: 20250428
 */
 
 // Frida Android Util
@@ -46,6 +46,7 @@ class FridaAndroidUtil {
   static clsName_HttpsURLConnectionImpl       = "com.android.okhttp.internal.huc.HttpsURLConnectionImpl"
 
   static clsName_CronetUrlRequest             = "org.chromium.net.impl.CronetUrlRequest"
+  static clsName_ByteArrayOutputStream        = "java.io.ByteArrayOutputStream"
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -60,6 +61,7 @@ class FridaAndroidUtil {
   static JavaObjArr = null
 
   static StandardCharsets = null
+  static ByteArrayOutputStream = null
 
   // https://source.android.com/docs/core/runtime/dex-format?hl=zh-cn
   // https://cmrodriguez.me/blog/methods/
@@ -115,6 +117,9 @@ class FridaAndroidUtil {
       
       FridaAndroidUtil.StandardCharsets = Java.use("java.nio.charset.StandardCharsets")
       console.log("FridaAndroidUtil.StandardCharsets=" + FridaAndroidUtil.StandardCharsets)
+
+      FridaAndroidUtil.ByteArrayOutputStream = Java.use(FridaAndroidUtil.clsName_ByteArrayOutputStream)
+      console.log("FridaAndroidUtil.ByteArrayOutputStream=" + FridaAndroidUtil.ByteArrayOutputStream)
     } else {
       console.warn("FridaAndroidUtil: Non Android platfrom, no need init Android related")
     }
@@ -157,8 +162,8 @@ class FridaAndroidUtil {
   }
 
   // org.chromium.net.impl.CronetUrlRequest
-  // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
   static printClass_CronetUrlRequest(inputObj){
+    // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
     if (inputObj) {
       // var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_CronetUrlRequest)
       // console.log("curObj=" + curObj)
@@ -186,8 +191,8 @@ class FridaAndroidUtil {
   }
 
   // android.os.Messenger
-  // https://developer.android.com/reference/android/os/Messenger
   static printClass_Messenger(inputObj){
+    // https://developer.android.com/reference/android/os/Messenger
     if (inputObj) {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Messenger)
       // console.log("curObj=" + curObj)
@@ -207,8 +212,8 @@ class FridaAndroidUtil {
   }
 
   // android.os.Message
-  // https://developer.android.com/reference/android/os/Message
   static printClass_Message(inputObj, caller=""){
+    // https://developer.android.com/reference/android/os/Message
     if (inputObj) {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Message)
       // console.log("curObj=" + curObj)
@@ -245,8 +250,8 @@ class FridaAndroidUtil {
   }
 
   // java.net.URLConnection
-  // https://cs.android.com/android/platform/superproject/main/+/main:libcore/ojluni/src/main/java/java/net/URLConnection.java;drc=bd205f23c74d7498c9958d2bfa8622aacfe59517;l=161
   static printClass_URLConnection(inputObj){
+    // https://cs.android.com/android/platform/superproject/main/+/main:libcore/ojluni/src/main/java/java/net/URLConnection.java;drc=bd205f23c74d7498c9958d2bfa8622aacfe59517;l=161
     if (inputObj) {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_URLConnection)
       // console.log("curObj=" + curObj)
@@ -521,6 +526,53 @@ class FridaAndroidUtil {
       console.log("curClsName=" + curClsName)
 
       console.log("Unrecognized URLConnectionImpl class: " + curObj + ", curClsName=" + curClsName)
+    }
+  }
+
+  // com.android.okhttp.okio.Buffer
+  static printClass_Buffer(inputObj){
+    // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okio/okio/src/main/java/okio/Buffer.java
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      var clsNameStr = "[" + curClsName + "]"
+
+      var byteArray = curObj.readByteArray()
+
+      console.log("Buffer:" + clsNameStr
+        // + " size=" + curObj.size.value
+        + " size=" + curObj._size.value
+        + " head=" + curObj.head.value
+        + " toString()=" + curObj.toString()
+        + " byteArray=" + byteArray
+      )
+    } else {
+      console.log("Buffer: null")
+    }
+  }
+
+  // com.android.okhttp.internal.http.RetryableSink
+  static printClass_RetryableSink(inputObj){
+    // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okhttp/src/main/java/com/squareup/okhttp/internal/http/RetryableSink.java
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+      var clsNameStr = "[" + curClsName + "]"
+
+      console.log("RetryableSink:" + clsNameStr
+        + " closed=" + curObj.closed.value
+        + " limit=" + curObj.limit.value
+        + " contentLength()=" + curObj.contentLength()
+        + " content=" + curObj.content.value
+      )
+
+      FridaAndroidUtil.printClass_Buffer(curObj.content.value)
+    } else {
+      console.log("RetryableSink: null")
     }
   }
 
@@ -1399,8 +1451,8 @@ class FridaAndroidUtil {
 
     for (const loaderIdx in classLoaders) {
       var curClassLoader = classLoaders[loaderIdx]
-      // var loaderClsName = FridaAndroidUtil.getJavaClassName(curClassLoader)
-      // console.log(`[${loaderIdx}] loaderClsName=${loaderClsName}, curClassLoader=${curClassLoader}`)
+      var loaderClsName = FridaAndroidUtil.getJavaClassName(curClassLoader)
+      console.log(`[${loaderIdx}] loaderClsName=${loaderClsName}, curClassLoader=${curClassLoader}`)
 
       try {
         if (curClassLoader.findClass(className)){

@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250422
+	Updated: 20250427
 */
 
 // Frida hook common Android/Java class
@@ -953,7 +953,9 @@ class FridaHookAndroidJava {
         var funcParaDict = {}
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        return this.connect()
+        this.connect()
+
+        return
       }
     }
 
@@ -1330,9 +1332,38 @@ class FridaHookAndroidJava {
         var funcParaDict = {}
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var retResponse = this.getResponse()
-        console.log("HttpURLConnectionImpl.getResponse => retResponse=" + retResponse)
-        return retResponse
+        var curHttpEngine = this.getResponse()
+        console.log("HttpURLConnectionImpl.getResponse => curHttpEngine=" + curHttpEngine)
+
+        // var reqBodyOutStream = curHttpEngine.requestBodyOut.value
+        // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
+        // var reqBodyOutStream = this.requestBodyOut
+        var retryableSink = curHttpEngine.getRequestBody()
+        var clsName_RetryableSink = FridaAndroidUtil.getJavaClassName(retryableSink)
+        console.log("retryableSink=" + retryableSink + ", clsName=" + clsName_RetryableSink)
+        // retryableSink=[object Object], clsName=com.android.okhttp.internal.http.RetryableSink
+        // FridaAndroidUtil.printClassAllMethodsFields(clsName_RetryableSink)
+
+        var curRequest = curHttpEngine.getRequest()
+        console.log("curRequest=" + curRequest + ", clsName=" + FridaAndroidUtil.getJavaClassName(curRequest))
+
+        // var sinkContentLen = retryableSink.contentLength()
+        // console.log("sinkContentLen=" + sinkContentLen)
+        // var sinkClosed = retryableSink.closed.value
+        // var sinkLimit = retryableSink.limit.value
+        // console.log("sinkClosed=" + sinkClosed + ", sinkLimit=" + sinkLimit)
+        // var sinkContent = retryableSink.content.value
+        // console.log("sinkContent=" + sinkContent + ", clsName=" + FridaAndroidUtil.getJavaClassName(sinkContent))
+
+        FridaAndroidUtil.printClass_RetryableSink(retryableSink)
+
+        // var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
+        // console.log("newBaos=" + newBaos + ", clsName=" + FridaAndroidUtil.getJavaClassName(newBaos))
+        // newBaos.writeTo(retryableSink)
+        // var reqBodyByteArr = newBaos.toByteArray()
+        // console.log("reqBodyByteArr=" + reqBodyByteArr + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyByteArr))
+
+        return curHttpEngine
       }
     }
 
@@ -1398,6 +1429,35 @@ class FridaHookAndroidJava {
 
         var retResponseCode = this.getResponseCode()
         console.log("HttpURLConnectionImpl.getResponseCode => retResponseCode=" + retResponseCode)
+
+        // get request body data
+        var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
+        console.log("newBaos=" + newBaos + ", clsName=" + FridaAndroidUtil.getJavaClassName(newBaos))
+
+        // var reqBodyOutStream = this.getOutputStream()
+        // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
+        // newBaos.writeTo(reqBodyOutStream)
+
+        var reqBodyRbs = this.getOutputStream() // RealBufferedSink
+        console.log("reqBodyRbs=" + reqBodyRbs + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbs))
+
+        // var reqBodyRbsOutStream = reqBodyRbs.outputStream() // OutputStream
+        // console.log("reqBodyRbsOutStream=" + reqBodyRbsOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbsOutStream))
+        // newBaos.writeTo(reqBodyRbsOutStream)
+
+        var rbsSize = reqBodyRbs.size
+        console.log("rbsSize=" + rbsSize)
+        var rbsBuffer = reqBodyRbs.buffer
+        console.log("rbsBuffer=" + rbsBuffer + ", clsName=" + FridaAndroidUtil.getJavaClassName(rbsBuffer))
+
+        var okBufferSize = rbsBuffer.size
+        console.log("okBufferSize=" + okBufferSize)
+        var okBufferHead = rbsBuffer.head
+        console.log("okBufferHead=" + okBufferHead + ", clsName=" + FridaAndroidUtil.getJavaClassName(okBufferHead))
+
+        var reqBodyByteArr = newBaos.toByteArray()
+        console.log("reqBodyByteArr=" + reqBodyByteArr + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyByteArr))
+
         return retResponseCode
       }
     }
@@ -4559,7 +4619,7 @@ class FridaHookAndroidJava {
 
   static GZIPOutputStream() {
     var clsName_GZIPOutputStream = "java.util.zip.GZIPOutputStream"
-    FridaAndroidUtil.printClassAllMethodsFields(clsName_GZIPOutputStream)
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_GZIPOutputStream)
 
     var cls_GZIPOutputStream = Java.use(clsName_GZIPOutputStream)
     console.log("cls_GZIPOutputStream=" + cls_GZIPOutputStream)
@@ -4584,7 +4644,7 @@ class FridaHookAndroidJava {
     }
 
     // void write(byte[] buf, int off, int len)
-    // 
+    // public synchronized void java.util.zip.GZIPOutputStream.write(byte[],int,int) throws java.io.IOException
     var func_GZIPOutputStream_write = cls_GZIPOutputStream.write
     console.log("func_GZIPOutputStream_write=" + func_GZIPOutputStream_write)
     if (func_GZIPOutputStream_write) {
@@ -4600,6 +4660,567 @@ class FridaHookAndroidJava {
         return this.write(buf, off, len)
       }
     }
+
+    // void	finish()
+    // public void java.util.zip.GZIPOutputStream.finish() throws java.io.IOException
+    var func_GZIPOutputStream_finish = cls_GZIPOutputStream.finish
+    console.log("func_GZIPOutputStream_finish=" + func_GZIPOutputStream_finish)
+    if (func_GZIPOutputStream_finish) {
+      func_GZIPOutputStream_finish.implementation = function () {
+        var funcName = "GZIPOutputStream.finish"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var crc = this.crc.vaue
+        console.log(funcName + ": crc=" + crc)
+
+        return this.finish()
+      }
+    }
+
+    // void	close()
+    // 
+    var func_GZIPOutputStream_close = cls_GZIPOutputStream.close
+    console.log("func_GZIPOutputStream_close=" + func_GZIPOutputStream_close)
+    if (func_GZIPOutputStream_close) {
+      func_GZIPOutputStream_close.implementation = function () {
+        var funcName = "GZIPOutputStream.close"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var crc = this.crc.vaue
+        console.log(funcName + ": crc=" + crc)
+
+        return this.close()
+      }
+    }
+
+  }
+
+  static DeflaterOutputStream() {
+    var clsName_DeflaterOutputStream = "java.util.zip.DeflaterOutputStream"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_DeflaterOutputStream)
+
+    var cls_DeflaterOutputStream = Java.use(clsName_DeflaterOutputStream)
+    console.log("cls_DeflaterOutputStream=" + cls_DeflaterOutputStream)
+
+    // void	close()
+    // public void java.util.zip.DeflaterOutputStream.close() throws java.io.IOException
+    var func_DeflaterOutputStream_close = cls_DeflaterOutputStream.close
+    console.log("func_DeflaterOutputStream_close=" + func_DeflaterOutputStream_close)
+    if (func_DeflaterOutputStream_close) {
+      func_DeflaterOutputStream_close.implementation = function () {
+        var funcName = "DeflaterOutputStream.close"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var buffer = this.buf.vaue
+        console.log(funcName + ": buffer=" + buffer)
+        var deflater = this.def.vaue
+        console.log(funcName + ": deflater=" + deflater)
+
+        // var copiedDos = this.clone()
+        // console.log("DeflaterOutputStream: copiedDos=" + copiedDos)
+        // if (copiedDos){
+        //   var copiedDosBuf = copiedDos.buf
+        //   console.log("DeflaterOutputStream: copiedDosBuf=" + copiedDosBuf)
+        //   if(copiedDosBuf){
+        //     var buffer = copiedDosBuf.value
+        //     console.log("DeflaterOutputStream: buffer=" + buffer)
+        //   }
+        //   var copiedDosDef = copiedDos.def
+        //   console.log("DeflaterOutputStream: copiedDosDef=" + copiedDosDef)
+        //   if(copiedDosDef){
+        //     var deflater = copiedDosDef.value
+        //     console.log("DeflaterOutputStream: deflater=" + deflater)  
+        //   }
+        // }
+
+        return this.close()
+      }
+    }
+
+    // protected void	deflate()
+    // protected void java.util.zip.DeflaterOutputStream.deflate() throws java.io.IOException
+    var func_DeflaterOutputStream_deflate = cls_DeflaterOutputStream.deflate
+    console.log("func_DeflaterOutputStream_deflate=" + func_DeflaterOutputStream_deflate)
+    if (func_DeflaterOutputStream_deflate) {
+      func_DeflaterOutputStream_deflate.implementation = function () {
+        var funcName = "DeflaterOutputStream.deflate"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var buffer = this.buf.vaue
+        console.log(funcName + ": buffer=" + buffer)
+        var deflater = this.def.vaue
+        console.log(funcName + ": deflater=" + deflater)
+
+        return this.deflate()
+      }
+    }
+
+    // void	finish()
+    // public void java.util.zip.DeflaterOutputStream.finish() throws java.io.IOException
+    var func_DeflaterOutputStream_finish = cls_DeflaterOutputStream.finish
+    console.log("func_DeflaterOutputStream_finish=" + func_DeflaterOutputStream_finish)
+    if (func_DeflaterOutputStream_finish) {
+      func_DeflaterOutputStream_finish.implementation = function () {
+        var funcName = "DeflaterOutputStream.finish"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var buffer = this.buf.vaue
+        console.log(funcName + ": buffer=" + buffer)
+        var deflater = this.def.vaue
+        console.log(funcName + ": deflater=" + deflater)
+
+        return this.finish()
+      }
+    }
+
+    // void	flush()
+    // public void java.util.zip.DeflaterOutputStream.flush() throws java.io.IOException
+    var func_DeflaterOutputStream_flush = cls_DeflaterOutputStream.flush
+    console.log("func_DeflaterOutputStream_flush=" + func_DeflaterOutputStream_flush)
+    if (func_DeflaterOutputStream_flush) {
+      func_DeflaterOutputStream_flush.implementation = function () {
+        var funcName = "DeflaterOutputStream.flush"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var buffer = this.buf.vaue
+        console.log(funcName + ": buffer=" + buffer)
+        var deflater = this.def.vaue
+        console.log(funcName + ": deflater=" + deflater)
+
+        return this.flush()
+      }
+    }
+
+  }
+
+  static BufferedOutputStream() {
+    var clsName_BufferedOutputStream = "java.io.BufferedOutputStream"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_BufferedOutputStream)
+
+    var cls_BufferedOutputStream = Java.use(clsName_BufferedOutputStream)
+    console.log("cls_BufferedOutputStream=" + cls_BufferedOutputStream)
+
+    // void write(int b)
+    // public synchronized void java.io.BufferedOutputStream.write(int) throws java.io.IOException
+    var func_BufferedOutputStream_write_1pi = cls_BufferedOutputStream.write.overload('int')
+    console.log("func_BufferedOutputStream_write_1pi=" + func_BufferedOutputStream_write_1pi)
+    if (func_BufferedOutputStream_write_1pi) {
+      func_BufferedOutputStream_write_1pi.implementation = function (b) {
+        var funcName = "BufferedOutputStream.write_1pi"
+        var funcParaDict = {
+          "b": b,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + ": curBufStr=" + curBufStr)
+
+        var buf = this.buf.value
+        console.log(funcName + ": buf=" + buf)
+        var count = this.count.value
+        console.log(funcName + ": count=" + count)
+
+        return this.write(b)
+      }
+    }
+
+    // void write(byte[] b, int off, int len)
+    // public synchronized void java.io.BufferedOutputStream.write(byte[],int,int) throws java.io.IOException
+    var func_BufferedOutputStream_write_3pbii = cls_BufferedOutputStream.write.overload('[B', 'int', 'int')
+    console.log("func_BufferedOutputStream_write_3pbii=" + func_BufferedOutputStream_write_3pbii)
+    if (func_BufferedOutputStream_write_3pbii) {
+      func_BufferedOutputStream_write_3pbii.implementation = function (b, off, len) {
+        var funcName = "BufferedOutputStream.write_3pbii"
+        var funcParaDict = {
+          "b": b,
+          "off": off,
+          "len": len,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + ": curBufStr=" + curBufStr)
+
+        var buf = this.buf.value
+        console.log(funcName + ": buf=" + buf)
+        var count = this.count.value
+        console.log(funcName + ": count=" + count)
+
+        return this.write(b, off, len)
+      }
+    }
+
+    // void flush()
+    // public synchronized void java.io.BufferedOutputStream.flush() throws java.io.IOException
+    var func_BufferedOutputStream_flush = cls_BufferedOutputStream.flush
+    console.log("func_BufferedOutputStream_flush=" + func_BufferedOutputStream_flush)
+    if (func_BufferedOutputStream_flush) {
+      func_BufferedOutputStream_flush.implementation = function () {
+        var funcName = "BufferedOutputStream.flush"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log("before " + funcName + ": curBufStr=" + curBufStr)
+        
+        var buf = this.buf.value
+        console.log("before " + funcName + ": buf=" + buf)
+        var count = this.count.value
+        console.log("before " + funcName + ": count=" + count)
+
+        this.flush()
+
+        var curBufStr = this.toString()
+        console.log("after  " + funcName + ": curBufStr=" + curBufStr)
+        
+        var buf = this.buf.value
+        console.log("after  " + funcName + ": buf=" + buf)
+        var count = this.count.value
+        console.log("after  " + funcName + ": count=" + count)
+
+        return
+      }
+    }
+
+    // void	close()
+    // 
+    var func_BufferedOutputStream_close = cls_BufferedOutputStream.close
+    console.log("func_BufferedOutputStream_close=" + func_BufferedOutputStream_close)
+    if (func_BufferedOutputStream_close) {
+      func_BufferedOutputStream_close.implementation = function () {
+        var funcName = "BufferedOutputStream.close"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var buf = this.buf.value
+        console.log(funcName + " buf=" + buf)
+        var count = this.count.value
+        console.log(funcName + " count=" + count)
+
+        var curBufStr = this.toString()
+        console.log(funcName + " curBufStr=" + curBufStr)
+        
+        // var copiedBos = this.clone()
+        // console.log("BufferedOutputStream: copiedBos=" + copiedBos)
+        // if (copiedBos){
+        //   var copiedBosBuf = copiedBos.buf
+        //   console.log("BufferedOutputStream: copiedBosBuf=" + copiedBosBuf)
+        //   if(copiedBosBuf){
+        //     var buffer = copiedBosBuf.value
+        //     console.log("BufferedOutputStream: buffer=" + buffer)
+        //   }
+        //   var copiedBosCount = copiedBos.count
+        //   console.log("BufferedOutputStream: copiedBosCount=" + copiedBosCount)
+        //   if(copiedBosCount){
+        //     var count = copiedBosCount.value
+        //     console.log("BufferedOutputStream: count=" + count)  
+        //   }
+        // }
+
+        return this.close()
+      }
+    }
+
+  }
+
+  static FilterOutputStream() {
+    var clsName_FilterOutputStream = "java.io.FilterOutputStream"
+    FridaAndroidUtil.printClassAllMethodsFields(clsName_FilterOutputStream)
+
+    var cls_FilterOutputStream = Java.use(clsName_FilterOutputStream)
+    console.log("cls_FilterOutputStream=" + cls_FilterOutputStream)
+
+    // void	close()
+    // public void java.io.FilterOutputStream.close() throws java.io.IOException
+    var func_FilterOutputStream_close = cls_FilterOutputStream.close
+    console.log("func_FilterOutputStream_close=" + func_FilterOutputStream_close)
+    if (func_FilterOutputStream_close) {
+      func_FilterOutputStream_close.implementation = function () {
+        var funcName = "FilterOutputStream.close"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + " curBufStr=" + curBufStr)
+        var outStream = this.out.value
+        console.log(funcName + " outStream=" + outStream)
+        // FilterOutputStream.close outStream=buffer(com.android.okhttp.internal.http.RetryableSink@d96946b).outputStream()
+
+        return this.close()
+      }
+    }
+
+    // void	flush()
+    // public void java.io.FilterOutputStream.flush() throws java.io.IOException
+    var func_FilterOutputStream_flush = cls_FilterOutputStream.flush
+    console.log("func_FilterOutputStream_flush=" + func_FilterOutputStream_flush)
+    if (func_FilterOutputStream_flush) {
+      func_FilterOutputStream_flush.implementation = function () {
+        var funcName = "FilterOutputStream.flush"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + ": curBufStr=" + curBufStr)
+        var outStream = this.out.value
+        console.log(funcName + ": outStream=" + outStream)
+
+        return this.close()
+      }
+    }
+
+  }
+
+  static RetryableSink() {
+    var clsName_RetryableSink = "com.android.okhttp.internal.http.RetryableSink"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_RetryableSink)
+
+    var cls_RetryableSink = Java.use(clsName_RetryableSink)
+    console.log("cls_RetryableSink=" + cls_RetryableSink)
+
+    // @Override public void close() throws IOException {
+    // public void com.android.okhttp.internal.http.RetryableSink.close() throws java.io.IOException
+    var func_RetryableSink_close = cls_RetryableSink.close
+    console.log("func_RetryableSink_close=" + func_RetryableSink_close)
+    if (func_RetryableSink_close) {
+      func_RetryableSink_close.implementation = function () {
+        var funcName = "RetryableSink.close"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        FridaAndroidUtil.printClass_RetryableSink(this)
+
+        return this.close()
+      }
+    }
+
+    // @Override public void write(Buffer source, long byteCount) throws IOException {
+    // public void com.android.okhttp.internal.http.RetryableSink.write(com.android.okhttp.okio.Buffer,long) throws java.io.IOException
+    var func_RetryableSink_write = cls_RetryableSink.write
+    console.log("func_RetryableSink_write=" + func_RetryableSink_write)
+    if (func_RetryableSink_write) {
+      func_RetryableSink_write.implementation = function (source, byteCount) {
+        var funcName = "RetryableSink.write"
+        var funcParaDict = {
+          "source": source,
+          "byteCount": byteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var content = this.content.value
+        console.log(funcName + " content=" + content)
+
+        return this.write(source, byteCount)
+      }
+    }
+
+    // @Override public void flush() throws IOException {
+    // public void com.android.okhttp.internal.http.RetryableSink.flush() throws java.io.IOException
+    var func_RetryableSink_flush = cls_RetryableSink.flush
+    console.log("func_RetryableSink_flush=" + func_RetryableSink_flush)
+    if (func_RetryableSink_flush) {
+      func_RetryableSink_flush.implementation = function () {
+        var funcName = "RetryableSink.flush"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var content = this.content.value
+        console.log(funcName + " content=" + content)
+
+        return this.flush()
+      }
+    }
+
+    // public long contentLength() throws IOException {
+    // public long com.android.okhttp.internal.http.RetryableSink.contentLength() throws java.io.IOException
+    var func_RetryableSink_contentLength = cls_RetryableSink.contentLength
+    console.log("func_RetryableSink_contentLength=" + func_RetryableSink_contentLength)
+    if (func_RetryableSink_contentLength) {
+      func_RetryableSink_contentLength.implementation = function () {
+        var funcName = "RetryableSink.contentLength"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        
+        var retContentLength = this.contentLength()
+        console.log(funcName + " => retContentLength=" + retContentLength)
+
+        return retContentLength
+      }
+    }
+
+    // public void writeToSocket(Sink socketOut) throws IOException {
+    // public void com.android.okhttp.internal.http.RetryableSink.writeToSocket(com.android.okhttp.okio.Sink) throws java.io.IOException
+    var func_RetryableSink_writeToSocket = cls_RetryableSink.writeToSocket
+    console.log("func_RetryableSink_writeToSocket=" + func_RetryableSink_writeToSocket)
+    if (func_RetryableSink_writeToSocket) {
+      func_RetryableSink_writeToSocket.implementation = function (socketOut) {
+        var funcName = "RetryableSink.writeToSocket"
+        var funcParaDict = {
+          "socketOut": socketOut,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var content = this.content.value
+        console.log(funcName + " content=" + content)
+
+        return this.writeToSocket(socketOut)
+      }
+    }
+
+  }
+
+  static Buffer() {
+    // var clsName_Buffer = "okio.Buffer"
+    var clsName_Buffer = "com.android.okhttp.okio.Buffer"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Buffer)
+
+    var cls_Buffer = Java.use(clsName_Buffer)
+    console.log("cls_Buffer=" + cls_Buffer)
+
+    // @Override public int read(byte[] sink) {
+    // public int com.android.okhttp.okio.Buffer.read(byte[])
+    var func_Buffer_read_1ps = cls_Buffer.read.overload('[B')
+    console.log("func_Buffer_read_1ps=" + func_Buffer_read_1ps)
+    if (func_Buffer_read_1ps) {
+      func_Buffer_read_1ps.implementation = function (sink) {
+        var funcName = "okio.Buffer.read_1ps"
+        var funcParaDict = {
+          "sink": sink,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + " curBufStr=" + curBufStr)
+        var head = this.head.value
+        console.log(funcName + " head=" + head)
+        var size = this.size.value
+        console.log(funcName + " size=" + size)
+
+        var readCnt = this.read(sink)
+        console.log(funcName + " => readCnt=" + readCnt)
+        return readCnt
+      }
+    }
+
+    // @Override public int read(byte[] sink, int offset, int byteCount) {
+    // public int com.android.okhttp.okio.Buffer.read(byte[],int,int)
+    var func_Buffer_read_3psob = cls_Buffer.read.overload('[B', 'int', 'int')
+    console.log("func_Buffer_read_3psob=" + func_Buffer_read_3psob)
+    if (func_Buffer_read_3psob) {
+      func_Buffer_read_3psob.implementation = function (sink, offset, byteCount) {
+        var funcName = "okio.Buffer.read_3psob"
+        var funcParaDict = {
+          "sink": sink,
+          "offset": offset,
+          "byteCount": byteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + " curBufStr=" + curBufStr)
+        var head = this.head.value
+        console.log(funcName + " head=" + head)
+        var size = this.size.value
+        console.log(funcName + " size=" + size)
+
+        var readCnt = this.read(sink, offset, byteCount)
+        console.log(funcName + " => readCnt=" + readCnt)
+        return readCnt
+      }
+    }
+
+    // @Override public long read(Buffer sink, long byteCount) {
+    // public long com.android.okhttp.okio.Buffer.read(com.android.okhttp.okio.Buffer,long)
+    var func_Buffer_read_2psb = cls_Buffer.read.overload('com.android.okhttp.okio.Buffer', 'long')
+    console.log("func_Buffer_read_2psb=" + func_Buffer_read_2psb)
+    if (func_Buffer_read_2psb) {
+      func_Buffer_read_2psb.implementation = function (sink, byteCount) {
+        var funcName = "okio.Buffer.read_2psb"
+        var funcParaDict = {
+          "sink": sink,
+          "byteCount": byteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + " curBufStr=" + curBufStr)
+        var head = this.head.value
+        console.log(funcName + " head=" + head)
+        var size = this.size.value
+        console.log(funcName + " size=" + size)
+
+        var readCnt = this.read(sink, byteCount)
+        console.log(funcName + " => readCnt=" + readCnt)
+        return readCnt
+      }
+    }
+
+    // @Override public void readFully(byte[] sink) throws EOFException {
+    // public void com.android.okhttp.okio.Buffer.readFully(byte[]) throws java.io.EOFException
+    var func_Buffer_readFully_1ps = cls_Buffer.readFully.overload('[B')
+    console.log("func_Buffer_readFully_1ps=" + func_Buffer_readFully_1ps)
+    if (func_Buffer_readFully_1ps) {
+      func_Buffer_readFully_1ps.implementation = function (sink) {
+        var funcName = "okio.Buffer.readFully_1ps"
+        var funcParaDict = {
+          "sink": sink,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + " curBufStr=" + curBufStr)
+        var head = this.head.value
+        console.log(funcName + " head=" + head)
+        var size = this.size.value
+        console.log(funcName + " size=" + size)
+
+        return this.readFully(sink)
+      }
+    }
+
+    // @Override public void readFully(Buffer sink, long byteCount) throws EOFException {
+    // public void com.android.okhttp.okio.Buffer.readFully(com.android.okhttp.okio.Buffer,long) throws java.io.EOFException
+    var func_Buffer_readFully_2psb = cls_Buffer.readFully.overload('com.android.okhttp.okio.Buffer', 'long')
+    console.log("func_Buffer_readFully_2psb=" + func_Buffer_readFully_2psb)
+    if (func_Buffer_readFully_2psb) {
+      func_Buffer_readFully_2psb.implementation = function (sink, byteCount) {
+        var funcName = "okio.Buffer.readFully_2psb"
+        var funcParaDict = {
+          "sink": sink,
+          "byteCount": byteCount,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var curBufStr = this.toString()
+        console.log(funcName + " curBufStr=" + curBufStr)
+        var head = this.head.value
+        console.log(funcName + " head=" + head)
+        var size = this.size.value
+        console.log(funcName + " size=" + size)
+
+        return this.readFully(sink, byteCount)
+      }
+    }
+
   }
 
 }
