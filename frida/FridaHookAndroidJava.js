@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250427
+	Updated: 20250429
 */
 
 // Frida hook common Android/Java class
@@ -1335,33 +1335,19 @@ class FridaHookAndroidJava {
         var curHttpEngine = this.getResponse()
         console.log("HttpURLConnectionImpl.getResponse => curHttpEngine=" + curHttpEngine)
 
-        // var reqBodyOutStream = curHttpEngine.requestBodyOut.value
-        // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
-        // var reqBodyOutStream = this.requestBodyOut
-        var retryableSink = curHttpEngine.getRequestBody()
-        var clsName_RetryableSink = FridaAndroidUtil.getJavaClassName(retryableSink)
-        console.log("retryableSink=" + retryableSink + ", clsName=" + clsName_RetryableSink)
-        // retryableSink=[object Object], clsName=com.android.okhttp.internal.http.RetryableSink
-        // FridaAndroidUtil.printClassAllMethodsFields(clsName_RetryableSink)
+        // // var reqBodyOutStream = curHttpEngine.requestBodyOut.value
+        // // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
+        // // var reqBodyOutStream = this.requestBodyOut
+        // var retryableSink = curHttpEngine.getRequestBody()
+        // var clsName_RetryableSink = FridaAndroidUtil.getJavaClassName(retryableSink)
+        // console.log("retryableSink=" + retryableSink + ", clsName=" + clsName_RetryableSink)
+        // // retryableSink=[object Object], clsName=com.android.okhttp.internal.http.RetryableSink
+        // // FridaAndroidUtil.printClassAllMethodsFields(clsName_RetryableSink)
 
-        var curRequest = curHttpEngine.getRequest()
-        console.log("curRequest=" + curRequest + ", clsName=" + FridaAndroidUtil.getJavaClassName(curRequest))
+        // var curRequest = curHttpEngine.getRequest()
+        // console.log("curRequest=" + curRequest + ", clsName=" + FridaAndroidUtil.getJavaClassName(curRequest))
 
-        // var sinkContentLen = retryableSink.contentLength()
-        // console.log("sinkContentLen=" + sinkContentLen)
-        // var sinkClosed = retryableSink.closed.value
-        // var sinkLimit = retryableSink.limit.value
-        // console.log("sinkClosed=" + sinkClosed + ", sinkLimit=" + sinkLimit)
-        // var sinkContent = retryableSink.content.value
-        // console.log("sinkContent=" + sinkContent + ", clsName=" + FridaAndroidUtil.getJavaClassName(sinkContent))
-
-        FridaAndroidUtil.printClass_RetryableSink(retryableSink)
-
-        // var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
-        // console.log("newBaos=" + newBaos + ", clsName=" + FridaAndroidUtil.getJavaClassName(newBaos))
-        // newBaos.writeTo(retryableSink)
-        // var reqBodyByteArr = newBaos.toByteArray()
-        // console.log("reqBodyByteArr=" + reqBodyByteArr + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyByteArr))
+        // FridaAndroidUtil.printClass_RetryableSink(retryableSink)
 
         return curHttpEngine
       }
@@ -1430,33 +1416,33 @@ class FridaHookAndroidJava {
         var retResponseCode = this.getResponseCode()
         console.log("HttpURLConnectionImpl.getResponseCode => retResponseCode=" + retResponseCode)
 
-        // get request body data
-        var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
-        console.log("newBaos=" + newBaos + ", clsName=" + FridaAndroidUtil.getJavaClassName(newBaos))
+        // // get request body data
+        // var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
+        // console.log("newBaos=" + newBaos + ", clsName=" + FridaAndroidUtil.getJavaClassName(newBaos))
 
-        // var reqBodyOutStream = this.getOutputStream()
-        // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
-        // newBaos.writeTo(reqBodyOutStream)
+        // // var reqBodyOutStream = this.getOutputStream()
+        // // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
+        // // newBaos.writeTo(reqBodyOutStream)
 
-        var reqBodyRbs = this.getOutputStream() // RealBufferedSink
-        console.log("reqBodyRbs=" + reqBodyRbs + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbs))
+        // var reqBodyRbs = this.getOutputStream() // RealBufferedSink
+        // console.log("reqBodyRbs=" + reqBodyRbs + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbs))
 
-        // var reqBodyRbsOutStream = reqBodyRbs.outputStream() // OutputStream
-        // console.log("reqBodyRbsOutStream=" + reqBodyRbsOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbsOutStream))
-        // newBaos.writeTo(reqBodyRbsOutStream)
+        // // var reqBodyRbsOutStream = reqBodyRbs.outputStream() // OutputStream
+        // // console.log("reqBodyRbsOutStream=" + reqBodyRbsOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbsOutStream))
+        // // newBaos.writeTo(reqBodyRbsOutStream)
 
-        var rbsSize = reqBodyRbs.size
-        console.log("rbsSize=" + rbsSize)
-        var rbsBuffer = reqBodyRbs.buffer
-        console.log("rbsBuffer=" + rbsBuffer + ", clsName=" + FridaAndroidUtil.getJavaClassName(rbsBuffer))
+        // var rbsSize = reqBodyRbs.size
+        // console.log("rbsSize=" + rbsSize)
+        // var rbsBuffer = reqBodyRbs.buffer
+        // console.log("rbsBuffer=" + rbsBuffer + ", clsName=" + FridaAndroidUtil.getJavaClassName(rbsBuffer))
 
-        var okBufferSize = rbsBuffer.size
-        console.log("okBufferSize=" + okBufferSize)
-        var okBufferHead = rbsBuffer.head
-        console.log("okBufferHead=" + okBufferHead + ", clsName=" + FridaAndroidUtil.getJavaClassName(okBufferHead))
+        // var okBufferSize = rbsBuffer.size
+        // console.log("okBufferSize=" + okBufferSize)
+        // var okBufferHead = rbsBuffer.head
+        // console.log("okBufferHead=" + okBufferHead + ", clsName=" + FridaAndroidUtil.getJavaClassName(okBufferHead))
 
-        var reqBodyByteArr = newBaos.toByteArray()
-        console.log("reqBodyByteArr=" + reqBodyByteArr + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyByteArr))
+        // var reqBodyByteArr = newBaos.toByteArray()
+        // console.log("reqBodyByteArr=" + reqBodyByteArr + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyByteArr))
 
         return retResponseCode
       }
