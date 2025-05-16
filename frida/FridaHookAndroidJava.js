@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250429
+	Updated: 20250515
 */
 
 // Frida hook common Android/Java class
@@ -4110,6 +4110,25 @@ class FridaHookAndroidJava {
         return retSharedPreferences_2psi
       }
     }
+    
+    // public abstract Context createPackageContext (String packageName, int flags)
+    // 
+    var func_Context_createPackageContext = cls_Context.createPackageContext
+    console.log("func_Context_createPackageContext=" + func_Context_createPackageContext)
+    if (func_Context_createPackageContext) {
+      func_Context_createPackageContext.implementation = function (packageName, flags) {
+        var funcName = "Context.createPackageContext"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retContext = this.createPackageContext(packageName, flags)
+        console.log(funcName + " => retContext=" + retContext)
+        return retContext
+      }
+    }
 
     // public abstract FileInputStream openFileInput(String name)
     // 
@@ -4147,6 +4166,169 @@ class FridaHookAndroidJava {
         return retDir
       }
     }
+  }
+
+  static ContextWrapper() {
+    var clsName_ContextWrapper = "android.content.ContextWrapper"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_ContextWrapper)
+
+    var cls_ContextWrapper = Java.use(clsName_ContextWrapper)
+    console.log("cls_ContextWrapper=" + cls_ContextWrapper)
+
+    
+    // SharedPreferences getSharedPreferences(String name, int mode)
+    // public android.content.SharedPreferences android.content.ContextWrapper.getSharedPreferences(java.lang.String,int)
+    var func_ContextWrapper_getSharedPreferences = cls_ContextWrapper.getSharedPreferences.overload('java.lang.String', 'int')
+    console.log("func_ContextWrapper_getSharedPreferences=" + func_ContextWrapper_getSharedPreferences)
+    if (func_ContextWrapper_getSharedPreferences) {
+      func_ContextWrapper_getSharedPreferences.implementation = function (name, mode) {
+        var funcName = "ContextWrapper.getSharedPreferences"
+        var funcParaDict = {
+          "name": name,
+          "mode": mode,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retSharedPreferences = this.getSharedPreferences(name, mode)
+        // console.log(funcName + " => retSharedPreferences=" + retSharedPreferences)
+        console.log(`${funcName}(name=${name},mode=${mode}) => retSharedPreferences=${retSharedPreferences}`)
+
+        // // for debug: emulate can NOT get checkin related SharedPreferences
+        // if (
+        //   (name == "Checkin") ||
+        //   (name == "constellation_prefs") ||
+        //   (name == "CheckinService")
+        //  ) {
+        //   retSharedPreferences = null
+        //   var dbgStr = "for debug: emulate can NOT get checkin related SharedPreferences"
+        //   console.log(dbgStr + " " + funcName + " => retSharedPreferences=" + retSharedPreferences)
+        // }
+
+        return retSharedPreferences
+      }
+    }
+    
+    // Context createPackageContext(String packageName, int flags)
+    // public android.content.Context android.content.ContextWrapper.createPackageContext(java.lang.String,int) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_ContextWrapper_createPackageContext = cls_ContextWrapper.createPackageContext
+    console.log("func_ContextWrapper_createPackageContext=" + func_ContextWrapper_createPackageContext)
+    if (func_ContextWrapper_createPackageContext) {
+      func_ContextWrapper_createPackageContext.implementation = function (packageName, flags) {
+        var funcName = "ContextWrapper.createPackageContext"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retContext = this.createPackageContext(packageName, flags)
+        // console.log(funcName + " => retContext=" + retContext)
+        console.log(`${funcName}(packageName=${packageName},flags=${flags}) => retContext=${retContext}`)
+        return retContext
+      }
+    }
+
+    // FileInputStream openFileInput(String name)
+    // public java.io.FileInputStream android.content.ContextWrapper.openFileInput(java.lang.String) throws java.io.FileNotFoundException
+    var func_ContextWrapper_openFileInput = cls_ContextWrapper.openFileInput
+    console.log("func_ContextWrapper_openFileInput=" + func_ContextWrapper_openFileInput)
+    if (func_ContextWrapper_openFileInput) {
+      func_ContextWrapper_openFileInput.implementation = function (name) {
+        var funcName = "ContextWrapper.openFileInput"
+        var funcParaDict = {
+          "name": name,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retFileInputStream = this.openFileInput(name)
+
+        // // for debug: emulate can NOT get checkin_id_token
+        // if (
+        //   name == "checkin_id_token" // /data/user/0/com.google.android.gms/files/checkin_id_token
+        //   || name == "security_token" // /data/user/0/com.google.android.gsf/files/security_token
+        // ) {
+        //   // retFileInputStream = null
+        //   // var dbgStr = "for debug: emulate can NOT get checkin_id_token"
+        //   // console.log(dbgStr + " " + funcName + " => retFileInputStream=" + retFileInputStream)
+
+        //   // var notFoundException = new FridaAndroidUtil.FileNotFoundException("Emulated file not exist: " + name)
+        //   var notFoundException = FridaAndroidUtil.FileNotFoundException.$new("Emulated file not exist: " + name)
+        //   console.log(`${funcName}(name=${name}) => notFoundException=${notFoundException}`)
+        //   throw notFoundException
+        // } else {
+          // console.log(funcName + " => retFileInputStream=" + retFileInputStream)
+          console.log(`${funcName}(name=${name}) => retFileInputStream=${retFileInputStream}`)
+          return retFileInputStream
+        // }
+
+      }
+    }
+
+  }
+
+
+  static SharedPreferencesImpl() {
+    var clsName_SharedPreferencesImpl = "android.app.SharedPreferencesImpl"
+    FridaAndroidUtil.printClassAllMethodsFields(clsName_SharedPreferencesImpl)
+
+    var cls_SharedPreferencesImpl = Java.use(clsName_SharedPreferencesImpl)
+    console.log("cls_SharedPreferencesImpl=" + cls_SharedPreferencesImpl)
+
+    // public long getLong(String key, long defValue)
+    // public long android.app.SharedPreferencesImpl.getLong(java.lang.String,long)
+    var func_SharedPreferencesImpl_getLong = cls_SharedPreferencesImpl.getLong
+    console.log("func_SharedPreferencesImpl_getLong=" + func_SharedPreferencesImpl_getLong)
+    if (func_SharedPreferencesImpl_getLong) {
+      func_SharedPreferencesImpl_getLong.implementation = function (key, defValue) {
+        var funcName = "SharedPreferencesImpl.getLong"
+        var funcParaDict = {
+          "key": key,
+          "defValue": defValue,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var funcCallStr = `${funcName}(key=${key},defValue=${defValue})`
+        var retLong = this.getLong(key, defValue)
+        console.log(`${funcCallStr} => retLong=${retLong}`)
+
+        // // for debug: emulate can NOT get checkin related SharedPreferencesImpl getLong values
+        // if (JsUtil.isItemInList(key, HookAppJava_GMS.checkinKeyList)) {
+        //   retLong = defValue
+        //   var dbgStr = "for debug: emulate can NOT get checkin related SharedPreferencesImpl getLong values"
+        //   console.log(dbgStr + " " + funcCallStr + " => retLong=" + retLong)
+        // }
+
+        return retLong
+      }
+    }
+
+    // public String getString(String key, String defValue)
+    // public java.lang.String android.app.SharedPreferencesImpl.getString(java.lang.String,java.lang.String)
+    var func_SharedPreferencesImpl_getString = cls_SharedPreferencesImpl.getString
+    console.log("func_SharedPreferencesImpl_getString=" + func_SharedPreferencesImpl_getString)
+    if (func_SharedPreferencesImpl_getString) {
+      func_SharedPreferencesImpl_getString.implementation = function (key, defValue) {
+        var funcName = "SharedPreferencesImpl.getString"
+        var funcParaDict = {
+          "key": key,
+          "defValue": defValue,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retStr = this.getString(key, defValue)
+        console.log(`${funcName}(key=${key},defValue=${defValue}) => retStr=${retStr}`)
+
+        // // for debug: emulate can NOT get checkin related SharedPreferencesImpl getString values
+        // if (JsUtil.isItemInList(key, HookAppJava_GMS.checkinKeyList)) {
+        //   retStr = defValue
+        //   var dbgStr = "for debug: emulate can NOT get checkin related SharedPreferencesImpl getString values"
+        //   console.log(dbgStr + " " + funcName + " => retStr=" + retStr)
+        // }
+
+        return retStr
+      }
+    }
+
   }
 
   static File(func_isShowLog=null) {
@@ -4237,7 +4419,7 @@ class FridaHookAndroidJava {
         if(isShowLog){
           // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
           // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
-          console.log(funcCallAndStackStr)
+          // console.log(funcCallAndStackStr)
   
           console.log(funcName + " => retAbsolutePath=" + retAbsolutePath)
         }
@@ -4267,7 +4449,7 @@ class FridaHookAndroidJava {
         }
 
         if(isShowLog){
-          console.log(funcCallAndStackStr)
+          // console.log(funcCallAndStackStr)
           console.log(funcName + " => retParentFile=" + retParentFile)
         }
 
@@ -4298,7 +4480,7 @@ class FridaHookAndroidJava {
         if(isShowLog){
           // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
           // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
-          console.log(funcCallAndStackStr)
+          // console.log(funcCallAndStackStr)
         }
         
         var retBoolean = this.exists()

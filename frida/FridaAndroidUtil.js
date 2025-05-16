@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250428
+	Updated: 20250514
 */
 
 // Frida Android Util
@@ -47,6 +47,8 @@ class FridaAndroidUtil {
 
   static clsName_CronetUrlRequest             = "org.chromium.net.impl.CronetUrlRequest"
   static clsName_ByteArrayOutputStream        = "java.io.ByteArrayOutputStream"
+  static clsName_FileNotFoundException        = "java.io.FileNotFoundException"
+  static clsName_Long                         = "java.lang.Long"
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -62,6 +64,9 @@ class FridaAndroidUtil {
 
   static StandardCharsets = null
   static ByteArrayOutputStream = null
+  static FileNotFoundException = null
+  static Long = null
+  static Long_0 = null
 
   // https://source.android.com/docs/core/runtime/dex-format?hl=zh-cn
   // https://cmrodriguez.me/blog/methods/
@@ -120,6 +125,18 @@ class FridaAndroidUtil {
 
       FridaAndroidUtil.ByteArrayOutputStream = Java.use(FridaAndroidUtil.clsName_ByteArrayOutputStream)
       console.log("FridaAndroidUtil.ByteArrayOutputStream=" + FridaAndroidUtil.ByteArrayOutputStream)
+
+      FridaAndroidUtil.FileNotFoundException = Java.use(FridaAndroidUtil.clsName_FileNotFoundException)
+      console.log("FridaAndroidUtil.FileNotFoundException=" + FridaAndroidUtil.FileNotFoundException)
+
+      FridaAndroidUtil.Long = Java.use(FridaAndroidUtil.clsName_Long)
+      console.log("FridaAndroidUtil.Long=" + FridaAndroidUtil.Long)
+      // FridaAndroidUtil.Long_0 = FridaAndroidUtil.Long.valueOf(0)
+      // FridaAndroidUtil.Long_0 = FridaAndroidUtil.Long.$new(0)
+      // FridaAndroidUtil.Long_0 = int64(0)
+      FridaAndroidUtil.Long_0 = 0
+      console.log("FridaAndroidUtil.Long_0=" + FridaAndroidUtil.Long_0)
+
     } else {
       console.warn("FridaAndroidUtil: Non Android platfrom, no need init Android related")
     }
@@ -555,6 +572,7 @@ class FridaAndroidUtil {
 
   // com.android.okhttp.internal.http.RetryableSink
   static printClass_RetryableSink(inputObj){
+    // https://cs.android.com/android/platform/superproject/+/master:external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/internal/http/RetryableSink.java
     // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okhttp/src/main/java/com/squareup/okhttp/internal/http/RetryableSink.java
     if (inputObj) {
       var curObj = inputObj
