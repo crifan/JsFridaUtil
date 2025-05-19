@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250515
+	Updated: 20250518
 */
 
 // Frida hook common Android/Java class
@@ -5389,6 +5389,82 @@ class FridaHookAndroidJava {
       }
     }
 
+  }
+
+  static TelephonyManager() {
+    var clsName_TelephonyManager = "android.telephony.TelephonyManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_TelephonyManager)
+
+    var cls_TelephonyManager = Java.use(clsName_TelephonyManager)
+    console.log("cls_TelephonyManager=" + cls_TelephonyManager)
+    
+    // String getDeviceId()
+    // 
+    var func_TelephonyManager_getDeviceId_0p = cls_TelephonyManager.getDeviceId.overload()
+    console.log("func_TelephonyManager_getDeviceId_0p=" + func_TelephonyManager_getDeviceId_0p)
+    if (func_TelephonyManager_getDeviceId_0p) {
+      func_TelephonyManager_getDeviceId_0p.implementation = function () {
+        var funcName = "TelephonyManager.getDeviceId_0p"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retDeviceId_0p = this.getDeviceId()
+        console.log(funcName + " => retDeviceId_0p=" + retDeviceId_0p)
+        return retDeviceId_0p
+      }
+    }
+
+    // String getDeviceId(int slotIndex)
+    // 
+    var func_TelephonyManager_getDeviceId_1ps = cls_TelephonyManager.getDeviceId.overload('int')
+    console.log("func_TelephonyManager_getDeviceId_1ps=" + func_TelephonyManager_getDeviceId_1ps)
+    if (func_TelephonyManager_getDeviceId_1ps) {
+      func_TelephonyManager_getDeviceId_1ps.implementation = function (slotIndex) {
+        var funcName = "TelephonyManager.getDeviceId_1ps"
+        var funcParaDict = {
+          "slotIndex": slotIndex,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retDeviceId_1ps = this.getDeviceId(slotIndex)
+        console.log(funcName + " => retDeviceId_1ps=" + retDeviceId_1ps)
+        return retDeviceId_1ps
+      }
+    }
+
+    // String getImei(int slotIndex)
+    // 
+    var func_TelephonyManager_getImei_1ps = cls_TelephonyManager.getImei.overload('int')
+    console.log("func_TelephonyManager_getImei_1ps=" + func_TelephonyManager_getImei_1ps)
+    if (func_TelephonyManager_getImei_1ps) {
+      func_TelephonyManager_getImei_1ps.implementation = function (slotIndex) {
+        var funcName = "TelephonyManager.getImei(slotIndex)"
+        var funcParaDict = {
+          "slotIndex": slotIndex,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retImei_1ps = this.getImei(slotIndex)
+        console.log(funcName + " => retImei_1ps=" + retImei_1ps)
+        return retImei_1ps
+      }
+    }
+
+    // String getImei()
+    // 
+    var func_TelephonyManager_getImei_0p = cls_TelephonyManager.getImei.overload()
+    console.log("func_TelephonyManager_getImei_0p=" + func_TelephonyManager_getImei_0p)
+    if (func_TelephonyManager_getImei_0p) {
+      func_TelephonyManager_getImei_0p.implementation = function () {
+        var funcName = "TelephonyManager.getImei()"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retImei_0p = this.getImei()
+        console.log(funcName + " => retImei_0p=" + retImei_0p)
+        return retImei_0p
+      }
+    }
   }
 
 }
