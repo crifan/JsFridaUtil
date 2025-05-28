@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250514
+	Updated: 20250525
 */
 
 // Frida Android Util
@@ -49,6 +49,8 @@ class FridaAndroidUtil {
   static clsName_ByteArrayOutputStream        = "java.io.ByteArrayOutputStream"
   static clsName_FileNotFoundException        = "java.io.FileNotFoundException"
   static clsName_Long                         = "java.lang.Long"
+  static clsName_Long                         = "java.lang.Long"
+  static clsName_File                         = "java.io.File"
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -140,6 +142,12 @@ class FridaAndroidUtil {
     } else {
       console.warn("FridaAndroidUtil: Non Android platfrom, no need init Android related")
     }
+  }
+
+  static isClass_File(curObj){
+    var isClsFile = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_File)
+    console.log("curObj=" + curObj + " -> isClsFile=" + isClsFile)
+    return isClsFile
   }
 
   static isClass_HttpURLConnection(curObj){
@@ -561,9 +569,9 @@ class FridaAndroidUtil {
       console.log("Buffer:" + clsNameStr
         // + " size=" + curObj.size.value
         + " size=" + curObj._size.value
-        + " head=" + curObj.head.value
-        + " toString()=" + curObj.toString()
-        + " byteArray=" + byteArray
+        + ", head=" + curObj.head.value
+        + ", toString()=" + curObj.toString()
+        + ", byteArray=" + byteArray
       )
     } else {
       console.log("Buffer: null")
@@ -583,14 +591,40 @@ class FridaAndroidUtil {
 
       console.log("RetryableSink:" + clsNameStr
         + " closed=" + curObj.closed.value
-        + " limit=" + curObj.limit.value
-        + " contentLength()=" + curObj.contentLength()
-        + " content=" + curObj.content.value
+        + ", limit=" + curObj.limit.value
+        + ", contentLength()=" + curObj.contentLength()
+        + ", content=" + curObj.content.value
       )
 
       FridaAndroidUtil.printClass_Buffer(curObj.content.value)
     } else {
       console.log("RetryableSink: null")
+    }
+  }
+
+  static printClass_File(inputObj){
+    // https://developer.android.com/reference/java/io/File
+    if (inputObj) {
+      if (FridaAndroidUtil.isClass_File(inputObj)){
+        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_File)
+        // console.log("curObj=" + curObj)
+
+        var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
+        var clsNameStr = "[" + curClsName + "]"
+
+        console.log("File:" + clsNameStr
+          + " separator=" + curObj.separator.value
+          + ", pathSeparator=" + curObj.pathSeparator.value
+          + ", exists=" + curObj.exists()
+          + ", name=" + curObj.getName()
+          + ", absPath=" + curObj.getAbsolutePath()
+        )
+      } else {
+        var curClsName = FridaAndroidUtil.getJavaClassName(inputObj)
+        console.log(`printClass_File: ${inputObj} is not File class, curClsName=${curClsName}`)
+      }
+    } else {
+      console.log(`printClass_File: inputObj is null`)
     }
   }
 
