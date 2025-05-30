@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250527
+	Updated: 20250530
 */
 
 // Frida hook common Android/Java class
@@ -399,7 +399,7 @@ class FridaHookAndroidJava {
       }
     }
 
-    // public abstract ApplicationInfo getApplicationInfo (String packageName, int flags)
+    // public abstract ApplicationInfo getApplicationInfo(String packageName, int flags)
     // public abstract android.content.pm.ApplicationInfo android.content.pm.PackageManager.getApplicationInfo(java.lang.String,int) throws android.content.pm.PackageManager$NameNotFoundException
     var func_PackageManager_getApplicationInfo_abstract = cls_PackageManager.getApplicationInfo.overload('java.lang.String', 'int')
     console.log("func_PackageManager_getApplicationInfo_abstract=" + func_PackageManager_getApplicationInfo_abstract)
@@ -468,6 +468,168 @@ class FridaHookAndroidJava {
         var retPackageInfo_2ppf = this.getPackageInfo(packageName, flags)
         console.log(funcName + " => retPackageInfo_2ppf=" + retPackageInfo_2ppf)
         return retPackageInfo_2ppf
+      }
+    }
+
+    // public abstract int checkPermission(String permName, String packageName)
+    // public abstract int android.content.pm.PackageManager.checkPermission(java.lang.String,java.lang.String)
+    var func_PackageManager_checkPermission = cls_PackageManager.checkPermission
+    console.log("func_PackageManager_checkPermission=" + func_PackageManager_checkPermission)
+    if (func_PackageManager_checkPermission) {
+      func_PackageManager_checkPermission.implementation = function (permName, packageName) {
+        var funcName = "PackageManager.checkPermission"
+        var funcParaDict = {
+          "permName": permName,
+          "packageName": packageName,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPermissionInt = this.checkPermission(permName, packageName)
+        console.log(funcName + " => retPermissionInt=" + retPermissionInt)
+        return retPermissionInt
+      }
+    }
+
+  }
+
+  static ApplicationPackageManager() {
+    var clsName_ApplicationPackageManager = "android.app.ApplicationPackageManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_ApplicationPackageManager)
+
+    var cls_ApplicationPackageManager = Java.use(clsName_ApplicationPackageManager)
+    console.log("cls_ApplicationPackageManager=" + cls_ApplicationPackageManager)
+
+    
+    // public int checkPermission(String permName, String pkgName)
+    // public int android.app.ApplicationPackageManager.checkPermission(java.lang.String,java.lang.String)
+    var func_ApplicationPackageManager_checkPermission = cls_ApplicationPackageManager.checkPermission
+    console.log("func_ApplicationPackageManager_checkPermission=" + func_ApplicationPackageManager_checkPermission)
+    if (func_ApplicationPackageManager_checkPermission) {
+      func_ApplicationPackageManager_checkPermission.implementation = function (permName, pkgName) {
+        var funcName = "ApplicationPackageManager.checkPermission"
+        var funcParaDict = {
+          "permName": permName,
+          "pkgName": pkgName,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retInt = this.checkPermission(permName, pkgName)
+        console.log(funcName + " => retInt=" + retInt)
+        return retInt
+      }
+    }
+
+    // public ApplicationInfo getApplicationInfo(String packageName, int flags) throws NameNotFoundException
+    // 
+    var func_ApplicationPackageManager_getApplicationInfo_2ppf = cls_ApplicationPackageManager.getApplicationInfo.overload('java.lang.String', 'int')
+    console.log("func_ApplicationPackageManager_getApplicationInfo_2ppf=" + func_ApplicationPackageManager_getApplicationInfo_2ppf)
+    if (func_ApplicationPackageManager_getApplicationInfo_2ppf) {
+      func_ApplicationPackageManager_getApplicationInfo_2ppf.implementation = function (packageName, flags) {
+        var funcName = "ApplicationPackageManager.getApplicationInfo_2ppf"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retApplicationInfo_2ppf = this.getApplicationInfo(packageName, flags)
+        console.log(funcName + " => retApplicationInfo_2ppf=" + retApplicationInfo_2ppf)
+        return retApplicationInfo_2ppf
+      }
+    }
+
+    // public ApplicationInfo getApplicationInfo(String packageName, ApplicationInfoFlags flags) throws NameNotFoundException
+    // public android.content.pm.ApplicationInfo android.app.ApplicationPackageManager.getApplicationInfo(java.lang.String,android.content.pm.PackageManager$ApplicationInfoFlags) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_ApplicationPackageManager_getApplicationInfo_2ppf = cls_ApplicationPackageManager.getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager$ApplicationInfoFlags')
+    console.log("func_ApplicationPackageManager_getApplicationInfo_2ppf=" + func_ApplicationPackageManager_getApplicationInfo_2ppf)
+    if (func_ApplicationPackageManager_getApplicationInfo_2ppf) {
+      func_ApplicationPackageManager_getApplicationInfo_2ppf.implementation = function (packageName, flags) {
+        var funcName = "ApplicationPackageManager.getApplicationInfo_2ppf"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retApplicationInfo_2ppf = this.getApplicationInfo(packageName, flags)
+        console.log(funcName + " => retApplicationInfo_2ppf=" + retApplicationInfo_2ppf)
+        return retApplicationInfo_2ppf
+      }
+    }
+
+    // public PackageInfo getPackageInfo(String packageName, int flags) throws NameNotFoundException
+    // public android.content.pm.PackageInfo android.app.ApplicationPackageManager.getPackageInfo(java.lang.String,int) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_ApplicationPackageManager_getPackageInfo_2ppf = cls_ApplicationPackageManager.getPackageInfo.overload('java.lang.String', 'int')
+    console.log("func_ApplicationPackageManager_getPackageInfo_2ppf=" + func_ApplicationPackageManager_getPackageInfo_2ppf)
+    if (func_ApplicationPackageManager_getPackageInfo_2ppf) {
+      func_ApplicationPackageManager_getPackageInfo_2ppf.implementation = function (packageName, flags) {
+        var funcName = "ApplicationPackageManager.getPackageInfo_2ppf"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPackageInfo_2ppf = this.getPackageInfo(packageName, flags)
+        console.log(funcName + " => retPackageInfo_2ppf=" + retPackageInfo_2ppf)
+        return retPackageInfo_2ppf
+      }
+    }
+
+    // public PackageInfo getPackageInfo(String packageName, PackageInfoFlags flags) throws NameNotFoundException
+    // public android.content.pm.PackageInfo android.app.ApplicationPackageManager.getPackageInfo(java.lang.String,android.content.pm.PackageManager$PackageInfoFlags) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_ApplicationPackageManager_getPackageInfo_2ppf = cls_ApplicationPackageManager.getPackageInfo.overload('java.lang.String', 'android.content.pm.PackageManager$PackageInfoFlags')
+    console.log("func_ApplicationPackageManager_getPackageInfo_2ppf=" + func_ApplicationPackageManager_getPackageInfo_2ppf)
+    if (func_ApplicationPackageManager_getPackageInfo_2ppf) {
+      func_ApplicationPackageManager_getPackageInfo_2ppf.implementation = function (packageName, flags) {
+        var funcName = "ApplicationPackageManager.getPackageInfo_2ppf"
+        var funcParaDict = {
+          "packageName": packageName,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPackageInfo_2ppf = this.getPackageInfo(packageName, flags)
+        console.log(funcName + " => retPackageInfo_2ppf=" + retPackageInfo_2ppf)
+        return retPackageInfo_2ppf
+      }
+    }
+
+    // public PackageInfo getPackageInfo(VersionedPackage versionedPackage, int flags) throws NameNotFoundException
+    // public android.content.pm.PackageInfo android.app.ApplicationPackageManager.getPackageInfo(android.content.pm.VersionedPackage,int) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_ApplicationPackageManager_getPackageInfo_2pvf = cls_ApplicationPackageManager.getPackageInfo.overload('android.content.pm.VersionedPackage', 'int')
+    console.log("func_ApplicationPackageManager_getPackageInfo_2pvf=" + func_ApplicationPackageManager_getPackageInfo_2pvf)
+    if (func_ApplicationPackageManager_getPackageInfo_2pvf) {
+      func_ApplicationPackageManager_getPackageInfo_2pvf.implementation = function (versionedPackage, flags) {
+        var funcName = "ApplicationPackageManager.getPackageInfo_2pvf"
+        var funcParaDict = {
+          "versionedPackage": versionedPackage,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPackageInfo_2pvf = this.getPackageInfo(versionedPackage, flags)
+        console.log(funcName + " => retPackageInfo_2pvf=" + retPackageInfo_2pvf)
+        return retPackageInfo_2pvf
+      }
+    }
+
+    // public PackageInfo getPackageInfo(VersionedPackage versionedPackage, PackageInfoFlags flags) throws NameNotFoundException
+    // public android.content.pm.PackageInfo android.app.ApplicationPackageManager.getPackageInfo(android.content.pm.VersionedPackage,android.content.pm.PackageManager$PackageInfoFlags) throws android.content.pm.PackageManager$NameNotFoundException
+    var func_ApplicationPackageManager_getPackageInfo_2pvf = cls_ApplicationPackageManager.getPackageInfo.overload('android.content.pm.VersionedPackage', 'android.content.pm.PackageManager$PackageInfoFlags')
+    console.log("func_ApplicationPackageManager_getPackageInfo_2pvf=" + func_ApplicationPackageManager_getPackageInfo_2pvf)
+    if (func_ApplicationPackageManager_getPackageInfo_2pvf) {
+      func_ApplicationPackageManager_getPackageInfo_2pvf.implementation = function (versionedPackage, flags) {
+        var funcName = "ApplicationPackageManager.getPackageInfo_2pvf"
+        var funcParaDict = {
+          "versionedPackage": versionedPackage,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPackageInfo_2pvf = this.getPackageInfo(versionedPackage, flags)
+        console.log(funcName + " => retPackageInfo_2pvf=" + retPackageInfo_2pvf)
+        return retPackageInfo_2pvf
       }
     }
 
@@ -1977,6 +2139,7 @@ class FridaHookAndroidJava {
         return this.remove(key)
       }
     }
+
   }
 
   static BaseBundle() {
@@ -2000,7 +2163,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retBoolean = this.containsKey(key)
-        console.log("BaseBundle.containsKey => retBoolean=" + retBoolean)
+        console.log(funcName + " => retBoolean=" + retBoolean)
         return retBoolean
       }
     }
@@ -2019,7 +2182,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retBoolean_2pkd = this.getBoolean(key, defaultValue)
-        console.log("BaseBundle.getBoolean_2pkd => retBoolean_2pkd=" + retBoolean_2pkd)
+        console.log(funcName + " => retBoolean_2pkd=" + retBoolean_2pkd)
         return retBoolean_2pkd
       }
     }
@@ -2037,7 +2200,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retBoolean_1pk = this.getBoolean(key)
-        console.log("BaseBundle.getBoolean_1pk => retBoolean_1pk=" + retBoolean_1pk)
+        console.log(funcName + " => retBoolean_1pk=" + retBoolean_1pk)
         return retBoolean_1pk
       }
     }
@@ -2292,8 +2455,47 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var ret_T_T_2pkc = this.get(key, clazz)
-        console.log("BaseBundle.get_2pkc => ret_T_T_2pkc=" + ret_T_T_2pkc)
+        console.log(funcName + " => ret_T_T_2pkc=" + ret_T_T_2pkc)
         return ret_T_T_2pkc
+      }
+    }
+
+    // int getInt(String key)
+    // public int android.os.BaseBundle.getInt(java.lang.String)
+    var func_BaseBundle_getInt_1pk = cls_BaseBundle.getInt.overload("java.lang.String")
+    console.log("func_BaseBundle_getInt_1pk=" + func_BaseBundle_getInt_1pk)
+    if (func_BaseBundle_getInt_1pk) {
+      func_BaseBundle_getInt_1pk.implementation = function (key) {
+        var funcName = "BaseBundle.getInt(key)"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+
+        var retInt_1pk = this.getInt(key)
+        console.log(funcName + " => retInt_1pk=" + retInt_1pk)
+        return retInt_1pk
+      }
+    }
+
+    // int getInt(String key, int defaultValue)
+    // public int android.os.BaseBundle.getInt(java.lang.String,int)
+    var func_BaseBundle_getInt_2pkd = cls_BaseBundle.getInt.overload("java.lang.String", "int")
+    console.log("func_BaseBundle_getInt_2pkd=" + func_BaseBundle_getInt_2pkd)
+    if (func_BaseBundle_getInt_2pkd) {
+      func_BaseBundle_getInt_2pkd.implementation = function (key, defaultValue) {
+        var funcName = "BaseBundle.getInt(key,defaultValue)"
+        var funcParaDict = {
+          "key": key,
+          "defaultValue": defaultValue,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+
+        var retInt_2pkd = this.getInt(key, defaultValue)
+        console.log(funcName + " => retInt_2pkd=" + retInt_2pkd)
+        return retInt_2pkd
       }
     }
 
@@ -2311,7 +2513,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retString_1pk = this.getString(key)
-        console.log("BaseBundle.getString_1pk => retString_1pk=" + retString_1pk)
+        console.log(funcName + " => retString_1pk=" + retString_1pk)
         return retString_1pk
       }
     }
@@ -2330,7 +2532,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retString_2pkd = this.getString(key, defaultValue)
-        console.log("BaseBundle.getString_2pkd => retString_2pkd=" + retString_2pkd)
+        console.log(funcName + " => retString_2pkd=" + retString_2pkd)
         return retString_2pkd
       }
     }
@@ -2348,10 +2550,11 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retStringArray = this.getStringArray(key)
-        console.log("BaseBundle.getStringArray => retStringArray=" + retStringArray)
+        console.log(funcName + " => retStringArray=" + retStringArray)
         return retStringArray
       }
     }
+
   }
 
   static Messenger() {
@@ -4091,26 +4294,6 @@ class FridaHookAndroidJava {
     var cls_Context = Java.use(clsName_Context)
     console.log("cls_Context=" + cls_Context)
 
-    
-    // public abstract SharedPreferences getSharedPreferences(String name, int mode)
-    // public abstract android.content.SharedPreferences android.content.Context.getSharedPreferences(java.lang.String,int)
-    var func_Context_getSharedPreferences_2psi = cls_Context.getSharedPreferences.overload('java.lang.String', 'int')
-    console.log("func_Context_getSharedPreferences_2psi=" + func_Context_getSharedPreferences_2psi)
-    if (func_Context_getSharedPreferences_2psi) {
-      func_Context_getSharedPreferences_2psi.implementation = function (name, mode) {
-        var funcName = "Context.getSharedPreferences_2psi"
-        var funcParaDict = {
-          "name": name,
-          "mode": mode,
-        }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-        var retSharedPreferences_2psi = this.getSharedPreferences(name, mode)
-        console.log(funcName + " => retSharedPreferences_2psi=" + retSharedPreferences_2psi)
-        return retSharedPreferences_2psi
-      }
-    }
-    
     // public abstract Context createPackageContext (String packageName, int flags)
     // 
     var func_Context_createPackageContext = cls_Context.createPackageContext
@@ -4166,6 +4349,26 @@ class FridaHookAndroidJava {
         return retDir
       }
     }
+
+    // public abstract SharedPreferences getSharedPreferences(String name, int mode)
+    // public abstract android.content.SharedPreferences android.content.Context.getSharedPreferences(java.lang.String,int)
+    var func_Context_getSharedPreferences_2psi = cls_Context.getSharedPreferences.overload('java.lang.String', 'int')
+    console.log("func_Context_getSharedPreferences_2psi=" + func_Context_getSharedPreferences_2psi)
+    if (func_Context_getSharedPreferences_2psi) {
+      func_Context_getSharedPreferences_2psi.implementation = function (name, mode) {
+        var funcName = "Context.getSharedPreferences_2psi"
+        var funcParaDict = {
+          "name": name,
+          "mode": mode,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retSharedPreferences_2psi = this.getSharedPreferences(name, mode)
+        console.log(funcName + " => retSharedPreferences_2psi=" + retSharedPreferences_2psi)
+        return retSharedPreferences_2psi
+      }
+    }
+
   }
 
   static ContextWrapper() {
@@ -4175,7 +4378,58 @@ class FridaHookAndroidJava {
     var cls_ContextWrapper = Java.use(clsName_ContextWrapper)
     console.log("cls_ContextWrapper=" + cls_ContextWrapper)
 
-    
+
+    // public PackageManager getPackageManager()
+    // 
+    var func_ContextWrapper_getPackageManager = cls_ContextWrapper.getPackageManager
+    console.log("func_ContextWrapper_getPackageManager=" + func_ContextWrapper_getPackageManager)
+    if (func_ContextWrapper_getPackageManager) {
+      func_ContextWrapper_getPackageManager.implementation = function () {
+        var funcName = "ContextWrapper.getPackageManager"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retPackageManager = this.getPackageManager()
+        console.log(funcName + " => retPackageManager=" + retPackageManager)
+        return retPackageManager
+      }
+    }
+
+    // public Object getSystemService(String name)
+    // 
+    var func_ContextWrapper_getSystemService = cls_ContextWrapper.getSystemService
+    console.log("func_ContextWrapper_getSystemService=" + func_ContextWrapper_getSystemService)
+    if (func_ContextWrapper_getSystemService) {
+      func_ContextWrapper_getSystemService.implementation = function (name) {
+        var funcName = "ContextWrapper.getSystemService"
+        var funcParaDict = {
+          "name": name,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retSystemService = this.getSystemService(name)
+        console.log(funcName + " => retSystemService=" + retSystemService)
+        return retSystemService
+      }
+    }
+
+
+    // public ContentResolver getContentResolver()
+    // 
+    var func_ContextWrapper_getContentResolver = cls_ContextWrapper.getContentResolver
+    console.log("func_ContextWrapper_getContentResolver=" + func_ContextWrapper_getContentResolver)
+    if (func_ContextWrapper_getContentResolver) {
+      func_ContextWrapper_getContentResolver.implementation = function () {
+        var funcName = "ContextWrapper.getContentResolver"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retContentResolver = this.getContentResolver()
+        console.log(funcName + " => retContentResolver=" + retContentResolver)
+        return retContentResolver
+      }
+    }
+
     // SharedPreferences getSharedPreferences(String name, int mode)
     // public android.content.SharedPreferences android.content.ContextWrapper.getSharedPreferences(java.lang.String,int)
     var func_ContextWrapper_getSharedPreferences = cls_ContextWrapper.getSharedPreferences.overload('java.lang.String', 'int')
@@ -4207,7 +4461,7 @@ class FridaHookAndroidJava {
         return retSharedPreferences
       }
     }
-    
+
     // Context createPackageContext(String packageName, int flags)
     // public android.content.Context android.content.ContextWrapper.createPackageContext(java.lang.String,int) throws android.content.pm.PackageManager$NameNotFoundException
     var func_ContextWrapper_createPackageContext = cls_ContextWrapper.createPackageContext
@@ -4269,7 +4523,7 @@ class FridaHookAndroidJava {
 
   static SharedPreferencesImpl() {
     var clsName_SharedPreferencesImpl = "android.app.SharedPreferencesImpl"
-    FridaAndroidUtil.printClassAllMethodsFields(clsName_SharedPreferencesImpl)
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_SharedPreferencesImpl)
 
     var cls_SharedPreferencesImpl = Java.use(clsName_SharedPreferencesImpl)
     console.log("cls_SharedPreferencesImpl=" + cls_SharedPreferencesImpl)
@@ -4328,6 +4582,22 @@ class FridaHookAndroidJava {
         return retStr
       }
     }
+
+    // public Editor edit()
+    // public android.app.SharedPreferencesImpl$Editor android.app.SharedPreferencesImpl.edit()
+    var func_SharedPreferencesImpl_edit = cls_SharedPreferencesImpl.edit
+    console.log("func_SharedPreferencesImpl_edit=" + func_SharedPreferencesImpl_edit)
+    if (func_SharedPreferencesImpl_edit) {
+      func_SharedPreferencesImpl_edit.implementation = function () {
+        var funcName = "SharedPreferencesImpl.edit"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retEditor = this.edit()
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
 
   }
 
@@ -5433,7 +5703,7 @@ class FridaHookAndroidJava {
 
   static TelephonyManager() {
     var clsName_TelephonyManager = "android.telephony.TelephonyManager"
-    FridaAndroidUtil.printClassAllMethodsFields(clsName_TelephonyManager)
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_TelephonyManager)
 
     var cls_TelephonyManager = Java.use(clsName_TelephonyManager)
     console.log("cls_TelephonyManager=" + cls_TelephonyManager)
@@ -5519,6 +5789,36 @@ class FridaHookAndroidJava {
         var retSimOperator_0p = this.getSimOperator()
         console.log(funcName + " => retSimOperator_0p=" + retSimOperator_0p)
         return retSimOperator_0p
+      }
+    }
+
+    // public String getSimSerialNumber()
+    // public java.lang.String android.telephony.TelephonyManager.getSimSerialNumber()
+    var func_TelephonyManager_getSimSerialNumber_0p = cls_TelephonyManager.getSimSerialNumber.overload()
+    console.log("func_TelephonyManager_getSimSerialNumber_0p=" + func_TelephonyManager_getSimSerialNumber_0p)
+    if (func_TelephonyManager_getSimSerialNumber_0p) {
+      func_TelephonyManager_getSimSerialNumber_0p.implementation = function () {
+        var funcName = "TelephonyManager.getSimSerialNumber()"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retSimSerialNumber_0p = this.getSimSerialNumber()
+        console.log(funcName + " => retSimSerialNumber_0p=" + retSimSerialNumber_0p)
+        return retSimSerialNumber_0p
+      }
+    }
+    
+    // public String getSubscriberId()
+    // public java.lang.String android.telephony.TelephonyManager.getSubscriberId()
+    var func_TelephonyManager_getSubscriberId_0p = cls_TelephonyManager.getSubscriberId.overload()
+    console.log("func_TelephonyManager_getSubscriberId_0p=" + func_TelephonyManager_getSubscriberId_0p)
+    if (func_TelephonyManager_getSubscriberId_0p) {
+      func_TelephonyManager_getSubscriberId_0p.implementation = function () {
+        var funcName = "TelephonyManager.getSubscriberId()"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retSubscriberId_0p = this.getSubscriberId()
+        console.log(funcName + " => retSubscriberId_0p=" + retSubscriberId_0p)
+        return retSubscriberId_0p
       }
     }
 
@@ -5638,6 +5938,58 @@ class FridaHookAndroidJava {
         return retBoolean
       }
     }
+  }
+
+  static SubscriptionManager() {
+    var clsName_SubscriptionManager = "android.telephony.SubscriptionManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_SubscriptionManager)
+
+    var cls_SubscriptionManager = Java.use(clsName_SubscriptionManager)
+    console.log("cls_SubscriptionManager=" + cls_SubscriptionManager)
+
+    
+    // public List<SubscriptionInfo> getActiveSubscriptionInfoList()
+    // public java.util.List android.telephony.SubscriptionManager.getActiveSubscriptionInfoList()
+    var func_SubscriptionManager_getActiveSubscriptionInfoList = cls_SubscriptionManager.getActiveSubscriptionInfoList.overload()
+    console.log("func_SubscriptionManager_getActiveSubscriptionInfoList=" + func_SubscriptionManager_getActiveSubscriptionInfoList)
+    if (func_SubscriptionManager_getActiveSubscriptionInfoList) {
+      func_SubscriptionManager_getActiveSubscriptionInfoList.implementation = function () {
+        var funcName = "SubscriptionManager.getActiveSubscriptionInfoList"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retActiveSubscriptionInfoList = this.getActiveSubscriptionInfoList()
+        console.log(funcName + " => retActiveSubscriptionInfoList=" + retActiveSubscriptionInfoList)
+        return retActiveSubscriptionInfoList
+      }
+    }
+
+  }
+
+  static SubscriptionInfo() {
+    var clsName_SubscriptionInfo = "android.telephony.SubscriptionInfo"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_SubscriptionInfo)
+
+    var cls_SubscriptionInfo = Java.use(clsName_SubscriptionInfo)
+    console.log("cls_SubscriptionInfo=" + cls_SubscriptionInfo)
+
+    
+    // public int getSubscriptionId()
+    // 
+    var func_SubscriptionInfo_getSubscriptionId = cls_SubscriptionInfo.getSubscriptionId
+    console.log("func_SubscriptionInfo_getSubscriptionId=" + func_SubscriptionInfo_getSubscriptionId)
+    if (func_SubscriptionInfo_getSubscriptionId) {
+      func_SubscriptionInfo_getSubscriptionId.implementation = function () {
+        var funcName = "SubscriptionInfo.getSubscriptionId"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retSubscriptionId = this.getSubscriptionId()
+        console.log(funcName + " => retSubscriptionId=" + retSubscriptionId)
+        return retSubscriptionId
+      }
+    }
+
   }
 
 }
