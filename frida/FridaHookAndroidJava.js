@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250530
+	Updated: 20250602
 */
 
 // Frida hook common Android/Java class
@@ -5821,6 +5821,51 @@ class FridaHookAndroidJava {
         return retSubscriberId_0p
       }
     }
+    
+    // public String getSimOperatorName()
+    // public java.lang.String android.telephony.TelephonyManager.getSimOperatorName()
+    var func_TelephonyManager_getSimOperatorName_0p = cls_TelephonyManager.getSimOperatorName.overload()
+    console.log("func_TelephonyManager_getSimOperatorName_0p=" + func_TelephonyManager_getSimOperatorName_0p)
+    if (func_TelephonyManager_getSimOperatorName_0p) {
+      func_TelephonyManager_getSimOperatorName_0p.implementation = function () {
+        var funcName = "TelephonyManager.getSimOperatorName()"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retSimOperatorName_0p = this.getSimOperatorName()
+        console.log(funcName + " => retSimOperatorName_0p=" + retSimOperatorName_0p)
+        return retSimOperatorName_0p
+      }
+    }
+    
+    // public boolean isNetworkRoaming()
+    // public boolean android.telephony.TelephonyManager.isNetworkRoaming()
+    var func_TelephonyManager_isNetworkRoaming_0p = cls_TelephonyManager.isNetworkRoaming.overload()
+    console.log("func_TelephonyManager_isNetworkRoaming_0p=" + func_TelephonyManager_isNetworkRoaming_0p)
+    if (func_TelephonyManager_isNetworkRoaming_0p) {
+      func_TelephonyManager_isNetworkRoaming_0p.implementation = function () {
+        var funcName = "TelephonyManager.isNetworkRoaming()"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var isNetRoaming_0p = this.isNetworkRoaming()
+        console.log(funcName + " => isNetRoaming_0p=" + isNetRoaming_0p)
+        return isNetRoaming_0p
+      }
+    }
+    
+    // public String getGroupIdLevel1()
+    // public java.lang.String android.telephony.TelephonyManager.getGroupIdLevel1()
+    var func_TelephonyManager_getGroupIdLevel1_0p = cls_TelephonyManager.getGroupIdLevel1.overload()
+    console.log("func_TelephonyManager_getGroupIdLevel1_0p=" + func_TelephonyManager_getGroupIdLevel1_0p)
+    if (func_TelephonyManager_getGroupIdLevel1_0p) {
+      func_TelephonyManager_getGroupIdLevel1_0p.implementation = function () {
+        var funcName = "TelephonyManager.getGroupIdLevel1()"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var groupIdLevel1_0p = this.getGroupIdLevel1()
+        console.log(funcName + " => groupIdLevel1_0p=" + groupIdLevel1_0p)
+        return groupIdLevel1_0p
+      }
+    }
 
   }
 
@@ -5964,6 +6009,51 @@ class FridaHookAndroidJava {
       }
     }
 
+    // public static int getDefaultVoiceSubscriptionId()
+    // public static int android.telephony.SubscriptionManager.getDefaultVoiceSubscriptionId()
+    var func_SubscriptionManager_getDefaultVoiceSubscriptionId = cls_SubscriptionManager.getDefaultVoiceSubscriptionId
+    console.log("func_SubscriptionManager_getDefaultVoiceSubscriptionId=" + func_SubscriptionManager_getDefaultVoiceSubscriptionId)
+    if (func_SubscriptionManager_getDefaultVoiceSubscriptionId) {
+      func_SubscriptionManager_getDefaultVoiceSubscriptionId.implementation = function () {
+        var funcName = "SubscriptionManager.getDefaultVoiceSubscriptionId"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retDefaultVoiceSubscriptionId = this.getDefaultVoiceSubscriptionId()
+        console.log(funcName + " => retDefaultVoiceSubscriptionId=" + retDefaultVoiceSubscriptionId)
+        return retDefaultVoiceSubscriptionId
+      }
+    }
+
+    // public static int getDefaultDataSubscriptionId()
+    // public static int android.telephony.SubscriptionManager.getDefaultDataSubscriptionId()
+    var func_SubscriptionManager_getDefaultDataSubscriptionId = cls_SubscriptionManager.getDefaultDataSubscriptionId
+    console.log("func_SubscriptionManager_getDefaultDataSubscriptionId=" + func_SubscriptionManager_getDefaultDataSubscriptionId)
+    if (func_SubscriptionManager_getDefaultDataSubscriptionId) {
+      func_SubscriptionManager_getDefaultDataSubscriptionId.implementation = function () {
+        var funcName = "SubscriptionManager.getDefaultDataSubscriptionId"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retDefaultDataSubscriptionId = this.getDefaultDataSubscriptionId()
+        console.log(funcName + " => retDefaultDataSubscriptionId=" + retDefaultDataSubscriptionId)
+        return retDefaultDataSubscriptionId
+      }
+    }
+
+    // public static int getDefaultSmsSubscriptionId()
+    // public static int android.telephony.SubscriptionManager.getDefaultSmsSubscriptionId()
+    var func_SubscriptionManager_getDefaultSmsSubscriptionId = cls_SubscriptionManager.getDefaultSmsSubscriptionId
+    console.log("func_SubscriptionManager_getDefaultSmsSubscriptionId=" + func_SubscriptionManager_getDefaultSmsSubscriptionId)
+    if (func_SubscriptionManager_getDefaultSmsSubscriptionId) {
+      func_SubscriptionManager_getDefaultSmsSubscriptionId.implementation = function () {
+        var funcName = "SubscriptionManager.getDefaultSmsSubscriptionId"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retDefaultSmsSubscriptionId = this.getDefaultSmsSubscriptionId()
+        console.log(funcName + " => retDefaultSmsSubscriptionId=" + retDefaultSmsSubscriptionId)
+        return retDefaultSmsSubscriptionId
+      }
+    }
+
   }
 
   static SubscriptionInfo() {
@@ -5975,7 +6065,7 @@ class FridaHookAndroidJava {
 
     
     // public int getSubscriptionId()
-    // 
+    // public int android.telephony.SubscriptionInfo.getSubscriptionId()
     var func_SubscriptionInfo_getSubscriptionId = cls_SubscriptionInfo.getSubscriptionId
     console.log("func_SubscriptionInfo_getSubscriptionId=" + func_SubscriptionInfo_getSubscriptionId)
     if (func_SubscriptionInfo_getSubscriptionId) {
@@ -5987,6 +6077,38 @@ class FridaHookAndroidJava {
         var retSubscriptionId = this.getSubscriptionId()
         console.log(funcName + " => retSubscriptionId=" + retSubscriptionId)
         return retSubscriptionId
+      }
+    }
+    
+    // public CharSequence getCarrierName()
+    // public java.lang.CharSequence android.telephony.SubscriptionInfo.getCarrierName()
+    var func_SubscriptionInfo_getCarrierName = cls_SubscriptionInfo.getCarrierName
+    console.log("func_SubscriptionInfo_getCarrierName=" + func_SubscriptionInfo_getCarrierName)
+    if (func_SubscriptionInfo_getCarrierName) {
+      func_SubscriptionInfo_getCarrierName.implementation = function () {
+        var funcName = "SubscriptionInfo.getCarrierName"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retCarrierNameCharSeq = this.getCarrierName()
+        console.log(funcName + " => retCarrierNameCharSeq=" + retCarrierNameCharSeq)
+        return retCarrierNameCharSeq
+      }
+    }
+    
+    // public int getDataRoaming()
+    // public int android.telephony.SubscriptionInfo.getDataRoaming()
+    var func_SubscriptionInfo_getDataRoaming = cls_SubscriptionInfo.getDataRoaming
+    console.log("func_SubscriptionInfo_getDataRoaming=" + func_SubscriptionInfo_getDataRoaming)
+    if (func_SubscriptionInfo_getDataRoaming) {
+      func_SubscriptionInfo_getDataRoaming.implementation = function () {
+        var funcName = "SubscriptionInfo.getDataRoaming"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retDataRoaming = this.getDataRoaming()
+        console.log(funcName + " => retDataRoaming=" + retDataRoaming)
+        return retDataRoaming
       }
     }
 

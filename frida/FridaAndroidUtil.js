@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250525
+	Updated: 20250603
 */
 
 // Frida Android Util
@@ -1146,6 +1146,13 @@ class FridaAndroidUtil {
     }
     // console.log("javaClsName=" + javaClsName)
     return javaClsName
+  }
+
+  // generate the class name and value string from current object
+  static valueToNameStr(curObj){
+    var objClsName = FridaAndroidUtil.getJavaClassName(curObj)
+    var retStr = `<clsName=${objClsName}>=${curObj}`
+    return retStr
   }
 
   static isJavaClass(curObj, expectedClassName){
