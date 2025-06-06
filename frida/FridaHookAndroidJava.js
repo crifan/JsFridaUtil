@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250602
+	Updated: 20250606
 */
 
 // Frida hook common Android/Java class
@@ -520,7 +520,7 @@ class FridaHookAndroidJava {
     }
 
     // public ApplicationInfo getApplicationInfo(String packageName, int flags) throws NameNotFoundException
-    // 
+    // public android.content.pm.ApplicationInfo android.app.ApplicationPackageManager.getApplicationInfo(java.lang.String,int) throws android.content.pm.PackageManager$NameNotFoundException
     var func_ApplicationPackageManager_getApplicationInfo_2ppf = cls_ApplicationPackageManager.getApplicationInfo.overload('java.lang.String', 'int')
     console.log("func_ApplicationPackageManager_getApplicationInfo_2ppf=" + func_ApplicationPackageManager_getApplicationInfo_2ppf)
     if (func_ApplicationPackageManager_getApplicationInfo_2ppf) {
@@ -630,6 +630,41 @@ class FridaHookAndroidJava {
         var retPackageInfo_2pvf = this.getPackageInfo(versionedPackage, flags)
         console.log(funcName + " => retPackageInfo_2pvf=" + retPackageInfo_2pvf)
         return retPackageInfo_2pvf
+      }
+    }
+
+    // public abstract boolean hasSystemFeature(String featureName)
+    // public abstract boolean android.content.pm.PackageManager.hasSystemFeature(java.lang.String)
+    var func_ApplicationPackageManager_hasSystemFeature_1pf = cls_ApplicationPackageManager.hasSystemFeature.overload('java.lang.String')
+    console.log("func_ApplicationPackageManager_hasSystemFeature_1pf=" + func_ApplicationPackageManager_hasSystemFeature_1pf)
+    if (func_ApplicationPackageManager_hasSystemFeature_1pf) {
+      func_ApplicationPackageManager_hasSystemFeature_1pf.implementation = function (featureName) {
+        var funcName = "ApplicationPackageManager.hasSystemFeature(featureName)"
+        var funcParaDict = {
+          "featureName": featureName,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retHasSystemFeature_1pf = this.hasSystemFeature(featureName)
+        console.log(funcName + " => retHasSystemFeature_1pf=" + retHasSystemFeature_1pf)
+        return retHasSystemFeature_1pf
+      }
+    }
+
+    // public abstract boolean hasSystemFeature(String featureName, int version)
+    // public abstract boolean android.content.pm.PackageManager.hasSystemFeature(java.lang.String,int)
+    var func_ApplicationPackageManager_hasSystemFeature_2pfv = cls_ApplicationPackageManager.hasSystemFeature.overload('java.lang.String', 'int')
+    console.log("func_ApplicationPackageManager_hasSystemFeature_2pfv=" + func_ApplicationPackageManager_hasSystemFeature_2pfv)
+    if (func_ApplicationPackageManager_hasSystemFeature_2pfv) {
+      func_ApplicationPackageManager_hasSystemFeature_2pfv.implementation = function (featureName, version) {
+        var funcName = "ApplicationPackageManager.hasSystemFeature(featureName,version)"
+        var funcParaDict = {
+          "featureName": featureName,
+          "version": version,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retHasSystemFeature_2pfv = this.hasSystemFeature(featureName, version)
+        console.log(funcName + " => retHasSystemFeature_2pfv=" + retHasSystemFeature_2pfv)
+        return retHasSystemFeature_2pfv
       }
     }
 
@@ -3459,7 +3494,6 @@ class FridaHookAndroidJava {
 
   }
 
-
   static Uri() {
     var clsName_Uri = "android.net.Uri"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_Uri)
@@ -4520,7 +4554,6 @@ class FridaHookAndroidJava {
 
   }
 
-
   static SharedPreferencesImpl() {
     var clsName_SharedPreferencesImpl = "android.app.SharedPreferencesImpl"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_SharedPreferencesImpl)
@@ -5483,7 +5516,7 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        FridaAndroidUtil.printClass_RetryableSink(this)
+        FridaAndroidUtil.printClass_RetryableSink(this, `Before ${funcName}` )
 
         return this.close()
       }
@@ -5709,7 +5742,7 @@ class FridaHookAndroidJava {
     console.log("cls_TelephonyManager=" + cls_TelephonyManager)
     
     // String getDeviceId()
-    // 
+    // public java.lang.String android.telephony.TelephonyManager.getDeviceId()
     var func_TelephonyManager_getDeviceId_0p = cls_TelephonyManager.getDeviceId.overload()
     console.log("func_TelephonyManager_getDeviceId_0p=" + func_TelephonyManager_getDeviceId_0p)
     if (func_TelephonyManager_getDeviceId_0p) {
@@ -5725,7 +5758,7 @@ class FridaHookAndroidJava {
     }
 
     // String getDeviceId(int slotIndex)
-    // 
+    // public java.lang.String android.telephony.TelephonyManager.getDeviceId(int)
     var func_TelephonyManager_getDeviceId_1ps = cls_TelephonyManager.getDeviceId.overload('int')
     console.log("func_TelephonyManager_getDeviceId_1ps=" + func_TelephonyManager_getDeviceId_1ps)
     if (func_TelephonyManager_getDeviceId_1ps) {
@@ -5743,7 +5776,7 @@ class FridaHookAndroidJava {
     }
 
     // String getImei(int slotIndex)
-    // 
+    // public java.lang.String android.telephony.TelephonyManager.getImei(int)
     var func_TelephonyManager_getImei_1ps = cls_TelephonyManager.getImei.overload('int')
     console.log("func_TelephonyManager_getImei_1ps=" + func_TelephonyManager_getImei_1ps)
     if (func_TelephonyManager_getImei_1ps) {
@@ -5761,7 +5794,7 @@ class FridaHookAndroidJava {
     }
 
     // String getImei()
-    // 
+    // public java.lang.String android.telephony.TelephonyManager.getImei()
     var func_TelephonyManager_getImei_0p = cls_TelephonyManager.getImei.overload()
     console.log("func_TelephonyManager_getImei_0p=" + func_TelephonyManager_getImei_0p)
     if (func_TelephonyManager_getImei_0p) {
@@ -5773,6 +5806,38 @@ class FridaHookAndroidJava {
         var retImei_0p = this.getImei()
         console.log(funcName + " => retImei_0p=" + retImei_0p)
         return retImei_0p
+      }
+    }
+
+    // public String getMeid()
+    // public java.lang.String android.telephony.TelephonyManager.getMeid()
+    var func_TelephonyManager_getMeid_0p = cls_TelephonyManager.getMeid.overload()
+    console.log("func_TelephonyManager_getMeid_0p=" + func_TelephonyManager_getMeid_0p)
+    if (func_TelephonyManager_getMeid_0p) {
+      func_TelephonyManager_getMeid_0p.implementation = function () {
+        var funcName = "TelephonyManager.getMeid()"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retMeid_0p = this.getMeid()
+        console.log(funcName + " => retMeid_0p=" + retMeid_0p)
+        return retMeid_0p
+      }
+    }
+
+    // public String getMeid(int slotIndex)
+    // public java.lang.String android.telephony.TelephonyManager.getMeid(int)
+    var func_TelephonyManager_getMeid_1ps = cls_TelephonyManager.getMeid.overload('int')
+    console.log("func_TelephonyManager_getMeid_1ps=" + func_TelephonyManager_getMeid_1ps)
+    if (func_TelephonyManager_getMeid_1ps) {
+      func_TelephonyManager_getMeid_1ps.implementation = function (slotIndex) {
+        var funcName = "TelephonyManager.getMeid(slotIndex)"
+        var funcParaDict = {
+          "slotIndex": slotIndex,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retMeid_1ps = this.getMeid(slotIndex)
+        console.log(funcName + " => retMeid_1ps=" + retMeid_1ps)
+        return retMeid_1ps
       }
     }
 
@@ -5867,6 +5932,36 @@ class FridaHookAndroidJava {
       }
     }
 
+    // public int getSimCarrierId()
+    // public int android.telephony.TelephonyManager.getSimCarrierId()
+    var func_TelephonyManager_getSimCarrierId = cls_TelephonyManager.getSimCarrierId
+    console.log("func_TelephonyManager_getSimCarrierId=" + func_TelephonyManager_getSimCarrierId)
+    if (func_TelephonyManager_getSimCarrierId) {
+      func_TelephonyManager_getSimCarrierId.implementation = function () {
+        var funcName = "TelephonyManager.getSimCarrierId"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retSimCarrierId = this.getSimCarrierId()
+        console.log(funcName + " => retSimCarrierId=" + retSimCarrierId)
+        return retSimCarrierId
+      }
+    }
+
+    // public boolean isVoiceCapable()
+    // public boolean android.telephony.TelephonyManager.isVoiceCapable()
+    var func_TelephonyManager_isVoiceCapable = cls_TelephonyManager.isVoiceCapable
+    console.log("func_TelephonyManager_isVoiceCapable=" + func_TelephonyManager_isVoiceCapable)
+    if (func_TelephonyManager_isVoiceCapable) {
+      func_TelephonyManager_isVoiceCapable.implementation = function () {
+        var funcName = "TelephonyManager.isVoiceCapable"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retIsVoiceCapable = this.isVoiceCapable()
+        console.log(funcName + " => retIsVoiceCapable=" + retIsVoiceCapable)
+        return retIsVoiceCapable
+      }
+    }
+
   }
 
   static ConnectivityManager() {
@@ -5937,7 +6032,7 @@ class FridaHookAndroidJava {
 
     
     // public String getTypeName()
-    // 
+    // public java.lang.String android.net.NetworkInfo.getTypeName()
     var func_NetworkInfo_getTypeName = cls_NetworkInfo.getTypeName
     console.log("func_NetworkInfo_getTypeName=" + func_NetworkInfo_getTypeName)
     if (func_NetworkInfo_getTypeName) {
@@ -5953,7 +6048,7 @@ class FridaHookAndroidJava {
     }
 
     // public String getSubtypeName()
-    // 
+    // public java.lang.String android.net.NetworkInfo.getSubtypeName()
     var func_NetworkInfo_getSubtypeName = cls_NetworkInfo.getSubtypeName
     console.log("func_NetworkInfo_getSubtypeName=" + func_NetworkInfo_getSubtypeName)
     if (func_NetworkInfo_getSubtypeName) {
@@ -5969,7 +6064,7 @@ class FridaHookAndroidJava {
     }
 
     // public boolean isRoaming()
-    // 
+    // public boolean android.net.NetworkInfo.isRoaming()
     var func_NetworkInfo_isRoaming = cls_NetworkInfo.isRoaming
     console.log("func_NetworkInfo_isRoaming=" + func_NetworkInfo_isRoaming)
     if (func_NetworkInfo_isRoaming) {
@@ -5983,6 +6078,22 @@ class FridaHookAndroidJava {
         return retBoolean
       }
     }
+
+    // public String getExtraInfo()
+    // public java.lang.String android.net.NetworkInfo.getExtraInfo()
+    var func_NetworkInfo_getExtraInfo = cls_NetworkInfo.getExtraInfo
+    console.log("func_NetworkInfo_getExtraInfo=" + func_NetworkInfo_getExtraInfo)
+    if (func_NetworkInfo_getExtraInfo) {
+      func_NetworkInfo_getExtraInfo.implementation = function () {
+        var funcName = "NetworkInfo.getExtraInfo"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retExtraInfo = this.getExtraInfo()
+        console.log(funcName + " => retExtraInfo=" + retExtraInfo)
+        return retExtraInfo
+      }
+    }
+  
   }
 
   static SubscriptionManager() {
@@ -6109,6 +6220,44 @@ class FridaHookAndroidJava {
         var retDataRoaming = this.getDataRoaming()
         console.log(funcName + " => retDataRoaming=" + retDataRoaming)
         return retDataRoaming
+      }
+    }
+
+  }
+
+  static Boolean(callback_isShowLog=null) {
+    var clsName_Boolean = "java.lang.Boolean"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Boolean)
+
+    var cls_Boolean = Java.use(clsName_Boolean)
+    console.log("cls_Boolean=" + cls_Boolean)
+
+    
+    // boolean booleanValue()
+    // 
+    var func_Boolean_booleanValue = cls_Boolean.booleanValue
+    console.log("func_Boolean_booleanValue=" + func_Boolean_booleanValue)
+    if (func_Boolean_booleanValue) {
+      func_Boolean_booleanValue.implementation = function () {
+        var funcName = "Boolean.booleanValue"
+        var funcParaDict = {}
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+          console.log(funcCallAndStackStr)
+        }
+
+        var retBoolean = this.booleanValue()
+        if (isShowLog) {
+          console.log(funcName + " => retBoolean=" + retBoolean)
+        }
+        return retBoolean
       }
     }
 

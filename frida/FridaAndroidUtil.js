@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250603
+	Updated: 20250604
 */
 
 // Frida Android Util
@@ -196,8 +196,7 @@ class FridaAndroidUtil {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       console.log("CronetUrlRequest:" + clsNameStr
         + " mInitialUrl=" + curObj.mInitialUrl.value
@@ -222,8 +221,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Messenger)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       var binder = curObj.getBinder()
 
@@ -243,8 +241,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Message)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       var callback = curObj.getCallback()
       var dataBundle = curObj.getData()
@@ -281,11 +278,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_URLConnection)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
-      // console.log("URLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
-      // console.log("URLConnection: curClsName=" + curClsName)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       // if (FridaAndroidUtil.isClass_URLConnection(curObj)){
         // console.log("URLConnection:"
@@ -387,11 +380,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpURLConnection)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
-      // console.log("HttpURLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
-      // console.log("HttpURLConnection: curClsName=" + curClsName)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       // if (FridaAndroidUtil.isClass_HttpURLConnection(curObj)){
         // var headerFields = curObj.getHeaderFields()
@@ -433,11 +422,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpsURLConnection)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
-      // console.log("HttpsURLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
-      // console.log("HttpsURLConnection: curClsName=" + curClsName)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       // if (FridaAndroidUtil.isClass_HttpsURLConnection(curObj)){
         console.log("HttpsURLConnection: " + clsNameStr
@@ -459,11 +444,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_DelegatingHttpsURLConnection)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
-      // console.log("DelegatingHttpsURLConnection: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
-      // console.log("DelegatingHttpsURLConnection: curClsName=" + curClsName)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       // if (FridaAndroidUtil.isClass_DelegatingHttpsURLConnection(curObj)){
         console.log("DelegatingHttpsURLConnection:" + clsNameStr
@@ -485,11 +466,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpsURLConnectionImpl)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
-      // console.log("HttpsURLConnectionImpl: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
-      // console.log("HttpsURLConnectionImpl: curClsName=" + curClsName)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       // if (FridaAndroidUtil.isClass_HttpsURLConnectionImpl(curObj)){
         console.log("HttpsURLConnectionImpl:" + clsNameStr
@@ -511,11 +488,7 @@ class FridaAndroidUtil {
       var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpURLConnectionImpl)
       // console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      // var curJClassName = FridaAndroidUtil.getJclassName(curObj)
-      // console.log("HttpURLConnectionImpl: curClsName=" + curClsName + ", curJClassName=" + curJClassName)
-      // console.log("HttpURLConnectionImpl: curClsName=" + curClsName)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       // if (FridaAndroidUtil.isClass_HttpURLConnectionImpl(curObj)){
         console.log("HttpURLConnectionImpl:" + clsNameStr
@@ -555,18 +528,19 @@ class FridaAndroidUtil {
   }
 
   // com.android.okhttp.okio.Buffer
-  static printClass_Buffer(inputObj){
+  static printClass_Buffer(inputObj, prefixStr=""){
     // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okio/okio/src/main/java/okio/Buffer.java
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
       var byteArray = curObj.readByteArray()
 
-      console.log("Buffer:" + clsNameStr
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + "Buffer:" + clsNameStr
         // + " size=" + curObj.size.value
         + " size=" + curObj._size.value
         + ", head=" + curObj.head.value
@@ -579,24 +553,25 @@ class FridaAndroidUtil {
   }
 
   // com.android.okhttp.internal.http.RetryableSink
-  static printClass_RetryableSink(inputObj){
+  static printClass_RetryableSink(inputObj, prefixStr=""){
     // https://cs.android.com/android/platform/superproject/+/master:external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/internal/http/RetryableSink.java
     // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okhttp/src/main/java/com/squareup/okhttp/internal/http/RetryableSink.java
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
-      var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-      var clsNameStr = "[" + curClsName + "]"
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      console.log("RetryableSink:" + clsNameStr
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + "RetryableSink:" + clsNameStr
         + " closed=" + curObj.closed.value
         + ", limit=" + curObj.limit.value
         + ", contentLength()=" + curObj.contentLength()
         + ", content=" + curObj.content.value
       )
 
-      FridaAndroidUtil.printClass_Buffer(curObj.content.value)
+      FridaAndroidUtil.printClass_Buffer(curObj.content.value, prefixStr)
     } else {
       console.log("RetryableSink: null")
     }
@@ -609,8 +584,7 @@ class FridaAndroidUtil {
         var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_File)
         // console.log("curObj=" + curObj)
 
-        var curClsName = FridaAndroidUtil.getJavaClassName(curObj)
-        var clsNameStr = "[" + curClsName + "]"
+        var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
         console.log("File:" + clsNameStr
           + " separator=" + curObj.separator.value
@@ -1148,10 +1122,17 @@ class FridaAndroidUtil {
     return javaClsName
   }
 
+  // generate the class name string
+  static genClassNameStr(curObj){
+    var objClsName = FridaAndroidUtil.getJavaClassName(curObj)
+    var classNameStr = `<clsName=${objClsName}>`
+    return classNameStr
+  }
+
   // generate the class name and value string from current object
   static valueToNameStr(curObj){
-    var objClsName = FridaAndroidUtil.getJavaClassName(curObj)
-    var retStr = `<clsName=${objClsName}>=${curObj}`
+    var classNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+    var retStr = `${classNameStr}=${curObj}`
     return retStr
   }
 
