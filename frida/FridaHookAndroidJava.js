@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250606
+	Updated: 20250609
 */
 
 // Frida hook common Android/Java class
@@ -6261,6 +6261,236 @@ class FridaHookAndroidJava {
       }
     }
 
+  }
+
+  static TimeZone() {
+    var clsName_TimeZone = "android.icu.util.TimeZone"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_TimeZone)
+
+    var cls_TimeZone = Java.use(clsName_TimeZone)
+    console.log("cls_TimeZone=" + cls_TimeZone)
+
+    
+    // public static TimeZone getDefault()
+    // 
+    var func_TimeZone_getDefault = cls_TimeZone.getDefault
+    console.log("func_TimeZone_getDefault=" + func_TimeZone_getDefault)
+    if (func_TimeZone_getDefault) {
+      func_TimeZone_getDefault.implementation = function () {
+        var funcName = "TimeZone.getDefault"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retDefault = this.getDefault()
+        console.log(funcName + " => retDefault=" + retDefault)
+        return retDefault
+      }
+    }
+
+    // public String getID()
+    // 
+    var func_TimeZone_getID = cls_TimeZone.getID
+    console.log("func_TimeZone_getID=" + func_TimeZone_getID)
+    if (func_TimeZone_getID) {
+      func_TimeZone_getID.implementation = function () {
+        var funcName = "TimeZone.getID"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retID = this.getID()
+        console.log(funcName + " => retID=" + retID)
+        return retID
+      }
+    }
+  }
+
+  static ZipFile() {
+    var clsName_ZipFile = "java.util.zip.ZipFile"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_ZipFile)
+
+    var cls_ZipFile = Java.use(clsName_ZipFile)
+    console.log("cls_ZipFile=" + cls_ZipFile)
+
+    
+    // public ZipFile(File file)
+    // 
+    var func_ZipFile_ctor_1pf = cls_ZipFile.$init.overload('java.io.File')
+    console.log("func_ZipFile_ctor_1pf=" + func_ZipFile_ctor_1pf)
+    if (func_ZipFile_ctor_1pf) {
+      func_ZipFile_ctor_1pf.implementation = function (file) {
+        var funcName = "ZipFile_1pf"
+        var funcParaDict = {
+          "file": file,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init(file)
+        var newZipFile_1pf = this
+        console.log(funcName + " => newZipFile_1pf=" + newZipFile_1pf)
+        return
+      }
+    }
+
+    // public ZipFile(String name)
+    // 
+    var func_ZipFile_ctor_1pn = cls_ZipFile.$init.overload('java.lang.String')
+    console.log("func_ZipFile_ctor_1pn=" + func_ZipFile_ctor_1pn)
+    if (func_ZipFile_ctor_1pn) {
+      func_ZipFile_ctor_1pn.implementation = function (name) {
+        var funcName = "ZipFile_1pn"
+        var funcParaDict = {
+          "name": name,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init(name)
+        var newZipFile_1pn = this
+        console.log(funcName + " => newZipFile_1pn=" + newZipFile_1pn)
+        return
+      }
+    }
+
+    // public Enumeration<?extends ZipEntry> entries()
+    // public java.util.Enumeration java.util.zip.ZipFile.entries()
+    var func_ZipFile_entries = cls_ZipFile.entries
+    console.log("func_ZipFile_entries=" + func_ZipFile_entries)
+    if (func_ZipFile_entries) {
+      func_ZipFile_entries.implementation = function () {
+        var funcName = "ZipFile.entries"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retExtends_ZipEntry_ = this.entries()
+        console.log(funcName + " => retExtends_ZipEntry_=" + retExtends_ZipEntry_)
+        return retExtends_ZipEntry_
+      }
+    }
+
+    // public InputStream getInputStream(ZipEntry entry)
+    // public java.io.InputStream java.util.zip.ZipFile.getInputStream(java.util.zip.ZipEntry) throws java.io.IOException
+    var func_ZipFile_getInputStream = cls_ZipFile.getInputStream
+    console.log("func_ZipFile_getInputStream=" + func_ZipFile_getInputStream)
+    if (func_ZipFile_getInputStream) {
+      func_ZipFile_getInputStream.implementation = function (entry) {
+        var funcName = "ZipFile.getInputStream"
+        var funcParaDict = {
+          "entry": entry,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retInputStream = this.getInputStream(entry)
+        console.log(funcName + " => retInputStream=" + retInputStream)
+        return retInputStream
+      }
+    }
+  }
+
+  static MessageDigest() {
+    var clsName_MessageDigest = "java.security.MessageDigest"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_MessageDigest)
+
+    var cls_MessageDigest = Java.use(clsName_MessageDigest)
+    console.log("cls_MessageDigest=" + cls_MessageDigest)
+
+    
+    // void update(byte[] input)
+    // public void java.security.MessageDigest.update(byte[])
+    var func_MessageDigest_update_1pi = cls_MessageDigest.update.overload('[B')
+    console.log("func_MessageDigest_update_1pi=" + func_MessageDigest_update_1pi)
+    if (func_MessageDigest_update_1pi) {
+      func_MessageDigest_update_1pi.implementation = function (input) {
+        var funcName = "MessageDigest.update_1pi"
+        var funcParaDict = {
+          "input": input,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.update(input)
+      }
+    }
+
+    // void update(byte[] input, int offset, int len)
+    // public void java.security.MessageDigest.update(byte[],int,int)
+    var func_MessageDigest_update_3piol = cls_MessageDigest.update.overload('[B', 'int', 'int')
+    console.log("func_MessageDigest_update_3piol=" + func_MessageDigest_update_3piol)
+    if (func_MessageDigest_update_3piol) {
+      func_MessageDigest_update_3piol.implementation = function (input, offset, len) {
+        var funcName = "MessageDigest.update_3piol"
+        var funcParaDict = {
+          "input": input,
+          "offset": offset,
+          "len": len,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.update(input, offset, len)
+      }
+    }
+
+    // byte[] digest()
+    // 
+    var func_MessageDigest_digest_0p = cls_MessageDigest.digest.overload()
+    console.log("func_MessageDigest_digest_0p=" + func_MessageDigest_digest_0p)
+    if (func_MessageDigest_digest_0p) {
+      func_MessageDigest_digest_0p.implementation = function () {
+        var funcName = "MessageDigest.digest_0p"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retByte___0p = this.digest()
+        console.log(funcName + " => retByte___0p=" + retByte___0p)
+        return retByte___0p
+      }
+    }
+  }
+
+  static Base64() {
+    var clsName_Base64 = "android.util.Base64"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Base64)
+
+    var cls_Base64 = Java.use(clsName_Base64)
+    console.log("cls_Base64=" + cls_Base64)
+
+    
+    // static String encodeToString(byte[] input, int offset, int len, int flags)
+    // public static java.lang.String android.util.Base64.encodeToString(byte[],int,int,int)
+    var func_Base64_encodeToString_4piolf = cls_Base64.encodeToString.overload('[B', 'int', 'int', 'int')
+    console.log("func_Base64_encodeToString_4piolf=" + func_Base64_encodeToString_4piolf)
+    if (func_Base64_encodeToString_4piolf) {
+      func_Base64_encodeToString_4piolf.implementation = function (input, offset, len, flags) {
+        var funcName = "Base64.encodeToString_4piolf"
+        var funcParaDict = {
+          "input": input,
+          "offset": offset,
+          "len": len,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_4piolf = this.encodeToString(input, offset, len, flags)
+        console.log(funcName + " => retString_4piolf=" + retString_4piolf)
+        return retString_4piolf
+      }
+    }
+
+    // static String encodeToString(byte[] input, int flags)
+    // public static java.lang.String android.util.Base64.encodeToString(byte[],int)
+    var func_Base64_encodeToString_2pif = cls_Base64.encodeToString.overload('[B', 'int')
+    console.log("func_Base64_encodeToString_2pif=" + func_Base64_encodeToString_2pif)
+    if (func_Base64_encodeToString_2pif) {
+      func_Base64_encodeToString_2pif.implementation = function (input, flags) {
+        var funcName = "Base64.encodeToString_2pif"
+        var funcParaDict = {
+          "input": input,
+          "flags": flags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retString_2pif = this.encodeToString(input, flags)
+        console.log(funcName + " => retString_2pif=" + retString_2pif)
+        return retString_2pif
+      }
+    }
   }
 
 }
