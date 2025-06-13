@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250609
+	Updated: 20250611
 */
 
 // Frida hook common Android/Java class
@@ -665,6 +665,38 @@ class FridaHookAndroidJava {
         var retHasSystemFeature_2pfv = this.hasSystemFeature(featureName, version)
         console.log(funcName + " => retHasSystemFeature_2pfv=" + retHasSystemFeature_2pfv)
         return retHasSystemFeature_2pfv
+      }
+    }
+
+    // public String[] getSystemSharedLibraryNames() {
+    // public java.lang.String[] android.app.ApplicationPackageManager.getSystemSharedLibraryNames()
+    var func_ApplicationPackageManager_getSystemSharedLibraryNames = cls_ApplicationPackageManager.getSystemSharedLibraryNames
+    console.log("func_ApplicationPackageManager_getSystemSharedLibraryNames=" + func_ApplicationPackageManager_getSystemSharedLibraryNames)
+    if (func_ApplicationPackageManager_getSystemSharedLibraryNames) {
+      func_ApplicationPackageManager_getSystemSharedLibraryNames.implementation = function () {
+        var funcName = "ApplicationPackageManager.getSystemSharedLibraryNames"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var systemSharedLibraryNames = this.getSystemSharedLibraryNames()
+        console.log(funcName + " => systemSharedLibraryNames=" + systemSharedLibraryNames)
+        return systemSharedLibraryNames
+      }
+    }
+
+    // public FeatureInfo[] getSystemAvailableFeatures() {
+    // public android.content.pm.FeatureInfo[] android.app.ApplicationPackageManager.getSystemAvailableFeatures()
+    var func_ApplicationPackageManager_getSystemAvailableFeatures = cls_ApplicationPackageManager.getSystemAvailableFeatures
+    console.log("func_ApplicationPackageManager_getSystemAvailableFeatures=" + func_ApplicationPackageManager_getSystemAvailableFeatures)
+    if (func_ApplicationPackageManager_getSystemAvailableFeatures) {
+      func_ApplicationPackageManager_getSystemAvailableFeatures.implementation = function () {
+        var funcName = "ApplicationPackageManager.getSystemAvailableFeatures"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var systemAvailableFeatures = this.getSystemAvailableFeatures()
+        console.log(funcName + " => systemAvailableFeatures=" + systemAvailableFeatures)
+        return systemAvailableFeatures
       }
     }
 
@@ -4552,6 +4584,21 @@ class FridaHookAndroidJava {
       }
     }
 
+    // public Resources getResources()
+    // public android.content.res.Resources android.content.ContextWrapper.getResources()
+    var func_ContextWrapper_getResources = cls_ContextWrapper.getResources
+    console.log("func_ContextWrapper_getResources=" + func_ContextWrapper_getResources)
+    if (func_ContextWrapper_getResources) {
+      func_ContextWrapper_getResources.implementation = function () {
+        var funcName = "ContextWrapper.getResources"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retResources = this.getResources()
+        console.log(funcName + " => retResources=" + retResources)
+        return retResources
+      }
+    }
+
   }
 
   static SharedPreferencesImpl() {
@@ -6489,6 +6536,168 @@ class FridaHookAndroidJava {
         var retString_2pif = this.encodeToString(input, flags)
         console.log(funcName + " => retString_2pif=" + retString_2pif)
         return retString_2pif
+      }
+    }
+  }
+
+  static ActivityManager() {
+    var clsName_ActivityManager = "android.app.ActivityManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_ActivityManager)
+
+    var cls_ActivityManager = Java.use(clsName_ActivityManager)
+    console.log("cls_ActivityManager=" + cls_ActivityManager)
+
+    
+    // public ConfigurationInfo getDeviceConfigurationInfo()
+    // 
+    var func_ActivityManager_getDeviceConfigurationInfo = cls_ActivityManager.getDeviceConfigurationInfo
+    console.log("func_ActivityManager_getDeviceConfigurationInfo=" + func_ActivityManager_getDeviceConfigurationInfo)
+    if (func_ActivityManager_getDeviceConfigurationInfo) {
+      func_ActivityManager_getDeviceConfigurationInfo.implementation = function () {
+        var funcName = "ActivityManager.getDeviceConfigurationInfo"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retDeviceConfigurationInfo = this.getDeviceConfigurationInfo()
+        console.log(funcName + " => retDeviceConfigurationInfo=" + retDeviceConfigurationInfo)
+        FridaAndroidUtil.printClass_ConfigurationInfo(retDeviceConfigurationInfo)
+        return retDeviceConfigurationInfo
+      }
+    }
+
+    // void getMemoryInfo(ActivityManager.MemoryInfo outInfo)
+    // 
+    var func_ActivityManager_getMemoryInfo = cls_ActivityManager.getMemoryInfo
+    console.log("func_ActivityManager_getMemoryInfo=" + func_ActivityManager_getMemoryInfo)
+    if (func_ActivityManager_getMemoryInfo) {
+      func_ActivityManager_getMemoryInfo.implementation = function (outInfo) {
+        var funcName = "ActivityManager.getMemoryInfo"
+        var funcParaDict = {
+          "outInfo": outInfo,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.getMemoryInfo(outInfo)
+      }
+    }
+  }
+
+  static DisplayManager() {
+    var clsName_DisplayManager = "android.hardware.display.DisplayManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_DisplayManager)
+
+    var cls_DisplayManager = Java.use(clsName_DisplayManager)
+    console.log("cls_DisplayManager=" + cls_DisplayManager)
+    
+    // public Display getDisplay(int displayId)
+    // 
+    var func_DisplayManager_getDisplay = cls_DisplayManager.getDisplay
+    console.log("func_DisplayManager_getDisplay=" + func_DisplayManager_getDisplay)
+    if (func_DisplayManager_getDisplay) {
+      func_DisplayManager_getDisplay.implementation = function (displayId) {
+        var funcName = "DisplayManager.getDisplay"
+        var funcParaDict = {
+          "displayId": displayId,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retDisplay = this.getDisplay(displayId)
+        console.log(funcName + " => retDisplay=" + retDisplay)
+        return retDisplay
+      }
+    }
+
+    // public Point getStableDisplaySize()
+    // 
+    var func_DisplayManager_getStableDisplaySize = cls_DisplayManager.getStableDisplaySize
+    console.log("func_DisplayManager_getStableDisplaySize=" + func_DisplayManager_getStableDisplaySize)
+    if (func_DisplayManager_getStableDisplaySize) {
+      func_DisplayManager_getStableDisplaySize.implementation = function () {
+        var funcName = "DisplayManager.getStableDisplaySize"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retStableDisplaySize = this.getStableDisplaySize()
+        console.log(funcName + " => retStableDisplaySize=" + retStableDisplaySize)
+        return retStableDisplaySize
+      }
+    }
+  }
+
+  static Display() {
+    var clsName_Display = "android.view.Display"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Display)
+
+    var cls_Display = Java.use(clsName_Display)
+    console.log("cls_Display=" + cls_Display)
+
+    
+    // void getRealMetrics(DisplayMetrics outMetrics)
+    // 
+    var func_Display_getRealMetrics = cls_Display.getRealMetrics
+    console.log("func_Display_getRealMetrics=" + func_Display_getRealMetrics)
+    if (func_Display_getRealMetrics) {
+      func_Display_getRealMetrics.implementation = function (outMetrics) {
+        var funcName = "Display.getRealMetrics"
+        var funcParaDict = {
+          "outMetrics": outMetrics,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.getRealMetrics(outMetrics)
+        FridaAndroidUtil.printClass_DisplayMetrics(outMetrics, `After ${funcName}`)
+        return
+      }
+    }
+  }
+
+  static DisplayMetrics() {
+    var clsName_DisplayMetrics = "android.util.DisplayMetrics"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_DisplayMetrics)
+
+    var cls_DisplayMetrics = Java.use(clsName_DisplayMetrics)
+    console.log("cls_DisplayMetrics=" + cls_DisplayMetrics)
+
+    // public DisplayMetrics()
+    // 
+    var func_DisplayMetrics_ctor = cls_DisplayMetrics.$init
+    console.log("func_DisplayMetrics_ctor=" + func_DisplayMetrics_ctor)
+    if (func_DisplayMetrics_ctor) {
+      func_DisplayMetrics_ctor.implementation = function () {
+        var funcName = "DisplayMetrics"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init()
+        var newDisplayMetrics = this
+        console.log(funcName + " => newDisplayMetrics=" + newDisplayMetrics)
+        FridaAndroidUtil.printClass_DisplayMetrics(newDisplayMetrics, "After DisplayMetrics()")
+        return
+      }
+    }
+  }
+
+  static Resources() {
+    var clsName_Resources = "android.content.res.Resources"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Resources)
+
+    var cls_Resources = Java.use(clsName_Resources)
+    console.log("cls_Resources=" + cls_Resources)
+
+    // public Configuration getConfiguration()
+    // public android.content.res.Configuration android.content.res.Resources.getConfiguration()
+    var func_Resources_getConfiguration = cls_Resources.getConfiguration
+    console.log("func_Resources_getConfiguration=" + func_Resources_getConfiguration)
+    if (func_Resources_getConfiguration) {
+      func_Resources_getConfiguration.implementation = function () {
+        var funcName = "Resources.getConfiguration"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retConfiguration = this.getConfiguration()
+        console.log(funcName + " => retConfiguration=" + retConfiguration)
+        FridaAndroidUtil.printClass_Configuration(retConfiguration, `After ${funcName}`)
+        return retConfiguration
       }
     }
   }

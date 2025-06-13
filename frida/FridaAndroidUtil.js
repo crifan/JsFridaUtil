@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250604
+	Updated: 20250612
 */
 
 // Frida Android Util
@@ -527,31 +527,6 @@ class FridaAndroidUtil {
     }
   }
 
-  // com.android.okhttp.okio.Buffer
-  static printClass_Buffer(inputObj, prefixStr=""){
-    // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okio/okio/src/main/java/okio/Buffer.java
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
-
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      var byteArray = curObj.readByteArray()
-
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-
-      console.log(newPrefStr + "Buffer:" + clsNameStr
-        // + " size=" + curObj.size.value
-        + " size=" + curObj._size.value
-        + ", head=" + curObj.head.value
-        + ", toString()=" + curObj.toString()
-        + ", byteArray=" + byteArray
-      )
-    } else {
-      console.log("Buffer: null")
-    }
-  }
-
   // com.android.okhttp.internal.http.RetryableSink
   static printClass_RetryableSink(inputObj, prefixStr=""){
     // https://cs.android.com/android/platform/superproject/+/master:external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/internal/http/RetryableSink.java
@@ -599,6 +574,143 @@ class FridaAndroidUtil {
       }
     } else {
       console.log(`printClass_File: inputObj is null`)
+    }
+  }
+
+  // com.android.okhttp.okio.Buffer
+  static printClass_Buffer(inputObj, prefixStr=""){
+    // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okio/okio/src/main/java/okio/Buffer.java
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+      var byteArray = curObj.readByteArray()
+
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + "Buffer:" + clsNameStr
+        // + " size=" + curObj.size.value
+        + " size=" + curObj._size.value
+        + ", head=" + curObj.head.value
+        + ", toString()=" + curObj.toString()
+        + ", byteArray=" + byteArray
+      )
+    } else {
+      console.log("Buffer: null")
+    }
+  }
+
+  // android.util.DisplayMetrics
+  static printClass_DisplayMetrics(inputObj, prefixStr=""){
+    const ClassName = "DisplayMetrics"
+    // https://developer.android.com/reference/android/util/DisplayMetrics#DisplayMetrics()
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + ClassName + ":" + clsNameStr
+        + " DENSITY_DEVICE_STABLE=" + curObj.DENSITY_DEVICE_STABLE.value
+        + ", density=" + curObj.density.value
+        + ", densityDpi=" + curObj.densityDpi.value
+        + ", heightPixels=" + curObj.heightPixels.value
+        + ", scaledDensity=" + curObj.scaledDensity.value
+        + ", widthPixels=" + curObj.widthPixels.value
+        + ", xdpi=" + curObj.xdpi.value
+        + ", ydpi=" + curObj.ydpi.value
+      )
+    } else {
+      console.log(ClassName + ": null")
+    }
+  }
+
+  // android.content.pm.ConfigurationInfo
+  static printClass_ConfigurationInfo(inputObj, prefixStr=""){
+    const ClassName = "ConfigurationInfo"
+    // https://developer.android.com/reference/android/content/pm/ConfigurationInfo#INPUT_FEATURE_FIVE_WAY_NAV
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + ClassName + ":" + clsNameStr
+        + " reqGlEsVersion=" + curObj.reqGlEsVersion.value
+        + ", reqInputFeatures=" + curObj.reqInputFeatures.value
+        + ", reqKeyboardType=" + curObj.reqKeyboardType.value
+        + ", reqNavigation=" + curObj.reqNavigation.value
+        + ", reqTouchScreen=" + curObj.reqTouchScreen.value
+      )
+    } else {
+      console.log(ClassName + ": null")
+    }
+  }
+
+  // android.content.res.Configuration
+  static printClass_Configuration(inputObj, prefixStr=""){
+    const ClassName = "Configuration"
+    // https://developer.android.com/reference/android/content/res/Configuration#screenLayout
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + ClassName + ":" + clsNameStr
+        + " colorMode=" + curObj.colorMode.value
+        + ", densityDpi=" + curObj.densityDpi.value
+        + ", fontScale=" + curObj.fontScale.value
+        + ", fontWeightAdjustment=" + curObj.fontWeightAdjustment.value
+        + ", hardKeyboardHidden=" + curObj.hardKeyboardHidden.value
+        + ", keyboard=" + curObj.keyboard.value
+        + ", keyboardHidden=" + curObj.keyboardHidden.value
+        + ", locale=" + curObj.locale.value
+        + ", mcc=" + curObj.mcc.value
+        + ", mnc=" + curObj.mnc.value
+        + ", navigation=" + curObj.navigation.value
+        + ", navigationHidden=" + curObj.navigationHidden.value
+        + ", orientation=" + curObj.orientation.value
+        + ", screenHeightDp=" + curObj.screenHeightDp.value
+        + ", screenLayout=" + curObj.screenLayout.value
+        + ", screenWidthDp=" + curObj.screenWidthDp.value
+        + ", smallestScreenWidthDp=" + curObj.smallestScreenWidthDp.value
+        + ", touchscreen=" + curObj.touchscreen.value
+        + ", uiMode=" + curObj.uiMode.value
+      )
+    } else {
+      console.log(ClassName + ": null")
+    }
+  }
+
+  // android.content.pm.FeatureInfo
+  static printClass_FeatureInfo(inputObj, prefixStr=""){
+    const ClassName = "FeatureInfo"
+    // https://developer.android.com/reference/android/content/pm/FeatureInfo
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + ClassName + ":" + clsNameStr
+        + " flags=" + curObj.flags.value
+        + ", name=" + curObj.name.value
+        + ", reqGlEsVersion=" + curObj.reqGlEsVersion.value
+        + ", version=" + curObj.version.value
+      )
+    } else {
+      console.log(ClassName + ": null")
     }
   }
 
