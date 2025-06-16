@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250611
+	Updated: 20250616
 */
 
 // Frida hook common Android/Java class
@@ -4444,9 +4444,8 @@ class FridaHookAndroidJava {
     var cls_ContextWrapper = Java.use(clsName_ContextWrapper)
     console.log("cls_ContextWrapper=" + cls_ContextWrapper)
 
-
     // public PackageManager getPackageManager()
-    // 
+    // public android.content.pm.PackageManager android.content.ContextWrapper.getPackageManager()
     var func_ContextWrapper_getPackageManager = cls_ContextWrapper.getPackageManager
     console.log("func_ContextWrapper_getPackageManager=" + func_ContextWrapper_getPackageManager)
     if (func_ContextWrapper_getPackageManager) {
@@ -4462,7 +4461,7 @@ class FridaHookAndroidJava {
     }
 
     // public Object getSystemService(String name)
-    // 
+    // public java.lang.Object android.content.ContextWrapper.getSystemService(java.lang.String)
     var func_ContextWrapper_getSystemService = cls_ContextWrapper.getSystemService
     console.log("func_ContextWrapper_getSystemService=" + func_ContextWrapper_getSystemService)
     if (func_ContextWrapper_getSystemService) {
@@ -4481,7 +4480,7 @@ class FridaHookAndroidJava {
 
 
     // public ContentResolver getContentResolver()
-    // 
+    // public android.content.ContentResolver android.content.ContextWrapper.getContentResolver()
     var func_ContextWrapper_getContentResolver = cls_ContextWrapper.getContentResolver
     console.log("func_ContextWrapper_getContentResolver=" + func_ContextWrapper_getContentResolver)
     if (func_ContextWrapper_getContentResolver) {
@@ -4584,18 +4583,52 @@ class FridaHookAndroidJava {
       }
     }
 
-    // public Resources getResources()
-    // public android.content.res.Resources android.content.ContextWrapper.getResources()
-    var func_ContextWrapper_getResources = cls_ContextWrapper.getResources
-    console.log("func_ContextWrapper_getResources=" + func_ContextWrapper_getResources)
-    if (func_ContextWrapper_getResources) {
-      func_ContextWrapper_getResources.implementation = function () {
-        var funcName = "ContextWrapper.getResources"
+    // // public Resources getResources()
+    // // public android.content.res.Resources android.content.ContextWrapper.getResources()
+    // var func_ContextWrapper_getResources = cls_ContextWrapper.getResources
+    // console.log("func_ContextWrapper_getResources=" + func_ContextWrapper_getResources)
+    // if (func_ContextWrapper_getResources) {
+    //   func_ContextWrapper_getResources.implementation = function () {
+    //     var funcName = "ContextWrapper.getResources"
+    //     var funcParaDict = {}
+    //     FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+    //     var retResources = this.getResources()
+    //     console.log(funcName + " => retResources=" + retResources)
+    //     return retResources
+    //   }
+    // }
+
+    // public AssetManager getAssets()
+    // public android.content.res.AssetManager android.content.ContextWrapper.getAssets()
+    var func_ContextWrapper_getAssets = cls_ContextWrapper.getAssets
+    console.log("func_ContextWrapper_getAssets=" + func_ContextWrapper_getAssets)
+    if (func_ContextWrapper_getAssets) {
+      func_ContextWrapper_getAssets.implementation = function () {
+        var funcName = "ContextWrapper.getAssets"
         var funcParaDict = {}
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        var retResources = this.getResources()
-        console.log(funcName + " => retResources=" + retResources)
-        return retResources
+        var retAssetManager = this.getAssets()
+        console.log(funcName + " => retAssetManager=" + retAssetManager)
+        return retAssetManager
+      }
+    }
+
+    // SharedPreferences getSharedPreferences(String name, int mode)
+    // public android.content.SharedPreferences android.content.ContextWrapper.getSharedPreferences(java.lang.String,int)
+    var func_ContextWrapper_getSharedPreferences_2pnm = cls_ContextWrapper.getSharedPreferences.overload("java.lang.String", "int")
+    console.log("func_ContextWrapper_getSharedPreferences_2pnm=" + func_ContextWrapper_getSharedPreferences_2pnm)
+    if (func_ContextWrapper_getSharedPreferences_2pnm) {
+      func_ContextWrapper_getSharedPreferences_2pnm.implementation = function (name, mode) {
+        var funcName = "ContextWrapper.getSharedPreferences(name,mode)"
+        var funcParaDict = {
+          "name": name,
+          "mode": mode
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var retSharedPreferences_2pnm = this.getSharedPreferences(name, mode)
+        var clsNameValStr = FridaAndroidUtil.valueToNameStr(retSharedPreferences_2pnm)
+        console.log(funcName + " => retSharedPreferences_2pnm=" + clsNameValStr)
+          return retSharedPreferences_2pnm
       }
     }
 
@@ -6547,9 +6580,8 @@ class FridaHookAndroidJava {
     var cls_ActivityManager = Java.use(clsName_ActivityManager)
     console.log("cls_ActivityManager=" + cls_ActivityManager)
 
-    
     // public ConfigurationInfo getDeviceConfigurationInfo()
-    // 
+    // public android.content.pm.ConfigurationInfo android.app.ActivityManager.getDeviceConfigurationInfo()
     var func_ActivityManager_getDeviceConfigurationInfo = cls_ActivityManager.getDeviceConfigurationInfo
     console.log("func_ActivityManager_getDeviceConfigurationInfo=" + func_ActivityManager_getDeviceConfigurationInfo)
     if (func_ActivityManager_getDeviceConfigurationInfo) {
@@ -6566,7 +6598,7 @@ class FridaHookAndroidJava {
     }
 
     // void getMemoryInfo(ActivityManager.MemoryInfo outInfo)
-    // 
+    // public void android.app.ActivityManager.getMemoryInfo(android.app.ActivityManager$MemoryInfo)
     var func_ActivityManager_getMemoryInfo = cls_ActivityManager.getMemoryInfo
     console.log("func_ActivityManager_getMemoryInfo=" + func_ActivityManager_getMemoryInfo)
     if (func_ActivityManager_getMemoryInfo) {
@@ -6577,9 +6609,27 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        return this.getMemoryInfo(outInfo)
+        this.getMemoryInfo(outInfo)
+        FridaAndroidUtil.printClass_ActivityManagerMemoryInfo(outInfo, "After " + funcName)
+        return 
       }
     }
+    
+    // boolean isLowRamDevice()
+    // public boolean android.app.ActivityManager.isLowRamDevice()
+    var func_ActivityManager_isLowRamDevice = cls_ActivityManager.isLowRamDevice
+    console.log("func_ActivityManager_isLowRamDevice=" + func_ActivityManager_isLowRamDevice)
+    if (func_ActivityManager_isLowRamDevice) {
+      func_ActivityManager_isLowRamDevice.implementation = function () {
+        var funcName = "ActivityManager.isLowRamDevice"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var isLowRamDev = this.isLowRamDevice()
+        console.log(funcName + " => isLowRamDev=" + isLowRamDev)
+        return isLowRamDev
+      }
+    }
+
   }
 
   static DisplayManager() {
@@ -6700,6 +6750,322 @@ class FridaHookAndroidJava {
         return retConfiguration
       }
     }
+  }
+
+  static AssetManager() {
+    var clsName_AssetManager = "android.content.res.AssetManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_AssetManager)
+
+    var cls_AssetManager = Java.use(clsName_AssetManager)
+    console.log("cls_AssetManager=" + cls_AssetManager)
+
+    // public String[] getLocales()
+    // 
+    var func_AssetManager_getLocales = cls_AssetManager.getLocales
+    console.log("func_AssetManager_getLocales=" + func_AssetManager_getLocales)
+    if (func_AssetManager_getLocales) {
+      func_AssetManager_getLocales.implementation = function () {
+        var funcName = "AssetManager.getLocales"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retLocales = this.getLocales()
+        console.log(funcName + " => retLocales=" + retLocales)
+        return retLocales
+      }
+    }
+  }
+
+  static EGLDisplay() {
+    var clsName_EGLDisplay = "android.opengl.EGLDisplay"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_EGLDisplay)
+
+    var cls_EGLDisplay = Java.use(clsName_EGLDisplay)
+    console.log("cls_EGLDisplay=" + cls_EGLDisplay)
+  }
+
+  static EGL_EGLDisplay() {
+    var clsName_EGL_EGLDisplay = "javax.microedition.khronos.egl.EGLDisplay"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_EGL_EGLDisplay)
+
+    var cls_EGL_EGLDisplay = Java.use(clsName_EGL_EGLDisplay)
+    console.log("cls_EGL_EGLDisplay=" + cls_EGL_EGLDisplay)
+  }
+
+  // static EGL_EGL10() {
+  //   var clsName_EGL_EGL10 = "javax.microedition.khronos.egl.EGL10"
+  //   // FridaAndroidUtil.printClassAllMethodsFields(clsName_EGL_EGL10)
+
+  //   var cls_EGL_EGL10 = Java.use(clsName_EGL_EGL10)
+  //   console.log("cls_EGL_EGL10=" + cls_EGL_EGL10)
+  // }
+
+  static EGL10() {
+    var clsName_EGL10 = "javax.microedition.khronos.egl.EGL10"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_EGL10)
+
+    var cls_EGL10 = Java.use(clsName_EGL10)
+    console.log("cls_EGL10=" + cls_EGL10)
+
+    // abstract EGLDisplay eglGetDisplay(Object native_display)
+    // public abstract javax.microedition.khronos.egl.EGLDisplay javax.microedition.khronos.egl.EGL10.eglGetDisplay(java.lang.Object)
+    var func_EGL10_eglGetDisplay = cls_EGL10.eglGetDisplay
+    console.log("func_EGL10_eglGetDisplay=" + func_EGL10_eglGetDisplay)
+    if (func_EGL10_eglGetDisplay) {
+      func_EGL10_eglGetDisplay.implementation = function (native_display) {
+        var funcName = "EGL10.eglGetDisplay"
+        var funcParaDict = {
+          "native_display": native_display,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retEGLDisplay = this.eglGetDisplay(native_display)
+        console.log(funcName + " => retEGLDisplay=" + retEGLDisplay)
+        return retEGLDisplay
+      }
+    }
+
+    // abstract boolean eglGetConfigs(EGLDisplay display, EGLConfig[] configs, int config_size, int[] num_config)
+    // public abstract boolean javax.microedition.khronos.egl.EGL10.eglGetConfigs(javax.microedition.khronos.egl.EGLDisplay,javax.microedition.khronos.egl.EGLConfig[],int,int[])
+    var func_EGL10_eglGetConfigs = cls_EGL10.eglGetConfigs
+    console.log("func_EGL10_eglGetConfigs=" + func_EGL10_eglGetConfigs)
+    if (func_EGL10_eglGetConfigs) {
+      func_EGL10_eglGetConfigs.implementation = function (display, configs, config_size, num_config) {
+        var funcName = "EGL10.eglGetConfigs"
+        var funcParaDict = {
+          "display": display,
+          "configs": configs,
+          "config_size": config_size,
+          "num_config": num_config,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.eglGetConfigs(display, configs, config_size, num_config)
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // abstract boolean eglGetConfigAttrib(EGLDisplay display, EGLConfig config, int attribute, int[] value)
+    // public abstract boolean javax.microedition.khronos.egl.EGL10.eglGetConfigAttrib(javax.microedition.khronos.egl.EGLDisplay,javax.microedition.khronos.egl.EGLConfig,int,int[])
+    var func_EGL10_eglGetConfigAttrib = cls_EGL10.eglGetConfigAttrib
+    console.log("func_EGL10_eglGetConfigAttrib=" + func_EGL10_eglGetConfigAttrib)
+    if (func_EGL10_eglGetConfigAttrib) {
+      func_EGL10_eglGetConfigAttrib.implementation = function (display, config, attribute, value) {
+        var funcName = "EGL10.eglGetConfigAttrib"
+        var funcParaDict = {
+          "display": display,
+          "config": config,
+          "attribute": attribute,
+          "value": value,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.eglGetConfigAttrib(display, config, attribute, value)
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // abstract boolean eglTerminate(EGLDisplay display)
+    // public abstract boolean javax.microedition.khronos.egl.EGL10.eglTerminate(javax.microedition.khronos.egl.EGLDisplay)
+    var func_EGL10_eglTerminate = cls_EGL10.eglTerminate
+    console.log("func_EGL10_eglTerminate=" + func_EGL10_eglTerminate)
+    if (func_EGL10_eglTerminate) {
+      func_EGL10_eglTerminate.implementation = function (display) {
+        var funcName = "EGL10.eglTerminate"
+        var funcParaDict = {
+          "display": display,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.eglTerminate(display)
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+  }
+
+  static EGLContext() {
+    var clsName_EGLContext = "javax.microedition.khronos.egl.EGLContext"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_EGLContext)
+
+    var cls_EGLContext = Java.use(clsName_EGLContext)
+    console.log("cls_EGLContext=" + cls_EGLContext)
+
+    
+    // public EGLContext()
+    // 
+    var func_EGLContext_ctor = cls_EGLContext.$init
+    console.log("func_EGLContext_ctor=" + func_EGLContext_ctor)
+    if (func_EGLContext_ctor) {
+      func_EGLContext_ctor.implementation = function () {
+        var funcName = "EGLContext"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init()
+        var newEGLContext = this
+        console.log(funcName + " => newEGLContext=" + newEGLContext)
+        return
+      }
+    }
+
+    // static EGL getEGL()
+    // public static javax.microedition.khronos.egl.EGL javax.microedition.khronos.egl.EGLContext.getEGL()
+    var func_EGLContext_getEGL = cls_EGLContext.getEGL
+    console.log("func_EGLContext_getEGL=" + func_EGLContext_getEGL)
+    if (func_EGLContext_getEGL) {
+      func_EGLContext_getEGL.implementation = function () {
+        var funcName = "EGLContext.getEGL"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retEGL = this.getEGL()
+        var clsName = FridaAndroidUtil.getJavaClassName(retEGL)
+        console.log(funcName + " => retEGL=" + retEGL + ", clsName=" + clsName)
+
+        return retEGL
+      }
+    }
+
+    // abstract GL getGL()
+    // public abstract javax.microedition.khronos.opengles.GL javax.microedition.khronos.egl.EGLContext.getGL()
+    var func_EGLContext_getGL = cls_EGLContext.getGL
+    console.log("func_EGLContext_getGL=" + func_EGLContext_getGL)
+    if (func_EGLContext_getGL) {
+      func_EGLContext_getGL.implementation = function () {
+        var funcName = "EGLContext.getGL"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retGL = this.getGL()
+        console.log(funcName + " => retGL=" + retGL)
+        return retGL
+      }
+    }
+  }
+
+  static Runtime() {
+    var clsName_Runtime = "java.lang.Runtime"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Runtime)
+
+    var cls_Runtime = Java.use(clsName_Runtime)
+    console.log("cls_Runtime=" + cls_Runtime)
+
+    // public int availableProcessors()
+    // public int java.lang.Runtime.availableProcessors()
+    var func_Runtime_availableProcessors = cls_Runtime.availableProcessors
+    console.log("func_Runtime_availableProcessors=" + func_Runtime_availableProcessors)
+    if (func_Runtime_availableProcessors) {
+      func_Runtime_availableProcessors.implementation = function () {
+        var funcName = "Runtime.availableProcessors"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var availableProcessors = this.availableProcessors()
+        console.log(funcName + " => availableProcessors=" + availableProcessors)
+        return availableProcessors
+      }
+    }
+  }
+
+  static KeyguardManager() {
+    var clsName_KeyguardManager = "android.app.KeyguardManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_KeyguardManager)
+
+    var cls_KeyguardManager = Java.use(clsName_KeyguardManager)
+    console.log("cls_KeyguardManager=" + cls_KeyguardManager)
+
+    
+    // public boolean isDeviceSecure()
+    // public boolean android.app.KeyguardManager.isDeviceSecure()
+    var func_KeyguardManager_isDeviceSecure = cls_KeyguardManager.isDeviceSecure.overload()
+    console.log("func_KeyguardManager_isDeviceSecure=" + func_KeyguardManager_isDeviceSecure)
+    if (func_KeyguardManager_isDeviceSecure) {
+      func_KeyguardManager_isDeviceSecure.implementation = function () {
+        var funcName = "KeyguardManager.isDeviceSecure"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.isDeviceSecure()
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+  }
+
+  static SystemProperties() {
+    var clsName_SystemProperties = "android.os.SystemProperties"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_SystemProperties)
+
+    var cls_SystemProperties = Java.use(clsName_SystemProperties)
+    console.log("cls_SystemProperties=" + cls_SystemProperties)
+
+    
+    // public static String get(String key)
+    // public static java.lang.String android.os.SystemProperties.get(java.lang.String)
+    var func_SystemProperties_get_1pk = cls_SystemProperties.get.overload('java.lang.String')
+    console.log("func_SystemProperties_get_1pk=" + func_SystemProperties_get_1pk)
+    if (func_SystemProperties_get_1pk) {
+      func_SystemProperties_get_1pk.implementation = function (key) {
+        var funcName = "SystemProperties.get(key)"
+        var funcParaDict = {
+          "key": key,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retStr_1pk = this.get(key)
+        console.log(funcName + " => retStr_1pk=" + retStr_1pk)
+        return retStr_1pk
+      }
+    }
+
+    // public static String get(String key, String def)
+    // public static java.lang.String android.os.SystemProperties.get(java.lang.String,java.lang.String)
+    var func_SystemProperties_get_2pkd = cls_SystemProperties.get.overload('java.lang.String', 'java.lang.String')
+    console.log("func_SystemProperties_get_2pkd=" + func_SystemProperties_get_2pkd)
+    if (func_SystemProperties_get_2pkd) {
+      func_SystemProperties_get_2pkd.implementation = function (key, def) {
+        var funcName = "SystemProperties.get(key,def)"
+        var funcParaDict = {
+          "key": key,
+          "def": def,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retStr_2pkd = this.get(key, def)
+        console.log(funcName + " => retStr_2pkd=" + retStr_2pkd)
+        return retStr_2pkd
+      }
+    }
+  }
+
+  static UserManager() {
+    var clsName_UserManager = "android.os.UserManager"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_UserManager)
+
+    var cls_UserManager = Java.use(clsName_UserManager)
+    console.log("cls_UserManager=" + cls_UserManager)
+
+    // 
+    // public int android.os.UserManager.getUserSerialNumber(int)
+    var func_getUserSerialNumber = cls_UserManager.getUserSerialNumber
+    console.log("func_getUserSerialNumber=" + func_getUserSerialNumber)
+    if (func_getUserSerialNumber) {
+      func_getUserSerialNumber.implementation = function (user) {
+        var funcName = "UserManager.getUserSerialNumber(user)"
+        var funcParaDict = {
+          "user": user,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retUserSerNr = this.getUserSerialNumber(user)
+        console.log(funcName + " => retUserSerNr=" + retUserSerNr)
+        return retUserSerNr
+      }
+    }
+
   }
 
 }

@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250612
+	Updated: 20250613
 */
 
 // Frida Android Util
@@ -714,6 +714,33 @@ class FridaAndroidUtil {
     }
   }
 
+  // android.app.ActivityManager.MemoryInfo
+  static printClass_ActivityManagerMemoryInfo(inputObj, prefixStr=""){
+    const ClassName = "ActivityManager.MemoryInfo"
+    // https://developer.android.com/reference/android/app/ActivityManager.MemoryInfo
+    if (inputObj) {
+      var curObj = inputObj
+      console.log("curObj=" + curObj)
+
+      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+
+      console.log(newPrefStr + ClassName + ":" + clsNameStr
+        + " CREATOR=" + curObj.CREATOR.value
+        + ", advertisedMem=" + curObj.advertisedMem.value
+        + ", availMem=" + curObj.availMem.value
+        + ", lowMemory=" + curObj.lowMemory.value
+        + ", threshold=" + curObj.threshold.value
+        + ", totalMem=" + curObj.totalMem.value
+      )
+    } else {
+      console.log(ClassName + ": null")
+    }
+  }
+
+
+
   // static printRequestBodyInfo(urlConn){
   //   console.log("printRequestBodyInfo: urlConn=" + urlConn)
   //   var requestBody = urlConn.getOutputStream()
@@ -1235,6 +1262,7 @@ class FridaAndroidUtil {
   }
 
   // generate the class name string
+  // eg: "<clsName=fjiq>"
   static genClassNameStr(curObj){
     var objClsName = FridaAndroidUtil.getJavaClassName(curObj)
     var classNameStr = `<clsName=${objClsName}>`
@@ -1242,6 +1270,7 @@ class FridaAndroidUtil {
   }
 
   // generate the class name and value string from current object
+  // eg: "<clsName=fjiq>=[object Object]"
   static valueToNameStr(curObj){
     var classNameStr = FridaAndroidUtil.genClassNameStr(curObj)
     var retStr = `${classNameStr}=${curObj}`
