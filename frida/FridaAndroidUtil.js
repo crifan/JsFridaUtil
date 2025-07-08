@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250626
+	Updated: 20250703
 */
 
 // Frida Android Util
@@ -51,6 +51,7 @@ class FridaAndroidUtil {
   static clsName_Long                         = "java.lang.Long"
   static clsName_Long                         = "java.lang.Long"
   static clsName_File                         = "java.io.File"
+  static clsName_Parcel                       = "android.os.Parcel"
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -739,6 +740,41 @@ class FridaAndroidUtil {
     }
   }
 
+  // android.os.Parcel
+  static printClass_Parcel(inputObj, prefixStr=""){
+    // https://developer.android.com/reference/android/os/Parcel
+    const ClassName = "Parcel"
+    if (inputObj) {
+      var curClassName = FridaAndroidUtil.getJavaClassName(inputObj)
+      if (curClassName === FridaAndroidUtil.clsName_Parcel) {
+        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Parcel)
+        // console.log("curObj=" + curObj)
+
+        var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+        var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+        var dataSize = curObj.dataSize()
+        var dataPosition = curObj.dataPosition()
+        var dataAvail = curObj.dataAvail()
+        var dataCapacity = curObj.dataCapacity()
+        var hasFileDescriptors = curObj.hasFileDescriptors()
+
+        console.log(newPrefStr + ClassName + ":" + clsNameStr
+          + " STRING_CREATOR=" + curObj.STRING_CREATOR.value
+          + ", dataSize=" + dataSize
+          + ", dataPosition=" + dataPosition
+          + ", dataAvail=" + dataAvail
+          + ", dataCapacity=" + dataCapacity
+          + ", hasFileDescriptors=" + hasFileDescriptors
+        )
+      } else {
+        console.log(newPrefStr + ClassName + ": not a Parcel")
+      }
+    } else {
+      console.log(newPrefStr + ClassName + ": null")
+    }
+  }
+
   // static printRequestBodyInfo(urlConn){
   //   console.log("printRequestBodyInfo: urlConn=" + urlConn)
   //   var requestBody = urlConn.getOutputStream()
@@ -920,8 +956,13 @@ class FridaAndroidUtil {
   // generate the class name and value string from current object
   // eg: "<clsName=fjiq>=[object Object]"
   static valueToNameStr(curObj){
-    var classNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-    var retStr = `${classNameStr}=${curObj}`
+    var retStr = ""
+    if (curObj){
+      var classNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+      retStr = `${classNameStr}=${curObj}`
+    } else {
+      retStr = "<clsName=null>=null"
+    }
     return retStr
   }
 

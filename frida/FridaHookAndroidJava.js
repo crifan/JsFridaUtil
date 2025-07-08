@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250616
+	Updated: 20250706
 */
 
 // Frida hook common Android/Java class
@@ -38,7 +38,7 @@ class FridaHookAndroidJava {
 
   }
 
-  static HashMap(callback_isPrintStack_put=null, callback_isPrintStack_putAll=null, callback_isPrintStack_get=null) {
+  static HashMap(callback_isShowLog=null) {
     /******************** java.util.HashMap ********************/
     var className_HashMap = "java.util.HashMap"
     // FridaAndroidUtil.printClassAllMethodsFields(className_HashMap)
@@ -55,30 +55,31 @@ class FridaHookAndroidJava {
     console.log("func_HashMap_put=" + func_HashMap_put)
     if (func_HashMap_put) {
       func_HashMap_put.implementation = function (keyObj, valueObj) {
-        var funcName = "HashMap.put(key,val)"
+        var funcName = "HashMap.put"
         var funcParaDict = {
           "keyObj": keyObj,
           "valueObj": valueObj,
         }
 
-        if (null != keyObj) {
-          // console.log("keyObj=" + keyObj)
-          // console.log("keyObj.value=" + keyObj.value)
-          // console.log("keyObj=" + keyObj + ", valueObj=" + valueObj)
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
 
-          var isPrintStack = false
-
-          // isPrintStack = HookDouyin_feedUrl.HashMap(keyObj, valueObj)
-          if (null != callback_isPrintStack_put){
-            isPrintStack = callback_isPrintStack_put(keyObj, valueObj)
-          }
-
-          if (isPrintStack) {
-            FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-          }
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
         }
 
-        return this.put(keyObj, valueObj)
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        var retObj = this.put(keyObj, valueObj)
+
+        if (isShowLog) {
+          console.log(funcName + " => retObj=" + retObj)
+        }
+
+        return retObj
       }
     }
 
@@ -88,22 +89,25 @@ class FridaHookAndroidJava {
     console.log("func_HashMap_putAll=" + func_HashMap_putAll)
     if (func_HashMap_putAll) {
       func_HashMap_putAll.implementation = function (newMap) {
-        var funcName = "HashMap.putAll(map)"
+        var funcName = "HashMap.putAll"
         var funcParaDict = {
           "newMap": newMap,
         }
-        // console.log("newMap=" + newMap)
-        var isPrintStack = false
-        if (null != callback_isPrintStack_putAll){
-          isPrintStack = callback_isPrintStack_putAll(newMap)
+
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
         }
 
-        if (isPrintStack){
-          console.log("newMapStr=" + FridaAndroidUtil.mapToStr(newMap))
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
         }
 
-        return this.putAll(newMap)
+        this.putAll(newMap)
+        return
       }
     }
 
@@ -117,20 +121,24 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "keyObj": keyObj,
         }
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
 
-        var isPrintStack = false
-        if (null != callback_isPrintStack_get){
-          isPrintStack = callback_isPrintStack_get(keyObj)
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
         }
 
-        if (isPrintStack){
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
         }
 
         var retValObj = this.get(keyObj)
-        if (isPrintStack){
-          console.log("retValObj=" + retValObj)
+
+        if (isShowLog) {
+          console.log(funcName + " => retValObj=" + retValObj)
         }
+
         return retValObj
       }
     }
@@ -144,7 +152,6 @@ class FridaHookAndroidJava {
 
     var cls_LinkedHashMap = Java.use(className_LinkedHashMap)
     console.log("cls_LinkedHashMap=" + cls_LinkedHashMap)
-
   }
 
   static RandomAccessFile() {
@@ -6531,7 +6538,6 @@ class FridaHookAndroidJava {
     var cls_Base64 = Java.use(clsName_Base64)
     console.log("cls_Base64=" + cls_Base64)
 
-    
     // static String encodeToString(byte[] input, int offset, int len, int flags)
     // public static java.lang.String android.util.Base64.encodeToString(byte[],int,int,int)
     var func_Base64_encodeToString_4piolf = cls_Base64.encodeToString.overload('[B', 'int', 'int', 'int')
@@ -7063,6 +7069,338 @@ class FridaHookAndroidJava {
         var retUserSerNr = this.getUserSerialNumber(user)
         console.log(funcName + " => retUserSerNr=" + retUserSerNr)
         return retUserSerNr
+      }
+    }
+
+  }
+
+  static StringBuilder(callback_isShowLog=null) {
+    var clsName_StringBuilder = "java.lang.StringBuilder"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_StringBuilder)
+
+    var cls_StringBuilder = Java.use(clsName_StringBuilder)
+    console.log("cls_StringBuilder=" + cls_StringBuilder)
+
+    // // public String toString()
+    // // public java.lang.String java.lang.StringBuilder.toString()
+    // var func_StringBuilder_toString = cls_StringBuilder.toString
+    // console.log("func_StringBuilder_toString=" + func_StringBuilder_toString)
+    // if (func_StringBuilder_toString) {
+    //   func_StringBuilder_toString.implementation = function () {
+    //     var funcName = "StringBuilder.toString"
+    //     var funcParaDict = {}
+
+    //     var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+    //     var isShowLog = true
+    //     if (null != callback_isShowLog) {
+    //       isShowLog = callback_isShowLog(funcCallAndStackStr)
+    //     }
+
+    //     // if (isShowLog) {
+    //     //   console.log(funcCallAndStackStr)
+    //     // }
+
+    //     var retString = this.toString()
+
+    //     if (isShowLog) {
+    //       console.log(funcName + " => retString=" + retString)
+    //     }
+
+    //     return retString
+    //   }
+    // }
+
+    // public StringBuilder append(String str)
+    // public java.lang.AbstractStringBuilder java.lang.StringBuilder.append(java.lang.String)
+    var func_StringBuilder_append_1ps = cls_StringBuilder.append.overload('java.lang.String')
+    console.log("func_StringBuilder_append_1ps=" + func_StringBuilder_append_1ps)
+    if (func_StringBuilder_append_1ps) {
+      func_StringBuilder_append_1ps.implementation = function (str) {
+        var funcName = "StringBuilder.append(str)"
+        var funcParaDict = {
+          "str": str,
+        }
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        var retStringBuilder_1ps = this.append(str)
+
+        if (isShowLog) {
+          console.log(funcName + " => retStringBuilder_1ps=" + retStringBuilder_1ps)
+        }
+
+        return retStringBuilder_1ps
+      }
+    }
+
+  }
+
+  static ArrayBlockingQueue() {
+    var clsName_ArrayBlockingQueue = "java.util.concurrent.ArrayBlockingQueue"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_ArrayBlockingQueue)
+
+    var cls_ArrayBlockingQueue = Java.use(clsName_ArrayBlockingQueue)
+    console.log("cls_ArrayBlockingQueue=" + cls_ArrayBlockingQueue)
+
+    // public ArrayBlockingQueue(int capacity)
+    // 
+    var func_ArrayBlockingQueue_ctor_1pc = cls_ArrayBlockingQueue.$init.overload('int')
+    console.log("func_ArrayBlockingQueue_ctor_1pc=" + func_ArrayBlockingQueue_ctor_1pc)
+    if (func_ArrayBlockingQueue_ctor_1pc) {
+      func_ArrayBlockingQueue_ctor_1pc.implementation = function (capacity) {
+        var funcName = "ArrayBlockingQueue_1pc"
+        var funcParaDict = {
+          "capacity": capacity,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init(capacity)
+        var newArrayBlockingQueue_1pc = this
+        console.log(funcName + " => newArrayBlockingQueue_1pc=" + newArrayBlockingQueue_1pc)
+        return
+      }
+    }
+
+    // public boolean offer(E e)
+    // public boolean java.util.concurrent.ArrayBlockingQueue.offer(java.lang.Object)
+    var func_ArrayBlockingQueue_offer_1pe = cls_ArrayBlockingQueue.offer.overload('java.lang.Object')
+    console.log("func_ArrayBlockingQueue_offer_1pe=" + func_ArrayBlockingQueue_offer_1pe)
+    if (func_ArrayBlockingQueue_offer_1pe) {
+      func_ArrayBlockingQueue_offer_1pe.implementation = function (e) {
+        var funcName = "ArrayBlockingQueue.offer_1pe"
+        var funcParaDict = {
+          "e": e,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean_1pe = this.offer(e)
+        console.log(funcName + " => retBoolean_1pe=" + retBoolean_1pe)
+        return retBoolean_1pe
+      }
+    }
+
+    // public E poll()
+    // public java.lang.Object java.util.concurrent.ArrayBlockingQueue.poll()
+    var func_ArrayBlockingQueue_poll_0p = cls_ArrayBlockingQueue.poll.overload()
+    console.log("func_ArrayBlockingQueue_poll_0p=" + func_ArrayBlockingQueue_poll_0p)
+    if (func_ArrayBlockingQueue_poll_0p) {
+      func_ArrayBlockingQueue_poll_0p.implementation = function () {
+        var funcName = "ArrayBlockingQueue.poll_0p"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retE_0p = this.poll()
+        console.log(funcName + " => retE_0p=" + retE_0p)
+        return retE_0p
+      }
+    }
+  }
+
+  static Parcel(callback_isShowLog=null) {
+    var clsName_Parcel = "android.os.Parcel"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Parcel)
+
+    var cls_Parcel = Java.use(clsName_Parcel)
+    console.log("cls_Parcel=" + cls_Parcel)
+
+    // static Parcel obtain()
+    // public static android.os.Parcel android.os.Parcel.obtain()
+    var func_Parcel_obtain = cls_Parcel.obtain.overload()
+    console.log("func_Parcel_obtain=" + func_Parcel_obtain)
+    if (func_Parcel_obtain) {
+      func_Parcel_obtain.implementation = function () {
+        var funcName = "Parcel.obtain"
+        var funcParaDict = {}
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        var retParcel = this.obtain()
+
+        if (isShowLog) {
+          console.log(funcName + " => retParcel=" + retParcel)
+        }
+
+        return retParcel
+      }
+    }
+
+    // byte[] createByteArray()
+    // public final byte[] android.os.Parcel.createByteArray()
+    var func_Parcel_createByteArray = cls_Parcel.createByteArray
+    console.log("func_Parcel_createByteArray=" + func_Parcel_createByteArray)
+    if (func_Parcel_createByteArray) {
+      func_Parcel_createByteArray.implementation = function () {
+        var funcName = "Parcel.createByteArray"
+        var funcParaDict = {}
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        var retByte__ = this.createByteArray()
+
+        if (isShowLog) {
+          console.log(funcName + " => retByte__=" + retByte__)
+        }
+
+        return retByte__
+      }
+    }
+
+    // void writeMap(Map<K, V> val)
+    // public final void android.os.Parcel.writeMap(java.util.Map)
+    var func_Parcel_writeMap = cls_Parcel.writeMap
+    console.log("func_Parcel_writeMap=" + func_Parcel_writeMap)
+    if (func_Parcel_writeMap) {
+      func_Parcel_writeMap.implementation = function (val) {
+        var funcName = "Parcel.writeMap"
+        var funcParaDict = {
+          "val": val,
+        }
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        this.writeMap(val)
+        return 
+      }
+    }
+
+    // void writeInterfaceToken(String interfaceName)
+    // public final void android.os.Parcel.writeInterfaceToken(java.lang.String)
+    var func_Parcel_writeInterfaceToken = cls_Parcel.writeInterfaceToken
+    console.log("func_Parcel_writeInterfaceToken=" + func_Parcel_writeInterfaceToken)
+    if (func_Parcel_writeInterfaceToken) {
+      func_Parcel_writeInterfaceToken.implementation = function (interfaceName) {
+        var funcName = "Parcel.writeInterfaceToken"
+        var funcParaDict = {
+          "interfaceName": interfaceName,
+        }
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        this.writeInterfaceToken(interfaceName)
+        return 
+      }
+    }
+
+    // void readException()
+    // public final void android.os.Parcel.readException()
+    var func_Parcel_readException_0p = cls_Parcel.readException.overload()
+    console.log("func_Parcel_readException_0p=" + func_Parcel_readException_0p)
+    if (func_Parcel_readException_0p) {
+      func_Parcel_readException_0p.implementation = function () {
+        var funcName = "Parcel.readException_0p"
+        var funcParaDict = {}
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        return this.readException()        
+      }
+    }
+
+    // void writeParcelable(Parcelable p, int parcelableFlags)
+    // public final void android.os.Parcel.writeParcelable(android.os.Parcelable,int)
+    var func_Parcel_writeParcelable = cls_Parcel.writeParcelable
+    console.log("func_Parcel_writeParcelable=" + func_Parcel_writeParcelable)
+    if (func_Parcel_writeParcelable) {
+      func_Parcel_writeParcelable.implementation = function (p, parcelableFlags) {
+        var funcName = "Parcel.writeParcelable"
+        var funcParaDict = {
+          "p": p,
+          "parcelableFlags": parcelableFlags,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        return this.writeParcelable(p, parcelableFlags)
+      }
+    }
+
+    // IBinder readStrongBinder()
+    // public final android.os.IBinder android.os.Parcel.readStrongBinder()
+    var func_Parcel_readStrongBinder = cls_Parcel.readStrongBinder
+    console.log("func_Parcel_readStrongBinder=" + func_Parcel_readStrongBinder)
+    if (func_Parcel_readStrongBinder) {
+      func_Parcel_readStrongBinder.implementation = function () {
+        var funcName = "Parcel.readStrongBinder"
+        var funcParaDict = {}
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+        }
+
+        var retIBinder = this.readStrongBinder()
+
+        if (isShowLog) {
+          var binderInterfaceDescriptor = retIBinder.getInterfaceDescriptor()
+          console.log(funcName + " => retIBinder=" + FridaAndroidUtil.valueToNameStr(retIBinder) + ", binderInterfaceDescriptor=" + binderInterfaceDescriptor)
+        }
+
+        return retIBinder
       }
     }
 
