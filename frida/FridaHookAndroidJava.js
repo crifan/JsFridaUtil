@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250706
+	Updated: 20250711
 */
 
 // Frida hook common Android/Java class
@@ -2223,7 +2223,9 @@ class FridaHookAndroidJava {
     var cls_BaseBundle = Java.use(clsName_BaseBundle)
     console.log("cls_BaseBundle=" + cls_BaseBundle)
 
-    
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
     // boolean containsKey(String key)
     // public boolean android.os.BaseBundle.containsKey(java.lang.String)
     var func_BaseBundle_containsKey = cls_BaseBundle.containsKey
@@ -2234,7 +2236,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retBoolean = this.containsKey(key)
         console.log(funcName + " => retBoolean=" + retBoolean)
@@ -2253,7 +2255,7 @@ class FridaHookAndroidJava {
           "key": key,
           "defaultValue": defaultValue,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retBoolean_2pkd = this.getBoolean(key, defaultValue)
         console.log(funcName + " => retBoolean_2pkd=" + retBoolean_2pkd)
@@ -2271,7 +2273,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retBoolean_1pk = this.getBoolean(key)
         console.log(funcName + " => retBoolean_1pk=" + retBoolean_1pk)
@@ -2289,7 +2291,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "bundle": bundle,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putAll(bundle)
       }
@@ -2305,7 +2307,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "map": map,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putAll(map)
       }
@@ -2322,7 +2324,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putBoolean(key, value)
       }
@@ -2339,7 +2341,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putBooleanArray(key, value)
       }
@@ -2356,7 +2358,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putDouble(key, value)
       }
@@ -2373,7 +2375,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putDoubleArray(key, value)
       }
@@ -2390,7 +2392,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putInt(key, value)
       }
@@ -2407,7 +2409,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putIntArray(key, value)
       }
@@ -2424,7 +2426,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putLong(key, value)
       }
@@ -2441,7 +2443,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putLongArray(key, value)
       }
@@ -2458,7 +2460,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putString(key, value)
       }
@@ -2475,7 +2477,7 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.putStringArray(key, value)
       }
@@ -2491,7 +2493,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.remove(key)
       }
@@ -2507,7 +2509,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retObject_1pk = this.get(key)
         console.log("BaseBundle.get_1pk => retObject_1pk=" + retObject_1pk)
@@ -2526,7 +2528,7 @@ class FridaHookAndroidJava {
           "key": key,
           "clazz": clazz,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var ret_T_T_2pkc = this.get(key, clazz)
         console.log(funcName + " => ret_T_T_2pkc=" + ret_T_T_2pkc)
@@ -2544,7 +2546,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
         // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retInt_1pk = this.getInt(key)
@@ -2564,8 +2566,7 @@ class FridaHookAndroidJava {
           "key": key,
           "defaultValue": defaultValue,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retInt_2pkd = this.getInt(key, defaultValue)
         console.log(funcName + " => retInt_2pkd=" + retInt_2pkd)
@@ -2583,8 +2584,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retString_1pk = this.getString(key)
         console.log(funcName + " => retString_1pk=" + retString_1pk)
@@ -2603,7 +2603,7 @@ class FridaHookAndroidJava {
           "key": key,
           "defaultValue": defaultValue,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retString_2pkd = this.getString(key, defaultValue)
         console.log(funcName + " => retString_2pkd=" + retString_2pkd)
@@ -2621,7 +2621,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "key": key,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retStringArray = this.getStringArray(key)
         console.log(funcName + " => retStringArray=" + retStringArray)
@@ -7221,7 +7221,8 @@ class FridaHookAndroidJava {
       func_Parcel_obtain.implementation = function () {
         var funcName = "Parcel.obtain"
         var funcParaDict = {}
-        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        // var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict)
 
         var isShowLog = true
         if (null != callback_isShowLog) {
@@ -7331,7 +7332,8 @@ class FridaHookAndroidJava {
       func_Parcel_readException_0p.implementation = function () {
         var funcName = "Parcel.readException_0p"
         var funcParaDict = {}
-        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        // var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict)
 
         var isShowLog = true
         if (null != callback_isShowLog) {
@@ -7401,6 +7403,300 @@ class FridaHookAndroidJava {
         }
 
         return retIBinder
+      }
+    }
+
+  }
+
+  static BinderProxy(callback_isShowLog=null) {
+    var clsName_BinderProxy = "android.os.BinderProxy"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_BinderProxy)
+
+    var cls_BinderProxy = Java.use(clsName_BinderProxy)
+    console.log("cls_BinderProxy=" + cls_BinderProxy)
+
+    // public boolean transact(int code, Parcel data, Parcel reply, int flags) throws RemoteException
+    // public boolean android.os.BinderProxy.transact(int,android.os.Parcel,android.os.Parcel,int) throws android.os.RemoteException
+    var func_BinderProxy_transact = cls_BinderProxy.transact
+    console.log("func_BinderProxy_transact=" + func_BinderProxy_transact)
+    if (func_BinderProxy_transact) {
+      func_BinderProxy_transact.implementation = function (code, data, reply, flags) {
+        var funcName = "BinderProxy.transact"
+        var funcParaDict = {
+          "code": code,
+          "data": data,
+          "reply": reply,
+          "flags": flags,
+        }
+
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        var isShowLog = true
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+        if (isShowLog) {
+          console.log(funcCallAndStackStr)
+          console.log(funcName + "data=" + FridaAndroidUtil.printClass_Parcel(data) + ", reply=" + FridaAndroidUtil.printClass_Parcel(reply))
+        }
+
+        var retBoolean = this.transact(code, data, reply, flags)
+
+        if (isShowLog) {
+          console.log(funcName + " => retBoolean=" + retBoolean)
+        }
+
+        return retBoolean
+      }
+    }
+
+  }
+
+  static FileInputStream() {
+    var clsName_FileInputStream = "java.io.FileInputStream"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_FileInputStream)
+
+    var cls_FileInputStream = Java.use(clsName_FileInputStream)
+    console.log("cls_FileInputStream=" + cls_FileInputStream)
+
+    // public FileInputStream(File file) throws FileNotFoundException
+    // 
+    var func_FileInputStream_ctor_1pf = cls_FileInputStream.$init.overload('java.io.File')
+    console.log("func_FileInputStream_ctor_1pf=" + func_FileInputStream_ctor_1pf)
+    if (func_FileInputStream_ctor_1pf) {
+      func_FileInputStream_ctor_1pf.implementation = function (file) {
+        var funcName = "FileInputStream_1pf"
+        var funcParaDict = {
+          "file": file,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init(file)
+        var newFileInputStream_1pf = this
+        console.log(funcName + " => newFileInputStream_1pf=" + newFileInputStream_1pf)
+        return
+      }
+    }
+
+    // public FileInputStream(FileDescriptor fdObj) throws SecurityException
+    // 
+    var func_FileInputStream_ctor_1pf = cls_FileInputStream.$init.overload('java.io.FileDescriptor')
+    console.log("func_FileInputStream_ctor_1pf=" + func_FileInputStream_ctor_1pf)
+    if (func_FileInputStream_ctor_1pf) {
+      func_FileInputStream_ctor_1pf.implementation = function (fdObj) {
+        var funcName = "FileInputStream_1pf"
+        var funcParaDict = {
+          "fdObj": fdObj,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init(fdObj)
+        var newFileInputStream_1pf = this
+        console.log(funcName + " => newFileInputStream_1pf=" + newFileInputStream_1pf)
+        return
+      }
+    }
+
+    // public FileInputStream(String name) throws FileNotFoundException
+    // 
+    var func_FileInputStream_ctor_1pn = cls_FileInputStream.$init.overload('java.lang.String')
+    console.log("func_FileInputStream_ctor_1pn=" + func_FileInputStream_ctor_1pn)
+    if (func_FileInputStream_ctor_1pn) {
+      func_FileInputStream_ctor_1pn.implementation = function (name) {
+        var funcName = "FileInputStream_1pn"
+        var funcParaDict = {
+          "name": name,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init(name)
+        var newFileInputStream_1pn = this
+        console.log(funcName + " => newFileInputStream_1pn=" + newFileInputStream_1pn)
+        return
+      }
+    }
+
+    // public FileChannel getChannel()
+    // 
+    var func_FileInputStream_getChannel = cls_FileInputStream.getChannel
+    console.log("func_FileInputStream_getChannel=" + func_FileInputStream_getChannel)
+    if (func_FileInputStream_getChannel) {
+      func_FileInputStream_getChannel.implementation = function () {
+        var funcName = "FileInputStream.getChannel"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retChannel = this.getChannel()
+        console.log(funcName + " => retChannel=" + retChannel)
+        return retChannel
+      }
+    }
+  }
+
+  static LinkedBlockingQueue(callback_isShowLog=null) {
+    var clsName_LinkedBlockingQueue = "java.util.concurrent.LinkedBlockingQueue"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_LinkedBlockingQueue)
+
+    var cls_LinkedBlockingQueue = Java.use(clsName_LinkedBlockingQueue)
+    console.log("cls_LinkedBlockingQueue=" + cls_LinkedBlockingQueue)
+
+    
+    // public LinkedBlockingQueue()
+    // 
+    var func_LinkedBlockingQueue_ctor_0p = cls_LinkedBlockingQueue.$init.overload()
+    console.log("func_LinkedBlockingQueue_ctor_0p=" + func_LinkedBlockingQueue_ctor_0p)
+    if (func_LinkedBlockingQueue_ctor_0p) {
+      func_LinkedBlockingQueue_ctor_0p.implementation = function () {
+        var funcName = "LinkedBlockingQueue_0p"
+        var funcParaDict = {}
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        // var isShowLog = true
+        var isShowLog = false
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+        if (isShowLog) {
+          // console.log(funcCallAndStackStr)
+        }
+
+        this.$init()
+        var newLinkedBlockingQueue_0p = this
+
+        if (isShowLog) {
+          if (retE_0p) {
+            console.log(funcCallAndStackStr)
+
+            console.log(funcName + " => newLinkedBlockingQueue_0p=" + newLinkedBlockingQueue_0p)
+          }
+        }
+
+        return
+      }
+    }
+
+    // boolean offer(E e)
+    // public boolean java.util.concurrent.LinkedBlockingQueue.offer(java.lang.Object)
+    var func_LinkedBlockingQueue_offer_1pe = cls_LinkedBlockingQueue.offer.overload("java.lang.Object")
+    console.log("func_LinkedBlockingQueue_offer_1pe=" + func_LinkedBlockingQueue_offer_1pe)
+    if (func_LinkedBlockingQueue_offer_1pe) {
+      func_LinkedBlockingQueue_offer_1pe.implementation = function (e) {
+        var funcName = "LinkedBlockingQueue.offer_1pe"
+        var funcParaDict = {
+          "e": e,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean_1pe = this.offer(e)
+        console.log(funcName + " => retBoolean_1pe=" + retBoolean_1pe)
+        return retBoolean_1pe
+      }
+    }
+
+    // boolean offer(E e, long timeout, TimeUnit unit)
+    // public boolean java.util.concurrent.LinkedBlockingQueue.offer(java.lang.Object,long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException
+    var func_LinkedBlockingQueue_offer_3petu = cls_LinkedBlockingQueue.offer.overload("java.lang.Object", "long", "java.util.concurrent.TimeUnit")
+    console.log("func_LinkedBlockingQueue_offer_3petu=" + func_LinkedBlockingQueue_offer_3petu)
+    if (func_LinkedBlockingQueue_offer_3petu) {
+      func_LinkedBlockingQueue_offer_3petu.implementation = function (e, timeout, unit) {
+        var funcName = "LinkedBlockingQueue.offer_3petu"
+        var funcParaDict = {
+          "e": e,
+          "timeout": timeout,
+          "unit": unit,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean_3petu = this.offer(e, timeout, unit)
+        console.log(funcName + " => retBoolean_3petu=" + retBoolean_3petu)
+        return retBoolean_3petu
+      }
+    }
+
+    // E poll()
+    // public java.lang.Object java.util.concurrent.LinkedBlockingQueue.poll()
+    var func_LinkedBlockingQueue_poll_0p = cls_LinkedBlockingQueue.poll.overload()
+    console.log("func_LinkedBlockingQueue_poll_0p=" + func_LinkedBlockingQueue_poll_0p)
+    if (func_LinkedBlockingQueue_poll_0p) {
+      func_LinkedBlockingQueue_poll_0p.implementation = function () {
+        var funcName = "LinkedBlockingQueue.poll_0p"
+        var funcParaDict = {}
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        // var isShowLog = true
+        var isShowLog = false
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+        if (isShowLog) {
+          // console.log(funcCallAndStackStr)
+        }
+
+        var retE_0p = this.poll()
+
+        if (isShowLog) {
+          if (retE_0p) {
+            console.log(funcCallAndStackStr)
+
+            console.log(funcName + " => retE_0p=" + FridaAndroidUtil.valueToNameStr(retE_0p))
+          }
+        }
+
+        return retE_0p
+      }
+    }
+
+    // E poll(long timeout, TimeUnit unit)
+    // public java.lang.Object java.util.concurrent.LinkedBlockingQueue.poll(long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException
+    var func_LinkedBlockingQueue_poll_2ptu = cls_LinkedBlockingQueue.poll.overload("long", "java.util.concurrent.TimeUnit")
+    console.log("func_LinkedBlockingQueue_poll_2ptu=" + func_LinkedBlockingQueue_poll_2ptu)
+    if (func_LinkedBlockingQueue_poll_2ptu) {
+      func_LinkedBlockingQueue_poll_2ptu.implementation = function (timeout, unit) {
+        var funcName = "LinkedBlockingQueue.poll_2ptu"
+        var funcParaDict = {
+          "timeout": timeout,
+          "unit": unit,
+        }
+        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        // var isShowLog = true
+        var isShowLog = false
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(funcCallAndStackStr)
+        }
+        if (isShowLog) {
+          // console.log(funcCallAndStackStr)
+        }
+
+        var retE_2ptu = this.poll(timeout, unit)
+
+        if (isShowLog) {
+          if (retE_2ptu) {
+            console.log(funcCallAndStackStr)
+
+            console.log(funcName + " => retE_2ptu=" + FridaAndroidUtil.valueToNameStr(retE_2ptu))
+          }
+        }
+
+        return retE_2ptu
+      }
+    }
+
+    // void put(E e)
+    // public void java.util.concurrent.LinkedBlockingQueue.put(java.lang.Object) throws java.lang.InterruptedException
+    var func_LinkedBlockingQueue_put = cls_LinkedBlockingQueue.put
+    console.log("func_LinkedBlockingQueue_put=" + func_LinkedBlockingQueue_put)
+    if (func_LinkedBlockingQueue_put) {
+      func_LinkedBlockingQueue_put.implementation = function (e) {
+        var funcName = "LinkedBlockingQueue.put"
+        var funcParaDict = {
+          "e": e,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.put(e)
       }
     }
 
