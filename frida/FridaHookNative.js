@@ -3,24 +3,25 @@
 	Function: crifan's Frida hook common native related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookNative.js
-	Updated: 20250226
+	Updated: 20251023
 */
 
 // Frida hook common native functions
 class FridaHookNative {
-  static dladdr = null
-  static free = null
+  // static dladdr = null
+  // static free = null
 
   constructor() {
     console.log("FridaHookNative constructor")
   }
 
   static {
-    FridaHookNative.dladdr = FridaHookNative.genNativeFunc_dladdr()
-    console.log("FridaHookNative.dladdr=" + FridaHookNative.dladdr)
+    console.log("FridaHookNative static")
+    // FridaHookNative.dladdr = FridaHookNative.genNativeFunc_dladdr()
+    // console.log("FridaHookNative.dladdr=" + FridaHookNative.dladdr)
 
-    FridaHookNative.free = FridaHookNative.genNativeFunc_free()
-    console.log("FridaHookNative.free=" + FridaHookNative.free)
+    // FridaHookNative.free = FridaHookNative.genNativeFunc_free()
+    // console.log("FridaHookNative.free=" + FridaHookNative.free)
   }
 
   static hookNative_commonFunc(funcName_native, funcParaList, libFullPath=null, funcName_log=null, isPrintStack=true){
@@ -186,6 +187,44 @@ class FridaHookNative {
     })
   }
 
+  static hookNative_access(){
+    // int access(const char *pathname, int mode);
+    Interceptor.attach(Module.findExportByName(null, "access"), {
+      onEnter: function (args) {
+        var pathname = FridaUtil.ptrToCStr(args[0])
+        var mode = args[1]
+        console.log("access: [+] pathname=" + pathname + ", mode=" + mode)
+        this._pathname = pathname
+        this._mode = mode
+        FridaUtil.printFunctionCallStack_addr(this.context, "hookNative_access")
+      },
+      onLeave: function (retVal) {
+        console.log("access: [+] pathname=" + this._pathname + ", mode=" + this._mode + " -> retVal=" + retVal)
+      }
+    })
+  }
+
+  static hookNative_faccessat(){
+    // int faccessat(int dirfd, const char *pathname, int mode, int flags);
+    Interceptor.attach(Module.findExportByName(null, "faccessat"), {
+      onEnter: function (args) {
+        var dirfd = args[0]
+        var pathname = FridaUtil.ptrToCStr(args[1])
+        var mode = args[2]
+        var flags = args[3]
+        console.log("faccessat: [+] dirfd=" + dirfd + ", pathname=" + pathname + ", mode=" + mode + ", flags=" + flags)
+        this._dirfd = dirfd
+        this._pathname = pathname
+        this._mode = mode
+        this._flags = flags
+        FridaUtil.printFunctionCallStack_addr(this.context, "hookNative_faccessat")
+      },
+      onLeave: function (retVal) {
+        console.log("faccessat: [+] dirfd=" + this._dirfd + ", pathname=" + this._pathname + ", mode=" + this._mode + ", flags=" + this._flags + " -> retVal=" + retVal)
+      }
+    })
+  }
+
   static hookNative_read(){
     // ssize_t read(int fd, void buf[.count], size_t count)
     Interceptor.attach(Module.findExportByName(null, "read"), {
@@ -249,6 +288,8 @@ class FridaHookNative {
         // console.log("fopen: pathname=" + pathname + ", mode=" + mode)
         this._pathname = pathname
         this._mode = mode
+
+        FridaUtil.printFunctionCallStack_addr(this.context, "hookNative_fopen")
       },
       onLeave: function (retFile) {
         // console.log("fopen: retFile=" + retFile)
@@ -417,6 +458,8 @@ class FridaHookNative {
         var start_routine = args[2]
         var arg = args[3]
         console.log("pthread_create: thread=" + thread + ", attr=" + attr + ", start_routine=" + start_routine + ", arg=" + arg)
+
+        FridaUtil.printFunctionCallStack_addr(this.context, "hookNative_pthread_create")
       },
       onLeave: function (retNewPid) {
         console.log("\t pthread_create retNewPid= " + retNewPid)

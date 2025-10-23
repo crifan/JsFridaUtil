@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20250711
+	Updated: 20251023
 */
 
 // Frida hook common Android/Java class
@@ -756,7 +756,7 @@ class FridaHookAndroidJava {
     var cls_HttpURLConnection = Java.use(FridaAndroidUtil.clsName_HttpURLConnection)
     console.log("cls_HttpURLConnection=" + cls_HttpURLConnection)
 
-    
+
     // abstract void disconnect()
     // public abstract void java.net.HttpURLConnection.disconnect()
     var func_HttpURLConnection_disconnect = cls_HttpURLConnection.disconnect
@@ -1139,7 +1139,9 @@ class FridaHookAndroidJava {
     var cls_HttpURLConnectionImpl = Java.use(clsName_HttpURLConnectionImpl)
     console.log("cls_HttpURLConnectionImpl=" + cls_HttpURLConnectionImpl)
 
-    
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
     // public HttpURLConnectionImpl(URL url, OkHttpClient client) {
     // 
     var func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p = cls_HttpURLConnectionImpl.$init.overload("java.net.URL", "com.android.okhttp.OkHttpClient")
@@ -1151,7 +1153,7 @@ class FridaHookAndroidJava {
           "url": url,
           "client": client,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var newHttpURLConnectionImpl_2p = this.$init(url, client)
         console.log("HttpURLConnectionImpl(url,client) => newHttpURLConnectionImpl_2p=" + newHttpURLConnectionImpl_2p)
@@ -1171,7 +1173,7 @@ class FridaHookAndroidJava {
           "client": client,
           "urlFilter": urlFilter,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var newHttpURLConnectionImpl_3p = this.$init(url, client, urlFilter)
         console.log("HttpURLConnectionImpl(url,client,urlFilter) => newHttpURLConnectionImpl_3p=" + newHttpURLConnectionImpl_3p)
@@ -1187,7 +1189,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_connect.implementation = function () {
         var funcName = "HttpURLConnectionImpl.connect"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         this.connect()
 
@@ -1203,7 +1205,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_disconnect.implementation = function () {
         var funcName = "HttpURLConnectionImpl.disconnect"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.disconnect()
       }
@@ -1217,7 +1219,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getErrorStream.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getErrorStream"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retErrorStream = this.getErrorStream()
         console.log("HttpURLConnectionImpl.getErrorStream => retErrorStream=" + retErrorStream)
@@ -1233,7 +1235,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getHeaders.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getHeaders"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaders = this.getHeaders()
         console.log("HttpURLConnectionImpl.getHeaders => retHeaders=" + retHeaders)
@@ -1251,7 +1253,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "response": response,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retString = this.responseSourceHeader(response)
         console.log("HttpURLConnectionImpl.responseSourceHeader => retString=" + retString)
@@ -1269,7 +1271,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "position": position,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaderField_i = this.getHeaderField(position)
         console.log("HttpURLConnectionImpl.getHeaderField(position) => retHeaderField_i=" + retHeaderField_i)
@@ -1287,7 +1289,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "fieldName": fieldName,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaderField_str = this.getHeaderField(fieldName)
         console.log("HttpURLConnectionImpl.getHeaderField(fieldName) => retHeaderField_str=" + retHeaderField_str)
@@ -1305,7 +1307,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "position": position,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaderFieldKey = this.getHeaderFieldKey(position)
         console.log("HttpURLConnectionImpl.getHeaderFieldKey => retHeaderFieldKey=" + retHeaderFieldKey)
@@ -1321,7 +1323,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getHeaderFields.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getHeaderFields"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaderFields = this.getHeaderFields()
         console.log("HttpURLConnectionImpl.getHeaderFields => retHeaderFields=" + retHeaderFields)
@@ -1337,7 +1339,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getRequestProperties.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getRequestProperties"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retRequestProperties = this.getRequestProperties()
         console.log("HttpURLConnectionImpl.getRequestProperties => retRequestProperties=" + retRequestProperties)
@@ -1353,7 +1355,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getInputStream.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getInputStream"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retInputStream = this.getInputStream()
         console.log("HttpURLConnectionImpl.getInputStream => retInputStream=" + retInputStream)
@@ -1369,7 +1371,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getOutputStream.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getOutputStream"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retOutputStream = this.getOutputStream()
         console.log("HttpURLConnectionImpl.getOutputStream => retOutputStream=" + retOutputStream)
@@ -1385,7 +1387,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getPermission.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getPermission"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retPermission = this.getPermission()
         console.log("HttpURLConnectionImpl.getPermission => retPermission=" + retPermission)
@@ -1403,7 +1405,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "field": field,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retRequestProperty = this.getRequestProperty(field)
         console.log("HttpURLConnectionImpl.getRequestProperty => retRequestProperty=" + retRequestProperty)
@@ -1421,7 +1423,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "timeoutMillis": timeoutMillis,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setConnectTimeout(timeoutMillis)
       }
@@ -1437,7 +1439,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "followRedirects": followRedirects,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setInstanceFollowRedirects(followRedirects)
       }
@@ -1451,7 +1453,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getInstanceFollowRedirects.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getInstanceFollowRedirects"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retInstanceFollowRedirects = this.getInstanceFollowRedirects()
         console.log("HttpURLConnectionImpl.getInstanceFollowRedirects => retInstanceFollowRedirects=" + retInstanceFollowRedirects)
@@ -1467,7 +1469,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getConnectTimeout.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getConnectTimeout"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retConnectTimeout = this.getConnectTimeout()
         console.log("HttpURLConnectionImpl.getConnectTimeout => retConnectTimeout=" + retConnectTimeout)
@@ -1485,7 +1487,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "timeoutMillis": timeoutMillis,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setReadTimeout(timeoutMillis)
       }
@@ -1499,7 +1501,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getReadTimeout.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getReadTimeout"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retReadTimeout = this.getReadTimeout()
         console.log("HttpURLConnectionImpl.getReadTimeout => retReadTimeout=" + retReadTimeout)
@@ -1515,7 +1517,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_initHttpEngine.implementation = function () {
         var funcName = "HttpURLConnectionImpl.initHttpEngine"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.initHttpEngine()
       }
@@ -1534,7 +1536,7 @@ class FridaHookAndroidJava {
           "requestBody": requestBody,
           "priorResponse": priorResponse,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHttpEngine = this.newHttpEngine(method, streamAllocation, requestBody, priorResponse)
         console.log("HttpURLConnectionImpl.newHttpEngine => retHttpEngine=" + retHttpEngine)
@@ -1550,7 +1552,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_defaultUserAgent.implementation = function () {
         var funcName = "HttpURLConnectionImpl.defaultUserAgent"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retString = this.defaultUserAgent()
         console.log("HttpURLConnectionImpl.defaultUserAgent => retString=" + retString)
@@ -1566,7 +1568,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getResponse.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getResponse"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var curHttpEngine = this.getResponse()
         console.log("HttpURLConnectionImpl.getResponse => curHttpEngine=" + curHttpEngine)
@@ -1599,6 +1601,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "readResponse": readResponse,
         }
+        // curLogFunc(funcName, funcParaDict)
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retBoolean = this.execute(readResponse)
@@ -1615,7 +1618,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_usingProxy.implementation = function () {
         var funcName = "HttpURLConnectionImpl.usingProxy"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retBoolean = this.usingProxy()
         console.log("HttpURLConnectionImpl.usingProxy => retBoolean=" + retBoolean)
@@ -1631,7 +1634,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getResponseMessage.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getResponseMessage"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retResponseMessage = this.getResponseMessage()
         console.log("HttpURLConnectionImpl.getResponseMessage => retResponseMessage=" + retResponseMessage)
@@ -1647,7 +1650,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnectionImpl_getResponseCode.implementation = function () {
         var funcName = "HttpURLConnectionImpl.getResponseCode"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retResponseCode = this.getResponseCode()
         console.log("HttpURLConnectionImpl.getResponseCode => retResponseCode=" + retResponseCode)
@@ -1695,7 +1698,7 @@ class FridaHookAndroidJava {
           "field": field,
           "newValue": newValue,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setRequestProperty(field, newValue)
       }
@@ -1711,7 +1714,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "newValue": newValue,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setIfModifiedSince(newValue)
       }
@@ -1728,6 +1731,7 @@ class FridaHookAndroidJava {
           "field": field,
           "value": value,
         }
+        // curLogFunc(funcName, funcParaDict)
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         return this.addRequestProperty(field, value)
@@ -1745,7 +1749,7 @@ class FridaHookAndroidJava {
           "protocolsString": protocolsString,
           "append": append,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setProtocols(protocolsString, append)
       }
@@ -1761,7 +1765,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "method": method,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setRequestMethod(method)
       }
@@ -1777,7 +1781,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "contentLength": contentLength,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setFixedLengthStreamingMode(contentLength)
       }
@@ -1793,7 +1797,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "contentLength": contentLength,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setFixedLengthStreamingMode(contentLength)
       }
@@ -5114,6 +5118,8 @@ class FridaHookAndroidJava {
     var cls_URL = Java.use(clsName_URL)
     console.log("cls_URL=" + cls_URL)
 
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    const curLogFunc = FridaAndroidUtil.printFunctionCallStr
     
     // public URL(String spec)
     // 
@@ -5125,11 +5131,12 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "spec": spec,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
-        var newURL_1ps = this.$init(spec)
+        this.$init(spec)
+        var newURL_1ps = this
         console.log(funcName + " => newURL_1ps=" + newURL_1ps)
-        return newURL_1ps
+        return
       }
     }
 
@@ -5141,7 +5148,7 @@ class FridaHookAndroidJava {
       func_URL_getHost.implementation = function () {
         var funcName = "URL.getHost"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHost = this.getHost()
         console.log(funcName + " => retHost=" + retHost)
@@ -5157,7 +5164,7 @@ class FridaHookAndroidJava {
       func_URL_getPath.implementation = function () {
         var funcName = "URL.getPath"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retPath = this.getPath()
         console.log(funcName + " => retPath=" + retPath)
@@ -5173,7 +5180,7 @@ class FridaHookAndroidJava {
       func_URL_getPort.implementation = function () {
         var funcName = "URL.getPort"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retPort = this.getPort()
         console.log(funcName + " => retPort=" + retPort)
@@ -5189,7 +5196,7 @@ class FridaHookAndroidJava {
       func_URL_getProtocol.implementation = function () {
         var funcName = "URL.getProtocol"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retProtocol = this.getProtocol()
         console.log(funcName + " => retProtocol=" + retProtocol)
@@ -5205,11 +5212,27 @@ class FridaHookAndroidJava {
       func_URL_getQuery.implementation = function () {
         var funcName = "URL.getQuery"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retQuery = this.getQuery()
         console.log(funcName + " => retQuery=" + retQuery)
         return retQuery
+      }
+    }
+
+    // public URLConnection openConnection()
+    // public java.net.URLConnection java.net.URL.openConnection() throws java.io.IOException
+    var func_URL_openConnection_0p = cls_URL.openConnection.overload()
+    console.log("func_URL_openConnection_0p=" + func_URL_openConnection_0p)
+    if (func_URL_openConnection_0p) {
+      func_URL_openConnection_0p.implementation = function () {
+        var funcName = "URL.openConnection"
+        var funcParaDict = {}
+        curLogFunc(funcName, funcParaDict)
+
+        var retUrlConn = this.openConnection()
+        console.log(funcName + " => retUrlConn=" + retUrlConn)
+        return retUrlConn
       }
     }
 
