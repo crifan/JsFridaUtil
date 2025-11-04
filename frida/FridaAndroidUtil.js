@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20250703
+	Updated: 20251104
 */
 
 // Frida Android Util
@@ -44,6 +44,9 @@ class FridaAndroidUtil {
   static clsName_HttpURLConnectionImpl        = "com.android.okhttp.internal.huc.HttpURLConnectionImpl"
   static clsName_DelegatingHttpsURLConnection = "com.android.okhttp.internal.huc.DelegatingHttpsURLConnection"
   static clsName_HttpsURLConnectionImpl       = "com.android.okhttp.internal.huc.HttpsURLConnectionImpl"
+  // static clsName_Headers_Builder              = "com.android.okhttp.internal.huc.Headers$Builder"
+  static clsName_Headers_Builder              = "com.android.okhttp.Headers$Builder"
+  
 
   static clsName_CronetUrlRequest             = "org.chromium.net.impl.CronetUrlRequest"
   static clsName_ByteArrayOutputStream        = "java.io.ByteArrayOutputStream"
@@ -52,6 +55,7 @@ class FridaAndroidUtil {
   static clsName_Long                         = "java.lang.Long"
   static clsName_File                         = "java.io.File"
   static clsName_Parcel                       = "android.os.Parcel"
+  static clsName_SharedPreferencesImpl_EditorImpl = "android.app.SharedPreferencesImpl$EditorImpl"
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -185,6 +189,45 @@ class FridaAndroidUtil {
     var isClsHttpsURLConnectionImpl = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_HttpsURLConnectionImpl)
     console.log("curObj=" + curObj + " -> isClsHttpsURLConnectionImpl=" + isClsHttpsURLConnectionImpl)
     return isClsHttpsURLConnectionImpl
+  }
+
+  // Convert com.android.okhttp.Headers$Builder to string
+  static HeadersBuilderToString(headersBuilderObj) {
+    var headersStr = ""
+    if (headersBuilderObj) {
+      var headers = headersBuilderObj.build()
+      // console.log("headers=" + headers)
+      // com.squareup.okhttp.Headers
+      headersStr = headers.toString()
+    }
+    // console.log("headersStr=" + headersStr)
+    return headersStr
+  }
+
+  static printClass_SharedPreferencesImpl_EditorImpl(inputObj, prefixStr=""){
+    // android.app.SharedPreferencesImpl$EditorImpl
+    // https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/SharedPreferencesImpl.java
+    const ClassName = "SharedPreferencesImpl$EditorImpl"
+    if (inputObj) {
+      var curClassName = FridaAndroidUtil.getJavaClassName(inputObj)
+      if (curClassName === FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl) {
+        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl)
+        // console.log("curObj=" + curObj)
+
+        var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
+        var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+
+        console.log(newPrefStr + ClassName + ":" + clsNameStr
+          + " mEditorLock=" + curObj.mEditorLock.value
+          + ", mModified=" + FridaAndroidUtil.mapToStr(curObj.mModified.value)
+          + ", mClear=" + curObj.mClear.value
+        )
+      } else {
+        console.log(newPrefStr + curClassName + ": not a " + ClassName)
+      }
+    } else {
+      console.log(newPrefStr + ClassName + ": null")
+    }
   }
 
   // org.chromium.net.impl.CronetUrlRequest
@@ -491,10 +534,14 @@ class FridaAndroidUtil {
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
+      // var requestHeadersStr = FridaAndroidUtil.printClass_Headers_Builder(curObj.requestHeaders.value)
+      var requestHeadersStr = FridaAndroidUtil.HeadersBuilderToString(curObj.requestHeaders.value)
+      console.log("requestHeadersStr=" + requestHeadersStr)
+
       // if (FridaAndroidUtil.isClass_HttpURLConnectionImpl(curObj)){
         console.log("HttpURLConnectionImpl:" + clsNameStr
           + "  client=" + curObj.client.value
-          + ", requestHeaders=" + curObj.requestHeaders.value
+          + ", requestHeaders=" + requestHeadersStr
           + ", fixedContentLength=" + curObj.fixedContentLength.value
           + ", followUpCount=" + curObj.followUpCount.value
           + ", httpEngineFailure=" + curObj.httpEngineFailure.value
@@ -753,6 +800,9 @@ class FridaAndroidUtil {
         var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
         var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
+        var stringCreatorValue = curObj.STRING_CREATOR.value
+        var stringCreatorStr = FridaAndroidUtil.valueToNameStr(stringCreatorValue)
+
         var dataSize = curObj.dataSize()
         var dataPosition = curObj.dataPosition()
         var dataAvail = curObj.dataAvail()
@@ -760,7 +810,7 @@ class FridaAndroidUtil {
         var hasFileDescriptors = curObj.hasFileDescriptors()
 
         console.log(newPrefStr + ClassName + ":" + clsNameStr
-          + " STRING_CREATOR=" + curObj.STRING_CREATOR.value
+          + " STRING_CREATOR=" + stringCreatorStr
           + ", dataSize=" + dataSize
           + ", dataPosition=" + dataPosition
           + ", dataAvail=" + dataAvail

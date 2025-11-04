@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20251023
+	Updated: 20251104
 */
 
 // Frida hook common Android/Java class
@@ -12,14 +12,18 @@ class FridaHookAndroidJava {
     console.log("FridaHookAndroidJava constructor")
   }
 
-  static JSONObject() {
-    /******************** org.json.JSONObject ********************/
+
+  static JSONObject(callback_isShowLog=null) {
     var className_JSONObject = "org.json.JSONObject"
     // FridaAndroidUtil.printClassAllMethodsFields(className_JSONObject)
 
     var cls_JSONObject = Java.use(className_JSONObject)
     console.log("cls_JSONObject=" + cls_JSONObject)
 
+    // curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    var curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
+    // JSONObject	putOpt(String name, Object value)
     // public org.json.JSONObject org.json.JSONObject.put(java.lang.String,java.lang.Object) throws org.json.JSONException
     var func_JSONObject_put = cls_JSONObject.put.overload('java.lang.String', 'java.lang.Object')
     console.log("func_JSONObject_put=" + func_JSONObject_put)
@@ -30,9 +34,48 @@ class FridaHookAndroidJava {
           "str": str,
           "obj": obj,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        return this.put(str, obj)
+        var isShowLog = true
+        var curFuncCallStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(curFuncCallStackStr)
+        }
+        if (isShowLog){
+          console.log(curFuncCallStackStr)
+        }
+
+        var retJsonObj = this.put(str, obj)
+        if (isShowLog){
+          console.log(funcName + " => retJsonObj=" + retJsonObj)
+        }
+        return retJsonObj
+      }
+    }
+
+    // String	toString()
+    // public String toString()
+    var func_JSONObject_toString_0p = cls_JSONObject.toString.overload()
+    console.log("func_JSONObject_toString_0p=" + func_JSONObject_toString_0p)
+    if (func_JSONObject_toString_0p) {
+      func_JSONObject_toString_0p.implementation = function () {
+        var funcName = "JSONObject.toString()"
+        var funcParaDict = {
+        }
+
+        var isShowLog = true
+        var curFuncCallStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        if (null != callback_isShowLog) {
+          isShowLog = callback_isShowLog(curFuncCallStackStr)
+        }
+        if (isShowLog){
+          console.log(curFuncCallStackStr)
+        }
+
+        var retJsonStr = this.toString()
+        if (isShowLog){
+          console.log(funcName + " => retJsonStr=" + retJsonStr)
+        }
+        return retJsonStr
       }
     }
 
@@ -370,6 +413,9 @@ class FridaHookAndroidJava {
     var cls_PackageManager = Java.use(className_PackageManager)
     console.log("cls_PackageManager=" + cls_PackageManager)
 
+    const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
     // Note: Xiaomi8 not exist: getApplicationInfo.overload('java.lang.String', 'android.content.pm.PackageManager$ApplicationInfoFlags')
     // public ApplicationInfo getApplicationInfo(String packageName, PackageManager.ApplicationInfoFlags flags)
     // public android.content.pm.ApplicationInfo android.content.pm.PackageManager.getApplicationInfo(java.lang.String,android.content.pm.PackageManager$ApplicationInfoFlags) throws android.content.pm.PackageManager$NameNotFoundException
@@ -393,7 +439,7 @@ class FridaHookAndroidJava {
         }
 
         if (isMatch){
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+          curLogFunc(funcName, funcParaDict)
 
           // do hook bypass
           retAppInfo = ApplicationInfo()
@@ -426,7 +472,7 @@ class FridaHookAndroidJava {
         }
 
         if (isMatch){
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+          curLogFunc(funcName, funcParaDict)
 
           // // do hook bypass
           // retAppInfo_abstract = ApplicationInfo()
@@ -451,7 +497,7 @@ class FridaHookAndroidJava {
           "packageName": packageName,
           "flags": flags,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retPackageInfo_2psi = this.getPackageInfo(packageName, flags)
         console.log(funcName + " => retPackageInfo_2psi=" + retPackageInfo_2psi)
@@ -470,10 +516,16 @@ class FridaHookAndroidJava {
           "packageName": packageName,
           "flags": flags,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retPackageInfo_2ppf = this.getPackageInfo(packageName, flags)
         console.log(funcName + " => retPackageInfo_2ppf=" + retPackageInfo_2ppf)
+        var isGetSignatures = PackageManager.GET_SIGNATURES & flags
+        console.log(funcName + " isGetSignatures=" + isGetSignatures)
+        if(isGetSignatures){
+          var signatures = retPackageInfo_2ppf.signatures
+          console.log(funcName + " signatures=" + signatures)
+        }
         return retPackageInfo_2ppf
       }
     }
@@ -489,11 +541,40 @@ class FridaHookAndroidJava {
           "permName": permName,
           "packageName": packageName,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retPermissionInt = this.checkPermission(permName, packageName)
         console.log(funcName + " => retPermissionInt=" + retPermissionInt)
         return retPermissionInt
+      }
+    }
+
+  }
+
+  static Signature() {
+    var className_Signature = "android.content.pm.Signature"
+    // FridaAndroidUtil.printClassAllMethodsFields(className_Signature)
+
+    var cls_Signature = Java.use(className_Signature)
+    console.log("cls_Signature=" + cls_Signature)
+
+    const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
+    // public byte[] toByteArray()
+    // public byte[] android.content.pm.Signature.toByteArray()
+    var cls_Signature_toByteArray = cls_Signature.toByteArray
+    console.log("cls_Signature_toByteArray=" + cls_Signature_toByteArray)
+    if (cls_Signature_toByteArray) {
+      cls_Signature_toByteArray.implementation = function () {
+        var funcName = "Signature.toByteArray"
+        var funcParaDict = {
+        }
+        curLogFunc(funcName, funcParaDict)
+
+        var retBytes = this.toByteArray()
+        console.log(funcName + " => retBytes: len=" + retBytes.length + ", var=" + retBytes)
+        return retBytes
       }
     }
 
@@ -756,6 +837,8 @@ class FridaHookAndroidJava {
     var cls_HttpURLConnection = Java.use(FridaAndroidUtil.clsName_HttpURLConnection)
     console.log("cls_HttpURLConnection=" + cls_HttpURLConnection)
 
+    //var  curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    var curLogFunc = FridaAndroidUtil.printFunctionCallStr
 
     // abstract void disconnect()
     // public abstract void java.net.HttpURLConnection.disconnect()
@@ -765,7 +848,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_disconnect.implementation = function () {
         var funcName = "HttpURLConnection.disconnect"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.disconnect()
       }
@@ -779,7 +862,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getErrorStream.implementation = function () {
         var funcName = "HttpURLConnection.getErrorStream"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retErrorStream = this.getErrorStream()
         console.log("HttpURLConnection.getErrorStream => retErrorStream=" + retErrorStream)
@@ -795,7 +878,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getFollowRedirects.implementation = function () {
         var funcName = "HttpURLConnection.getFollowRedirects"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retFollowRedirects = this.getFollowRedirects()
         console.log("HttpURLConnection.getFollowRedirects => retFollowRedirects=" + retFollowRedirects)
@@ -813,7 +896,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "n": n,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaderField = this.getHeaderField(n)
         console.log("HttpURLConnection.getHeaderField => retHeaderField=" + retHeaderField)
@@ -832,7 +915,7 @@ class FridaHookAndroidJava {
           "name": name,
           "Default": Default,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaderFieldDate = this.getHeaderFieldDate(name, Default)
         console.log("HttpURLConnection.getHeaderFieldDate => retHeaderFieldDate=" + retHeaderFieldDate)
@@ -850,7 +933,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "n": n,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retHeaderFieldKey = this.getHeaderFieldKey(n)
         console.log("HttpURLConnection.getHeaderFieldKey => retHeaderFieldKey=" + retHeaderFieldKey)
@@ -866,7 +949,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getInstanceFollowRedirects.implementation = function () {
         var funcName = "HttpURLConnection.getInstanceFollowRedirects"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retInstanceFollowRedirects = this.getInstanceFollowRedirects()
         console.log("HttpURLConnection.getInstanceFollowRedirects => retInstanceFollowRedirects=" + retInstanceFollowRedirects)
@@ -882,7 +965,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getPermission.implementation = function () {
         var funcName = "HttpURLConnection.getPermission"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retPermission = this.getPermission()
         console.log("HttpURLConnection.getPermission => retPermission=" + retPermission)
@@ -898,7 +981,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getRequestMethod.implementation = function () {
         var funcName = "HttpURLConnection.getRequestMethod"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retRequestMethod = this.getRequestMethod()
         console.log("HttpURLConnection.getRequestMethod => retRequestMethod=" + retRequestMethod)
@@ -914,7 +997,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getResponseCode.implementation = function () {
         var funcName = "HttpURLConnection.getResponseCode"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retResponseCode = this.getResponseCode()
         console.log("HttpURLConnection.getResponseCode => retResponseCode=" + retResponseCode)
@@ -930,7 +1013,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getResponseMessage.implementation = function () {
         var funcName = "HttpURLConnection.getResponseMessage"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retResponseMessage = this.getResponseMessage()
         console.log("HttpURLConnection.getResponseMessage => retResponseMessage=" + retResponseMessage)
@@ -948,7 +1031,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "chunklen": chunklen,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setChunkedStreamingMode(chunklen)
       }
@@ -964,7 +1047,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "contentLength": contentLength,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setFixedLengthStreamingMode(contentLength)
       }
@@ -980,7 +1063,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "contentLength": contentLength,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setFixedLengthStreamingMode(contentLength)
       }
@@ -996,7 +1079,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "set": set,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setFollowRedirects(set)
       }
@@ -1012,7 +1095,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "followRedirects": followRedirects,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setInstanceFollowRedirects(followRedirects)
       }
@@ -1028,7 +1111,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "method": method,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         return this.setRequestMethod(method)
       }
@@ -1042,7 +1125,7 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_usingProxy.implementation = function () {
         var funcName = "HttpURLConnection.usingProxy"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retBoolean = this.usingProxy()
         console.log("HttpURLConnection.usingProxy => retBoolean=" + retBoolean)
@@ -1652,8 +1735,9 @@ class FridaHookAndroidJava {
         var funcParaDict = {}
         curLogFunc(funcName, funcParaDict)
 
+        FridaAndroidUtil.printClass_HttpOrHttpsURLConnectionImpl(this)
         var retResponseCode = this.getResponseCode()
-        console.log("HttpURLConnectionImpl.getResponseCode => retResponseCode=" + retResponseCode)
+        console.log(funcName + " => retResponseCode=" + retResponseCode)
 
         // // get request body data
         // var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
@@ -4645,12 +4729,182 @@ class FridaHookAndroidJava {
 
   }
 
+  static SharedPreferencesImpl_EditorImpl(){
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_SharedPreferencesImpl_EditorImpl)
+
+    var cls_SharedPreferencesImpl_EditorImpl = Java.use(FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl)
+    console.log("cls_SharedPreferencesImpl_EditorImpl=" + cls_SharedPreferencesImpl_EditorImpl)
+
+    const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
+    // public Editor putString(String key, @Nullable String value) {
+    // public android.content.SharedPreferences$Editor android.app.SharedPreferencesImpl$EditorImpl.putString(java.lang.String,java.lang.String)
+    var func_SharedPreferencesImpl_EditorImpl_putString = cls_SharedPreferencesImpl_EditorImpl.putString
+    console.log("func_SharedPreferencesImpl_EditorImpl_putString=" + func_SharedPreferencesImpl_EditorImpl_putString)
+    if (func_SharedPreferencesImpl_EditorImpl_putString) {
+      func_SharedPreferencesImpl_EditorImpl_putString.implementation = function (key, value) {
+        var funcName = "SharedPreferencesImpl.EditorImpl.putString"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.putString(key, value)
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
+    // public Editor putStringSet(String key, @Nullable Set<String> values) {
+    // public android.content.SharedPreferences$Editor android.app.SharedPreferencesImpl$EditorImpl.putStringSet(java.lang.String,java.util.Set)
+    var func_SharedPreferencesImpl_EditorImpl_putStringSet = cls_SharedPreferencesImpl_EditorImpl.putStringSet
+    console.log("func_SharedPreferencesImpl_EditorImpl_putStringSet=" + func_SharedPreferencesImpl_EditorImpl_putStringSet)
+    if (func_SharedPreferencesImpl_EditorImpl_putStringSet) {
+      func_SharedPreferencesImpl_EditorImpl_putStringSet.implementation = function (key, values) {
+        var funcName = "SharedPreferencesImpl.EditorImpl.putStringSet"
+        var funcParaDict = {
+          "key": key,
+          "values": values,
+        }
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.putStringSet(key, values)
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
+    // public Editor remove(String key) {
+    // public android.content.SharedPreferences$Editor android.app.SharedPreferencesImpl$EditorImpl.remove(java.lang.String)
+    var func_SharedPreferencesImpl_EditorImpl_remove = cls_SharedPreferencesImpl_EditorImpl.remove
+    console.log("func_SharedPreferencesImpl_EditorImpl_remove=" + func_SharedPreferencesImpl_EditorImpl_remove)
+    if (func_SharedPreferencesImpl_EditorImpl_remove) {
+      func_SharedPreferencesImpl_EditorImpl_remove.implementation = function (key) {
+        var funcName = "SharedPreferencesImpl.EditorImpl.remove"
+        var funcParaDict = {
+          "key": key,
+        }
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.remove(key)
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
+    // public Editor putLong(String key, long value) {
+    // public android.content.SharedPreferences$Editor android.app.SharedPreferencesImpl$EditorImpl.putLong(java.lang.String,long)
+    var func_SharedPreferencesImpl_EditorImpl_putLong = cls_SharedPreferencesImpl_EditorImpl.putLong
+    console.log("func_SharedPreferencesImpl_EditorImpl_putLong=" + func_SharedPreferencesImpl_EditorImpl_putLong)
+    if (func_SharedPreferencesImpl_EditorImpl_putLong) {
+      func_SharedPreferencesImpl_EditorImpl_putLong.implementation = function (key, value) {
+        var funcName = "SharedPreferencesImpl.EditorImpl.putLong"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.putLong(key, value)
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
+    // public Editor putBoolean(String key, boolean value) {
+    // public android.content.SharedPreferences$Editor android.app.SharedPreferencesImpl$EditorImpl.putBoolean(java.lang.String,boolean)
+    var func_SharedPreferencesImpl_EditorImpl_putBoolean = cls_SharedPreferencesImpl_EditorImpl.putBoolean
+    console.log("func_SharedPreferencesImpl_EditorImpl_putBoolean=" + func_SharedPreferencesImpl_EditorImpl_putBoolean)
+    if (func_SharedPreferencesImpl_EditorImpl_putBoolean) {
+      func_SharedPreferencesImpl_EditorImpl_putBoolean.implementation = function (key, value) {
+        var funcName = "SharedPreferencesImpl.EditorImpl.putBoolean"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.putBoolean(key, value)
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
+    // public Editor putFloat(String key, float value) {
+    // public android.content.SharedPreferences$Editor android.app.SharedPreferencesImpl$EditorImpl.putFloat(java.lang.String,float)
+    var func_SharedPreferencesImpl_EditorImpl_putFloat = cls_SharedPreferencesImpl_EditorImpl.putFloat
+    console.log("func_SharedPreferencesImpl_EditorImpl_putFloat=" + func_SharedPreferencesImpl_EditorImpl_putFloat)
+    if (func_SharedPreferencesImpl_EditorImpl_putFloat) {
+      func_SharedPreferencesImpl_EditorImpl_putFloat.implementation = function (key, value) {
+        var funcName = "SharedPreferencesImpl.EditorImpl.putFloat"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.putFloat(key, value)
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
+    // public Editor putInt(String key, int value) {
+    // public android.content.SharedPreferences$Editor android.app.SharedPreferencesImpl$EditorImpl.putInt(java.lang.String,int)
+    var func_SharedPreferencesImpl_EditorImpl_putInt = cls_SharedPreferencesImpl_EditorImpl.putInt
+    console.log("func_SharedPreferencesImpl_EditorImpl_putInt=" + func_SharedPreferencesImpl_EditorImpl_putInt)
+    if (func_SharedPreferencesImpl_EditorImpl_putInt) {
+      func_SharedPreferencesImpl_EditorImpl_putInt.implementation = function (key, value) {
+        var funcName = "SharedPreferencesImpl.EditorImpl.putInt"
+        var funcParaDict = {
+          "key": key,
+          "value": value,
+        }
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.putInt(key, value)
+        console.log(funcName + " => retEditor=" + retEditor)
+        return retEditor
+      }
+    }
+
+  }
+
   static SharedPreferencesImpl() {
     var clsName_SharedPreferencesImpl = "android.app.SharedPreferencesImpl"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_SharedPreferencesImpl)
 
     var cls_SharedPreferencesImpl = Java.use(clsName_SharedPreferencesImpl)
     console.log("cls_SharedPreferencesImpl=" + cls_SharedPreferencesImpl)
+
+    const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
+    // public Map<String, ?> getAll() {
+    // public java.util.Map android.app.SharedPreferencesImpl.getAll()
+    var func_SharedPreferencesImpl_getAll = cls_SharedPreferencesImpl.getAll
+    console.log("func_SharedPreferencesImpl_getAll=" + func_SharedPreferencesImpl_getAll)
+    if (func_SharedPreferencesImpl_getAll) {
+      func_SharedPreferencesImpl_getAll.implementation = function () {
+        var funcName = "SharedPreferencesImpl.getAll"
+        var funcParaDict = {}
+        curLogFunc(funcName, funcParaDict)
+        var retMap = this.getAll()
+        console.log(funcName + " => retMap=" + FridaAndroidUtil.mapToStr(retMap))
+        return retMap
+      }
+    }
+
+    // public Editor edit() {
+    // public android.app.SharedPreferencesImpl$Editor android.app.SharedPreferencesImpl.edit()
+    var func_SharedPreferencesImpl_edit = cls_SharedPreferencesImpl.edit
+    console.log("func_SharedPreferencesImpl_edit=" + func_SharedPreferencesImpl_edit)
+    if (func_SharedPreferencesImpl_edit) {
+      func_SharedPreferencesImpl_edit.implementation = function () {
+        var funcName = "SharedPreferencesImpl.edit"
+        var funcParaDict = {}
+        curLogFunc(funcName, funcParaDict)
+        var retEditor = this.edit()
+        console.log(funcName + " => retEditor=" + retEditor)
+        FridaAndroidUtil.printClass_SharedPreferencesImpl_EditorImpl(retEditor, funcName)
+        return retEditor
+      }
+    }
 
     // public long getLong(String key, long defValue)
     // public long android.app.SharedPreferencesImpl.getLong(java.lang.String,long)
@@ -4663,8 +4917,8 @@ class FridaHookAndroidJava {
           "key": key,
           "defValue": defValue,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
+        curLogFunc(funcName, funcParaDict)
+        
         var funcCallStr = `${funcName}(key=${key},defValue=${defValue})`
         var retLong = this.getLong(key, defValue)
         console.log(`${funcCallStr} => retLong=${retLong}`)
@@ -4691,7 +4945,7 @@ class FridaHookAndroidJava {
           "key": key,
           "defValue": defValue,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retStr = this.getString(key, defValue)
         console.log(`${funcName}(key=${key},defValue=${defValue}) => retStr=${retStr}`)
@@ -4715,7 +4969,7 @@ class FridaHookAndroidJava {
       func_SharedPreferencesImpl_edit.implementation = function () {
         var funcName = "SharedPreferencesImpl.edit"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
         var retEditor = this.edit()
         console.log(funcName + " => retEditor=" + retEditor)
         return retEditor
@@ -7077,6 +7331,9 @@ class FridaHookAndroidJava {
     var cls_UserManager = Java.use(clsName_UserManager)
     console.log("cls_UserManager=" + cls_UserManager)
 
+    const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
     // 
     // public int android.os.UserManager.getUserSerialNumber(int)
     var func_getUserSerialNumber = cls_UserManager.getUserSerialNumber
@@ -7087,11 +7344,27 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "user": user,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+        curLogFunc(funcName, funcParaDict)
 
         var retUserSerNr = this.getUserSerialNumber(user)
         console.log(funcName + " => retUserSerNr=" + retUserSerNr)
         return retUserSerNr
+      }
+    }
+    
+    // public boolean isUserUnlocked()
+    // public boolean android.os.UserManager.isUserUnlocked()
+    var func_UserManager_isUserUnlocked = cls_UserManager.isUserUnlocked.overload()
+    console.log("func_UserManager_isUserUnlocked=" + func_UserManager_isUserUnlocked)
+    if (func_UserManager_isUserUnlocked) {
+      func_UserManager_isUserUnlocked.implementation = function() {
+        var funcName = "UserManager.isUserUnlocked"
+        var funcParaDict = {}
+        curLogFunc(funcName, funcParaDict)
+
+        var retIsUserUnlocked = this.isUserUnlocked()
+        console.log(funcName + " => retIsUserUnlocked=" + retIsUserUnlocked)
+        return retIsUserUnlocked
       }
     }
 
