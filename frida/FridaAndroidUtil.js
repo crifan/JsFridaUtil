@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251104
+	Updated: 20251105
 */
 
 // Frida Android Util
@@ -534,14 +534,14 @@ class FridaAndroidUtil {
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      // var requestHeadersStr = FridaAndroidUtil.printClass_Headers_Builder(curObj.requestHeaders.value)
-      var requestHeadersStr = FridaAndroidUtil.HeadersBuilderToString(curObj.requestHeaders.value)
-      console.log("requestHeadersStr=" + requestHeadersStr)
+      // var reqHeadersStr = FridaAndroidUtil.printClass_Headers_Builder(curObj.requestHeaders.value)
+      var reqHeadersStr = FridaAndroidUtil.HeadersBuilderToString(curObj.requestHeaders.value)
+      // console.log("reqHeadersStr=" + reqHeadersStr)
 
       // if (FridaAndroidUtil.isClass_HttpURLConnectionImpl(curObj)){
         console.log("HttpURLConnectionImpl:" + clsNameStr
           + "  client=" + curObj.client.value
-          + ", requestHeaders=" + requestHeadersStr
+          + ", requestHeaders=" + reqHeadersStr
           + ", fixedContentLength=" + curObj.fixedContentLength.value
           + ", followUpCount=" + curObj.followUpCount.value
           + ", httpEngineFailure=" + curObj.httpEngineFailure.value
@@ -1263,6 +1263,21 @@ class FridaAndroidUtil {
     return functionCallAndStackStr
   }
 
+  static showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict){
+    var isShowLog = true
+    var curFuncCallStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+
+    if (null != callback_isShowLog) {
+      isShowLog = callback_isShowLog(curFuncCallStackStr)
+    }
+
+    if (isShowLog){
+      console.log(curFuncCallStackStr)
+    }
+
+    return isShowLog
+  }
+
   // print Function call and stack trace string
   static printFunctionCallAndStack(funcName, funcParaDict, whiteList=undefined, isPrintDelimiter=true){
     // console.log("whiteList=" + whiteList + ", isPrintDelimiter=" + isPrintDelimiter)
@@ -1288,6 +1303,37 @@ class FridaAndroidUtil {
       console.log(funcCallAndStackStr)
     }
   }
+
+  // common function to decide whether to show log or not
+  static func_isShowLog_common(curStr, includeList=[], excludeList=[]){
+    // let isShowLog = true
+    let isShowLog = false
+
+    // const includeList = [
+    //   "X.02J",
+    // ]
+    for(const eachInclude of includeList){
+      if (curStr.includes(eachInclude)){
+        isShowLog = true
+        break
+      }
+    }
+
+    // const excludeList = [
+    // ]
+    // console.log(`excludeList=${excludeList}`)
+    for(const eachExclude of excludeList){
+      // console.log(`eachExclude=${eachExclude}`)
+      if (curStr.includes(eachExclude)){
+        // console.log(`eachExclude=${eachExclude} inside curStr=${curStr} => should exclude => is not show log`)
+        isShowLog = false
+        break
+      }
+    }
+
+    return isShowLog
+  }
+
 
   // find loaded classes that match a pattern (async)
   // Note: for some app, will crash: Process terminated

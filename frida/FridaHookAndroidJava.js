@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20251104
+	Updated: 20251105
 */
 
 // Frida hook common Android/Java class
@@ -4372,16 +4372,40 @@ class FridaHookAndroidJava {
     FridaHookAndroidJava.CronetUrlRequest_origCode(cls_CronetUrlRequest)
   }
 
-  static UUID() {
+  static UUID(callback_isShowLog=null) {
     var clsName_UUID = "java.util.UUID"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_UUID)
 
     var cls_UUID = Java.use(clsName_UUID)
     console.log("cls_UUID=" + cls_UUID)
 
-    
+    var curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    // var curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
+    // UUID([B)
+    // public java.util.UUID java.util.UUID.<init>(byte[])
+    var func_UUID_ctor_1b = cls_UUID.$init.overload('[B')
+    console.log("func_UUID_ctor_1b=" + func_UUID_ctor_1b)
+    if (func_UUID_ctor_1b) {
+      func_UUID_ctor_1b.implementation = function (byteArray) {
+        var funcName = "UUID([B)"
+        var funcParaDict = {
+          "byteArray": byteArray,
+        }
+
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
+
+        this.$init(byteArray)
+        var newUUID_1b = this
+        if (isShowLog){
+          console.log(funcName + " => newUUID_1b=" + newUUID_1b)
+        }
+        return
+      }
+    }
+
     // UUID(long mostSigBits, long leastSigBits)
-    // 
+    // public java.util.UUID java.util.UUID.<init>(long, long)
     var func_UUID_ctor_2pll = cls_UUID.$init.overload('long', 'long')
     console.log("func_UUID_ctor_2pll=" + func_UUID_ctor_2pll)
     if (func_UUID_ctor_2pll) {
@@ -4391,61 +4415,75 @@ class FridaHookAndroidJava {
           "mostSigBits": mostSigBits,
           "leastSigBits": leastSigBits,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newUUID = this.$init(mostSigBits, leastSigBits)
-        console.log(funcName + " => newUUID=" + newUUID)
-        return newUUID
-      }
-    }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
-    // long getLeastSignificantBits()
-    // 
-    var func_UUID_getLeastSignificantBits = cls_UUID.getLeastSignificantBits
-    console.log("func_UUID_getLeastSignificantBits=" + func_UUID_getLeastSignificantBits)
-    if (func_UUID_getLeastSignificantBits) {
-      func_UUID_getLeastSignificantBits.implementation = function () {
-        var funcName = "UUID.getLeastSignificantBits"
-        var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-        var retLeastSignificantBits = this.getLeastSignificantBits()
-        console.log(funcName + " => retLeastSignificantBits=" + retLeastSignificantBits)
-        return retLeastSignificantBits
-      }
-    }
-
-    // long getMostSignificantBits()
-    // 
-    var func_UUID_getMostSignificantBits = cls_UUID.getMostSignificantBits
-    console.log("func_UUID_getMostSignificantBits=" + func_UUID_getMostSignificantBits)
-    if (func_UUID_getMostSignificantBits) {
-      func_UUID_getMostSignificantBits.implementation = function () {
-        var funcName = "UUID.getMostSignificantBits"
-        var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-        var retMostSignificantBits = this.getMostSignificantBits()
-        console.log(funcName + " => retMostSignificantBits=" + retMostSignificantBits)
-        return retMostSignificantBits
+        this.$init(mostSigBits, leastSigBits)
+        var newUUID_2pll = this
+        if (isShowLog){
+          console.log(funcName + " => newUUID_2pll=" + newUUID_2pll)
+        }
+        return
       }
     }
 
     // static UUID randomUUID()
-    // 
+    // public static java.util.UUID java.util.UUID.randomUUID()
     var func_UUID_randomUUID = cls_UUID.randomUUID
     console.log("func_UUID_randomUUID=" + func_UUID_randomUUID)
     if (func_UUID_randomUUID) {
       func_UUID_randomUUID.implementation = function () {
         var funcName = "UUID.randomUUID"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retUUID = this.randomUUID()
-        console.log(funcName + " => retUUID=" + retUUID)
+        if (isShowLog){
+          console.log(funcName + " => retUUID=" + retUUID)
+        }
         return retUUID
       }
     }
+
+    // long getLeastSignificantBits()
+    // public long java.util.UUID.getLeastSignificantBits()
+    var func_UUID_getLeastSignificantBits = cls_UUID.getLeastSignificantBits
+    console.log("func_UUID_getLeastSignificantBits=" + func_UUID_getLeastSignificantBits)
+    if (func_UUID_getLeastSignificantBits) {
+      func_UUID_getLeastSignificantBits.implementation = function () {
+        var funcName = "UUID.getLeastSignificantBits"
+        var funcParaDict = {}
+
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
+
+        var retLeastSignificantBits = this.getLeastSignificantBits()
+        if (isShowLog){
+          console.log(funcName + " => retLeastSignificantBits=" + retLeastSignificantBits)
+        }
+        return retLeastSignificantBits
+      }
+    }
+
+    // long getMostSignificantBits()
+    // public long java.util.UUID.getMostSignificantBits()
+    var func_UUID_getMostSignificantBits = cls_UUID.getMostSignificantBits
+    console.log("func_UUID_getMostSignificantBits=" + func_UUID_getMostSignificantBits)
+    if (func_UUID_getMostSignificantBits) {
+      func_UUID_getMostSignificantBits.implementation = function () {
+        var funcName = "UUID.getMostSignificantBits"
+        var funcParaDict = {}
+
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
+
+        var retMostSignificantBits = this.getMostSignificantBits()
+        if (isShowLog){
+          console.log(funcName + " => retMostSignificantBits=" + retMostSignificantBits)
+        }
+        return retMostSignificantBits
+      }
+    }
+
   }
 
   static Context() {
@@ -6808,7 +6846,7 @@ class FridaHookAndroidJava {
     }
   }
 
-  static Base64() {
+  static Base64(callback_isShowLog=null) {
     var clsName_Base64 = "android.util.Base64"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_Base64)
 
@@ -6828,10 +6866,13 @@ class FridaHookAndroidJava {
           "len": len,
           "flags": flags,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retString_4piolf = this.encodeToString(input, offset, len, flags)
-        console.log(funcName + " => retString_4piolf=" + retString_4piolf)
+        if (isShowLog){
+          console.log(funcName + " => retString_4piolf=" + retString_4piolf)
+        }
         return retString_4piolf
       }
     }
@@ -6847,13 +6888,17 @@ class FridaHookAndroidJava {
           "input": input,
           "flags": flags,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retString_2pif = this.encodeToString(input, flags)
-        console.log(funcName + " => retString_2pif=" + retString_2pif)
+        if (isShowLog){
+          console.log(funcName + " => retString_2pif=" + retString_2pif)
+        }
         return retString_2pif
       }
     }
+
   }
 
   static ActivityManager() {
