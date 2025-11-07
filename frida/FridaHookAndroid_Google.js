@@ -16,7 +16,7 @@ class FridaHookAndroid_Google {
     console.log("FridaHookAndroid_Google static")
   }
 
-  // com.google.firebase
+  //---------- com.google.firebase ----------
 
   static RandomFidGenerator() {
     var clsName_RandomFidGenerator = "com.google.firebase.installations.RandomFidGenerator"
@@ -453,6 +453,608 @@ class FridaHookAndroid_Google {
         var retTokenResult = this.generateAuthToken(apiKey, fid, projectId, refreshToken)
         console.log(funcName + " => retTokenResult=" + retTokenResult)
         return retTokenResult
+      }
+    }
+
+  }
+
+  //---------- com.google.android.gms ----------
+
+  static zzw() {
+    var clsName_zzw = "com.google.android.gms.tasks.zzw"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_zzw)
+
+    var cls_zzw = Java.use(clsName_zzw)
+    console.log("cls_zzw=" + cls_zzw)
+
+    // zzw()
+    // 
+    var func_zzw_ctor = cls_zzw.$init
+    console.log("func_zzw_ctor=" + func_zzw_ctor)
+    if (func_zzw_ctor) {
+      func_zzw_ctor.implementation = function () {
+        var funcName = "zzw"
+        var funcParaDict = {
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        this.$init()
+        var newZzw = this
+        console.log(funcName + " => newZzw=" + newZzw)
+        return
+      }
+    }
+    
+    // private final void zzf() {
+    // 
+    var func_zzw_zzf = cls_zzw.zzf
+    console.log("func_zzw_zzf=" + func_zzw_zzf)
+    if (func_zzw_zzf) {
+      func_zzw_zzf.implementation = function () {
+        var funcName = "zzw.zzf"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.zzf()
+      }
+    }
+
+    // private final void zzg() {
+    // 
+    var func_zzw_zzg = cls_zzw.zzg
+    console.log("func_zzw_zzg=" + func_zzw_zzg)
+    if (func_zzw_zzg) {
+      func_zzw_zzg.implementation = function () {
+        var funcName = "zzw.zzg"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.zzg()
+      }
+    }
+
+    // private final void zzh() {
+    // 
+    var func_zzw_zzh = cls_zzw.zzh
+    console.log("func_zzw_zzh=" + func_zzw_zzh)
+    if (func_zzw_zzh) {
+      func_zzw_zzh.implementation = function () {
+        var funcName = "zzw.zzh"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.zzh()
+      }
+    }
+
+    // private final void zzi() {
+    // 
+    var func_zzw_zzi = cls_zzw.zzi
+    console.log("func_zzw_zzi=" + func_zzw_zzi)
+    if (func_zzw_zzi) {
+      func_zzw_zzi.implementation = function () {
+        var funcName = "zzw.zzi"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.zzi()
+      }
+    }
+
+    // public final Task addOnCanceledListener(OnCanceledListener onCanceledListener) {
+    // 
+    var func_zzw_addOnCanceledListener_1po = cls_zzw.addOnCanceledListener.overload('com.google.android.gms.tasks.OnCanceledListener')
+    console.log("func_zzw_addOnCanceledListener_1po=" + func_zzw_addOnCanceledListener_1po)
+    if (func_zzw_addOnCanceledListener_1po) {
+      func_zzw_addOnCanceledListener_1po.implementation = function (onCanceledListener) {
+        var funcName = "zzw.addOnCanceledListener_1po"
+        var funcParaDict = {
+          "onCanceledListener": onCanceledListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_1po = this.addOnCanceledListener(onCanceledListener)
+        console.log(funcName + " => retTask_1po=" + retTask_1po)
+        return retTask_1po
+      }
+    }
+
+    // public final Task addOnCompleteListener(OnCompleteListener onCompleteListener) {
+    // 
+    var func_zzw_addOnCompleteListener_1po = cls_zzw.addOnCompleteListener.overload('com.google.android.gms.tasks.OnCompleteListener')
+    console.log("func_zzw_addOnCompleteListener_1po=" + func_zzw_addOnCompleteListener_1po)
+    if (func_zzw_addOnCompleteListener_1po) {
+      func_zzw_addOnCompleteListener_1po.implementation = function (onCompleteListener) {
+        var funcName = "zzw.addOnCompleteListener_1po"
+        var funcParaDict = {
+          "onCompleteListener": onCompleteListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_1po = this.addOnCompleteListener(onCompleteListener)
+        console.log(funcName + " => retTask_1po=" + retTask_1po)
+        return retTask_1po
+      }
+    }
+
+    // public final Task addOnFailureListener(OnFailureListener onFailureListener) {
+    // 
+    var func_zzw_addOnFailureListener_1po = cls_zzw.addOnFailureListener.overload('com.google.android.gms.tasks.OnFailureListener')
+    console.log("func_zzw_addOnFailureListener_1po=" + func_zzw_addOnFailureListener_1po)
+    if (func_zzw_addOnFailureListener_1po) {
+      func_zzw_addOnFailureListener_1po.implementation = function (onFailureListener) {
+        var funcName = "zzw.addOnFailureListener_1po"
+        var funcParaDict = {
+          "onFailureListener": onFailureListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_1po = this.addOnFailureListener(onFailureListener)
+        console.log(funcName + " => retTask_1po=" + retTask_1po)
+        return retTask_1po
+      }
+    }
+
+    // public final Task addOnSuccessListener(OnSuccessListener onSuccessListener) {
+    // 
+    var func_zzw_addOnSuccessListener_1po = cls_zzw.addOnSuccessListener.overload('com.google.android.gms.tasks.OnSuccessListener')
+    console.log("func_zzw_addOnSuccessListener_1po=" + func_zzw_addOnSuccessListener_1po)
+    if (func_zzw_addOnSuccessListener_1po) {
+      func_zzw_addOnSuccessListener_1po.implementation = function (onSuccessListener) {
+        var funcName = "zzw.addOnSuccessListener_1po"
+        var funcParaDict = {
+          "onSuccessListener": onSuccessListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_1po = this.addOnSuccessListener(onSuccessListener)
+        console.log(funcName + " => retTask_1po=" + retTask_1po)
+        return retTask_1po
+      }
+    }
+
+    // public final Task continueWith(Continuation continuation) {
+    // 
+    var func_zzw_continueWith_1pc = cls_zzw.continueWith.overload('com.google.android.gms.tasks.Continuation')
+    console.log("func_zzw_continueWith_1pc=" + func_zzw_continueWith_1pc)
+    if (func_zzw_continueWith_1pc) {
+      func_zzw_continueWith_1pc.implementation = function (continuation) {
+        var funcName = "zzw.continueWith_1pc"
+        var funcParaDict = {
+          "continuation": continuation,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_1pc = this.continueWith(continuation)
+        console.log(funcName + " => retTask_1pc=" + retTask_1pc)
+        return retTask_1pc
+      }
+    }
+
+    // public final Task continueWithTask(Continuation continuation) {
+    // 
+    var func_zzw_continueWithTask_1pc = cls_zzw.continueWithTask.overload('com.google.android.gms.tasks.Continuation')
+    console.log("func_zzw_continueWithTask_1pc=" + func_zzw_continueWithTask_1pc)
+    if (func_zzw_continueWithTask_1pc) {
+      func_zzw_continueWithTask_1pc.implementation = function (continuation) {
+        var funcName = "zzw.continueWithTask_1pc"
+        var funcParaDict = {
+          "continuation": continuation,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_1pc = this.continueWithTask(continuation)
+        console.log(funcName + " => retTask_1pc=" + retTask_1pc)
+        return retTask_1pc
+      }
+    }
+
+    // public final Exception getException() {
+    // 
+    var func_zzw_getException = cls_zzw.getException
+    console.log("func_zzw_getException=" + func_zzw_getException)
+    if (func_zzw_getException) {
+      func_zzw_getException.implementation = function () {
+        var funcName = "zzw.getException"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retException = this.getException()
+        console.log(funcName + " => retException=" + retException)
+        return retException
+      }
+    }
+
+    // public final Object getResult() {
+    // 
+    var func_zzw_getResult_0p = cls_zzw.getResult.overload()
+    console.log("func_zzw_getResult_0p=" + func_zzw_getResult_0p)
+    if (func_zzw_getResult_0p) {
+      func_zzw_getResult_0p.implementation = function () {
+        var funcName = "zzw.getResult_0p"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retResult_0p = this.getResult()
+        console.log(funcName + " => retResult_0p=" + retResult_0p)
+        return retResult_0p
+      }
+    }
+
+    // public final boolean isComplete() {
+    // 
+    var func_zzw_isComplete = cls_zzw.isComplete
+    console.log("func_zzw_isComplete=" + func_zzw_isComplete)
+    if (func_zzw_isComplete) {
+      func_zzw_isComplete.implementation = function () {
+        var funcName = "zzw.isComplete"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.isComplete()
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // public final boolean isSuccessful() {
+    // 
+    var func_zzw_isSuccessful = cls_zzw.isSuccessful
+    console.log("func_zzw_isSuccessful=" + func_zzw_isSuccessful)
+    if (func_zzw_isSuccessful) {
+      func_zzw_isSuccessful.implementation = function () {
+        var funcName = "zzw.isSuccessful"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.isSuccessful()
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // public final Task onSuccessTask(SuccessContinuation successContinuation) {
+    // 
+    var func_zzw_onSuccessTask_1ps = cls_zzw.onSuccessTask.overload('com.google.android.gms.tasks.SuccessContinuation')
+    console.log("func_zzw_onSuccessTask_1ps=" + func_zzw_onSuccessTask_1ps)
+    if (func_zzw_onSuccessTask_1ps) {
+      func_zzw_onSuccessTask_1ps.implementation = function (successContinuation) {
+        var funcName = "zzw.onSuccessTask_1ps"
+        var funcParaDict = {
+          "successContinuation": successContinuation,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_1ps = this.onSuccessTask(successContinuation)
+        console.log(funcName + " => retTask_1ps=" + retTask_1ps)
+        return retTask_1ps
+      }
+    }
+
+    // public final void zza(Exception exc) {
+    // 
+    var func_zzw_zza = cls_zzw.zza
+    console.log("func_zzw_zza=" + func_zzw_zza)
+    if (func_zzw_zza) {
+      func_zzw_zza.implementation = function (exc) {
+        var funcName = "zzw.zza"
+        var funcParaDict = {
+          "exc": exc,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.zza(exc)
+      }
+    }
+
+    // public final void zzb(Object obj) {
+    // 
+    var func_zzw_zzb = cls_zzw.zzb
+    console.log("func_zzw_zzb=" + func_zzw_zzb)
+    if (func_zzw_zzb) {
+      func_zzw_zzb.implementation = function (obj) {
+        var funcName = "zzw.zzb"
+        var funcParaDict = {
+          "obj": obj,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        return this.zzb(obj)
+      }
+    }
+
+    // public final boolean zzc() {
+    // 
+    var func_zzw_zzc = cls_zzw.zzc
+    console.log("func_zzw_zzc=" + func_zzw_zzc)
+    if (func_zzw_zzc) {
+      func_zzw_zzc.implementation = function () {
+        var funcName = "zzw.zzc"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.zzc()
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // public final boolean zzd(Exception exc) {
+    // 
+    var func_zzw_zzd = cls_zzw.zzd
+    console.log("func_zzw_zzd=" + func_zzw_zzd)
+    if (func_zzw_zzd) {
+      func_zzw_zzd.implementation = function (exc) {
+        var funcName = "zzw.zzd"
+        var funcParaDict = {
+          "exc": exc,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.zzd(exc)
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // public final boolean zze(Object obj) {
+    // 
+    var func_zzw_zze = cls_zzw.zze
+    console.log("func_zzw_zze=" + func_zzw_zze)
+    if (func_zzw_zze) {
+      func_zzw_zze.implementation = function (obj) {
+        var funcName = "zzw.zze"
+        var funcParaDict = {
+          "obj": obj,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.zze(obj)
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // public final boolean isCanceled() {
+    // 
+    var func_zzw_isCanceled = cls_zzw.isCanceled
+    console.log("func_zzw_isCanceled=" + func_zzw_isCanceled)
+    if (func_zzw_isCanceled) {
+      func_zzw_isCanceled.implementation = function () {
+        var funcName = "zzw.isCanceled"
+        var funcParaDict = {}
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retBoolean = this.isCanceled()
+        console.log(funcName + " => retBoolean=" + retBoolean)
+        return retBoolean
+      }
+    }
+
+    // public final Task addOnCanceledListener(Activity activity, OnCanceledListener onCanceledListener) {
+    // 
+    var func_zzw_addOnCanceledListener_2pao = cls_zzw.addOnCanceledListener.overload('android.app.Activity', 'com.google.android.gms.tasks.OnCanceledListener')
+    console.log("func_zzw_addOnCanceledListener_2pao=" + func_zzw_addOnCanceledListener_2pao)
+    if (func_zzw_addOnCanceledListener_2pao) {
+      func_zzw_addOnCanceledListener_2pao.implementation = function (activity, onCanceledListener) {
+        var funcName = "zzw.addOnCanceledListener_2pao"
+        var funcParaDict = {
+          "activity": activity,
+          "onCanceledListener": onCanceledListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2pao = this.addOnCanceledListener(activity, onCanceledListener)
+        console.log(funcName + " => retTask_2pao=" + retTask_2pao)
+        return retTask_2pao
+      }
+    }
+
+    // public final Task addOnCompleteListener(Activity activity, OnCompleteListener onCompleteListener) {
+    // 
+    var func_zzw_addOnCompleteListener_2pao = cls_zzw.addOnCompleteListener.overload('android.app.Activity', 'com.google.android.gms.tasks.OnCompleteListener')
+    console.log("func_zzw_addOnCompleteListener_2pao=" + func_zzw_addOnCompleteListener_2pao)
+    if (func_zzw_addOnCompleteListener_2pao) {
+      func_zzw_addOnCompleteListener_2pao.implementation = function (activity, onCompleteListener) {
+        var funcName = "zzw.addOnCompleteListener_2pao"
+        var funcParaDict = {
+          "activity": activity,
+          "onCompleteListener": onCompleteListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2pao = this.addOnCompleteListener(activity, onCompleteListener)
+        console.log(funcName + " => retTask_2pao=" + retTask_2pao)
+        return retTask_2pao
+      }
+    }
+
+    // public final Task addOnFailureListener(Activity activity, OnFailureListener onFailureListener) {
+    // 
+    var func_zzw_addOnFailureListener_2pao = cls_zzw.addOnFailureListener.overload('android.app.Activity', 'com.google.android.gms.tasks.OnFailureListener')
+    console.log("func_zzw_addOnFailureListener_2pao=" + func_zzw_addOnFailureListener_2pao)
+    if (func_zzw_addOnFailureListener_2pao) {
+      func_zzw_addOnFailureListener_2pao.implementation = function (activity, onFailureListener) {
+        var funcName = "zzw.addOnFailureListener_2pao"
+        var funcParaDict = {
+          "activity": activity,
+          "onFailureListener": onFailureListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2pao = this.addOnFailureListener(activity, onFailureListener)
+        console.log(funcName + " => retTask_2pao=" + retTask_2pao)
+        return retTask_2pao
+      }
+    }
+
+    // public final Task addOnSuccessListener(Activity activity, OnSuccessListener onSuccessListener) {
+    // 
+    var func_zzw_addOnSuccessListener_2pao = cls_zzw.addOnSuccessListener.overload('android.app.Activity', 'com.google.android.gms.tasks.OnSuccessListener')
+    console.log("func_zzw_addOnSuccessListener_2pao=" + func_zzw_addOnSuccessListener_2pao)
+    if (func_zzw_addOnSuccessListener_2pao) {
+      func_zzw_addOnSuccessListener_2pao.implementation = function (activity, onSuccessListener) {
+        var funcName = "zzw.addOnSuccessListener_2pao"
+        var funcParaDict = {
+          "activity": activity,
+          "onSuccessListener": onSuccessListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2pao = this.addOnSuccessListener(activity, onSuccessListener)
+        console.log(funcName + " => retTask_2pao=" + retTask_2pao)
+        return retTask_2pao
+      }
+    }
+
+    // public final Task continueWith(Executor executor, Continuation continuation) {
+    // 
+    var func_zzw_continueWith_2pec = cls_zzw.continueWith.overload('java.util.concurrent.Executor', 'com.google.android.gms.tasks.Continuation')
+    console.log("func_zzw_continueWith_2pec=" + func_zzw_continueWith_2pec)
+    if (func_zzw_continueWith_2pec) {
+      func_zzw_continueWith_2pec.implementation = function (executor, continuation) {
+        var funcName = "zzw.continueWith_2pec"
+        var funcParaDict = {
+          "executor": executor,
+          "continuation": continuation,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2pec = this.continueWith(executor, continuation)
+        console.log(funcName + " => retTask_2pec=" + retTask_2pec)
+        return retTask_2pec
+      }
+    }
+
+    // public final Task continueWithTask(Executor executor, Continuation continuation) {
+    // 
+    var func_zzw_continueWithTask_2pec = cls_zzw.continueWithTask.overload('java.util.concurrent.Executor', 'com.google.android.gms.tasks.Continuation')
+    console.log("func_zzw_continueWithTask_2pec=" + func_zzw_continueWithTask_2pec)
+    if (func_zzw_continueWithTask_2pec) {
+      func_zzw_continueWithTask_2pec.implementation = function (executor, continuation) {
+        var funcName = "zzw.continueWithTask_2pec"
+        var funcParaDict = {
+          "executor": executor,
+          "continuation": continuation,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2pec = this.continueWithTask(executor, continuation)
+        console.log(funcName + " => retTask_2pec=" + retTask_2pec)
+        return retTask_2pec
+      }
+    }
+
+    // public final Object getResult(Class cls) throws Throwable {
+    // 
+    var func_zzw_getResult_1pc = cls_zzw.getResult.overload('java.lang.Class')
+    console.log("func_zzw_getResult_1pc=" + func_zzw_getResult_1pc)
+    if (func_zzw_getResult_1pc) {
+      func_zzw_getResult_1pc.implementation = function (cls) {
+        var funcName = "zzw.getResult_1pc"
+        var funcParaDict = {
+          "cls": cls,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retResult_1pc = this.getResult(cls)
+        console.log(funcName + " => retResult_1pc=" + retResult_1pc)
+        return retResult_1pc
+      }
+    }
+
+    // public final Task onSuccessTask(Executor executor, SuccessContinuation successContinuation) {
+    // 
+    var func_zzw_onSuccessTask_2pes = cls_zzw.onSuccessTask.overload('java.util.concurrent.Executor', 'com.google.android.gms.tasks.SuccessContinuation')
+    console.log("func_zzw_onSuccessTask_2pes=" + func_zzw_onSuccessTask_2pes)
+    if (func_zzw_onSuccessTask_2pes) {
+      func_zzw_onSuccessTask_2pes.implementation = function (executor, successContinuation) {
+        var funcName = "zzw.onSuccessTask_2pes"
+        var funcParaDict = {
+          "executor": executor,
+          "successContinuation": successContinuation,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2pes = this.onSuccessTask(executor, successContinuation)
+        console.log(funcName + " => retTask_2pes=" + retTask_2pes)
+        return retTask_2pes
+      }
+    }
+
+    // public final Task addOnCanceledListener(Executor executor, OnCanceledListener onCanceledListener) {
+    // 
+    var func_zzw_addOnCanceledListener_2peo = cls_zzw.addOnCanceledListener.overload('java.util.concurrent.Executor', 'com.google.android.gms.tasks.OnCanceledListener')
+    console.log("func_zzw_addOnCanceledListener_2peo=" + func_zzw_addOnCanceledListener_2peo)
+    if (func_zzw_addOnCanceledListener_2peo) {
+      func_zzw_addOnCanceledListener_2peo.implementation = function (executor, onCanceledListener) {
+        var funcName = "zzw.addOnCanceledListener_2peo"
+        var funcParaDict = {
+          "executor": executor,
+          "onCanceledListener": onCanceledListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2peo = this.addOnCanceledListener(executor, onCanceledListener)
+        console.log(funcName + " => retTask_2peo=" + retTask_2peo)
+        return retTask_2peo
+      }
+    }
+
+    // public final Task addOnCompleteListener(Executor executor, OnCompleteListener onCompleteListener) {
+    // 
+    var func_zzw_addOnCompleteListener_2peo = cls_zzw.addOnCompleteListener.overload('java.util.concurrent.Executor', 'com.google.android.gms.tasks.OnCompleteListener')
+    console.log("func_zzw_addOnCompleteListener_2peo=" + func_zzw_addOnCompleteListener_2peo)
+    if (func_zzw_addOnCompleteListener_2peo) {
+      func_zzw_addOnCompleteListener_2peo.implementation = function (executor, onCompleteListener) {
+        var funcName = "zzw.addOnCompleteListener_2peo"
+        var funcParaDict = {
+          "executor": executor,
+          "onCompleteListener": onCompleteListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2peo = this.addOnCompleteListener(executor, onCompleteListener)
+        console.log(funcName + " => retTask_2peo=" + retTask_2peo)
+        return retTask_2peo
+      }
+    }
+
+    // public final Task addOnFailureListener(Executor executor, OnFailureListener onFailureListener) {
+    // 
+    var func_zzw_addOnFailureListener_2peo = cls_zzw.addOnFailureListener.overload('java.util.concurrent.Executor', 'com.google.android.gms.tasks.OnFailureListener')
+    console.log("func_zzw_addOnFailureListener_2peo=" + func_zzw_addOnFailureListener_2peo)
+    if (func_zzw_addOnFailureListener_2peo) {
+      func_zzw_addOnFailureListener_2peo.implementation = function (executor, onFailureListener) {
+        var funcName = "zzw.addOnFailureListener_2peo"
+        var funcParaDict = {
+          "executor": executor,
+          "onFailureListener": onFailureListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2peo = this.addOnFailureListener(executor, onFailureListener)
+        console.log(funcName + " => retTask_2peo=" + retTask_2peo)
+        return retTask_2peo
+      }
+    }
+
+    // public final Task addOnSuccessListener(Executor executor, OnSuccessListener onSuccessListener) {
+    // 
+    var func_zzw_addOnSuccessListener_2peo = cls_zzw.addOnSuccessListener.overload('java.util.concurrent.Executor', 'com.google.android.gms.tasks.OnSuccessListener')
+    console.log("func_zzw_addOnSuccessListener_2peo=" + func_zzw_addOnSuccessListener_2peo)
+    if (func_zzw_addOnSuccessListener_2peo) {
+      func_zzw_addOnSuccessListener_2peo.implementation = function (executor, onSuccessListener) {
+        var funcName = "zzw.addOnSuccessListener_2peo"
+        var funcParaDict = {
+          "executor": executor,
+          "onSuccessListener": onSuccessListener,
+        }
+        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+        var retTask_2peo = this.addOnSuccessListener(executor, onSuccessListener)
+        console.log(funcName + " => retTask_2peo=" + retTask_2peo)
+        return retTask_2peo
       }
     }
 

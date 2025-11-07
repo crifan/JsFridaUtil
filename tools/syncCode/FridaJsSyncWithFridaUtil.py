@@ -1,7 +1,7 @@
 # Function: Sync code between Frida Hook js file and here js Frida Util
 # Author: Crifan Li
 # Link: https://github.com/crifan/JsFridaUtil/blob/main/tools/syncCode/FridaJsSyncWithFridaUtil.py
-# Update: 20250404
+# Update: 20251107
 
 import json
 import codecs
@@ -188,6 +188,10 @@ toSyncClassDictList = [
     {
         "subPath": "frida",
         "className": "FridaHookAndroidJava",
+    },
+    {
+        "subPath": "frida",
+        "className": "FridaHookAndroid_Google",
     },
     {
         "subPath": "frida",
