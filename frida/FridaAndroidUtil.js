@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251105
+	Updated: 20251109
 */
 
 // Frida Android Util
@@ -1263,8 +1263,9 @@ class FridaAndroidUtil {
     return functionCallAndStackStr
   }
 
-  static showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict){
-    var isShowLog = true
+  // Check whether to show log or not, and show (function call and stack) log if necessary
+  static showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict, isShowLogDefault=true){
+    var isShowLog = isShowLogDefault
     var curFuncCallStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
 
     if (null != callback_isShowLog) {

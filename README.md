@@ -1,6 +1,6 @@
 # JsFridaUtil
 
-* Update: `20250404`
+* Update: `20251109`
 
 ## Function
 
@@ -23,6 +23,8 @@ JS and Frida Util functions
       * Hook
         * Java
           * [FridaHookAndroidJava.js](https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js)
+            * Google
+              * [FridaHookAndroid_Google.js](https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroid_Google.js)
         * Native
           * [FridaHookAndroidNative.js](https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidNative.js)
     * iOS
