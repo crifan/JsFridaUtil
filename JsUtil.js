@@ -3,7 +3,7 @@
 	Function: crifan's common Javascript related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/JsUtil.js
-	Updated: 20250325
+	Updated: 20251112
 */
 
 // pure JavaScript utils
@@ -33,6 +33,16 @@ class JsUtil {
     var fullHexStr = prefix + padding0HexStr
     // console.log("fullHexStr=" + fullHexStr)
     return fullHexStr
+  }
+
+  // Convert (java) maybe negative long to unsigned long
+  static toUnsignedLong(longVal) {
+    var bigIntVal = BigInt(longVal)
+    if (longVal < 0) {
+      bigIntVal = BigInt.asUintN(64, bigIntVal)
+    }
+    // console.log(`bigIntVal: type=${typeof bigIntVal}, val=${bigIntVal}`)
+    return bigIntVal
   }
 
   /*---------- Log ----------*/

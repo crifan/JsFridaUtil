@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251109
+	Updated: 20251112
 */
 
 // Frida Android Util
@@ -51,7 +51,6 @@ class FridaAndroidUtil {
   static clsName_CronetUrlRequest             = "org.chromium.net.impl.CronetUrlRequest"
   static clsName_ByteArrayOutputStream        = "java.io.ByteArrayOutputStream"
   static clsName_FileNotFoundException        = "java.io.FileNotFoundException"
-  static clsName_Long                         = "java.lang.Long"
   static clsName_Long                         = "java.lang.Long"
   static clsName_File                         = "java.io.File"
   static clsName_Parcel                       = "android.os.Parcel"
@@ -149,6 +148,13 @@ class FridaAndroidUtil {
     }
   }
 
+  // print/convet Java long (maybe negtive) to (unsigned=positive long value) string
+  static printLongToStr(longVal){
+    var longStr = FridaAndroidUtil.Long.toUnsignedString(longVal)
+    // console.log(`longStr: type=${typeof longStr}, val=${longStr}`)
+    return longStr
+  }
+
   static isClass_File(curObj){
     var isClsFile = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_File)
     console.log("curObj=" + curObj + " -> isClsFile=" + isClsFile)
@@ -208,13 +214,13 @@ class FridaAndroidUtil {
     // android.app.SharedPreferencesImpl$EditorImpl
     // https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/SharedPreferencesImpl.java
     const ClassName = "SharedPreferencesImpl$EditorImpl"
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curClassName = FridaAndroidUtil.getJavaClassName(inputObj)
       if (curClassName === FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl) {
         var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl)
         // console.log("curObj=" + curObj)
 
-        var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
         var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
         console.log(newPrefStr + ClassName + ":" + clsNameStr
@@ -579,13 +585,13 @@ class FridaAndroidUtil {
   static printClass_RetryableSink(inputObj, prefixStr=""){
     // https://cs.android.com/android/platform/superproject/+/master:external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/internal/http/RetryableSink.java
     // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okhttp/src/main/java/com/squareup/okhttp/internal/http/RetryableSink.java
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
 
       console.log(newPrefStr + "RetryableSink:" + clsNameStr
         + " closed=" + curObj.closed.value
@@ -628,6 +634,7 @@ class FridaAndroidUtil {
   // com.android.okhttp.okio.Buffer
   static printClass_Buffer(inputObj, prefixStr=""){
     // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okio/okio/src/main/java/okio/Buffer.java
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
@@ -636,7 +643,6 @@ class FridaAndroidUtil {
 
       var byteArray = curObj.readByteArray()
 
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
 
       console.log(newPrefStr + "Buffer:" + clsNameStr
         // + " size=" + curObj.size.value
@@ -654,13 +660,13 @@ class FridaAndroidUtil {
   static printClass_DisplayMetrics(inputObj, prefixStr=""){
     const ClassName = "DisplayMetrics"
     // https://developer.android.com/reference/android/util/DisplayMetrics#DisplayMetrics()
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
 
       console.log(newPrefStr + ClassName + ":" + clsNameStr
         + " DENSITY_DEVICE_STABLE=" + curObj.DENSITY_DEVICE_STABLE.value
@@ -681,13 +687,13 @@ class FridaAndroidUtil {
   static printClass_ConfigurationInfo(inputObj, prefixStr=""){
     const ClassName = "ConfigurationInfo"
     // https://developer.android.com/reference/android/content/pm/ConfigurationInfo#INPUT_FEATURE_FIVE_WAY_NAV
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
 
       console.log(newPrefStr + ClassName + ":" + clsNameStr
         + " reqGlEsVersion=" + curObj.reqGlEsVersion.value
@@ -705,13 +711,13 @@ class FridaAndroidUtil {
   static printClass_Configuration(inputObj, prefixStr=""){
     const ClassName = "Configuration"
     // https://developer.android.com/reference/android/content/res/Configuration#screenLayout
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
 
       console.log(newPrefStr + ClassName + ":" + clsNameStr
         + " colorMode=" + curObj.colorMode.value
@@ -743,13 +749,13 @@ class FridaAndroidUtil {
   static printClass_FeatureInfo(inputObj, prefixStr=""){
     const ClassName = "FeatureInfo"
     // https://developer.android.com/reference/android/content/pm/FeatureInfo
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
 
       console.log(newPrefStr + ClassName + ":" + clsNameStr
         + " flags=" + curObj.flags.value
@@ -766,13 +772,13 @@ class FridaAndroidUtil {
   static printClass_ActivityManagerMemoryInfo(inputObj, prefixStr=""){
     const ClassName = "ActivityManager.MemoryInfo"
     // https://developer.android.com/reference/android/app/ActivityManager.MemoryInfo
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curObj = inputObj
       console.log("curObj=" + curObj)
 
       var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
-      var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
 
       console.log(newPrefStr + ClassName + ":" + clsNameStr
         + " CREATOR=" + curObj.CREATOR.value
@@ -791,13 +797,13 @@ class FridaAndroidUtil {
   static printClass_Parcel(inputObj, prefixStr=""){
     // https://developer.android.com/reference/android/os/Parcel
     const ClassName = "Parcel"
+    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
     if (inputObj) {
       var curClassName = FridaAndroidUtil.getJavaClassName(inputObj)
       if (curClassName === FridaAndroidUtil.clsName_Parcel) {
         var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Parcel)
         // console.log("curObj=" + curObj)
 
-        var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
         var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
         var stringCreatorValue = curObj.STRING_CREATOR.value
