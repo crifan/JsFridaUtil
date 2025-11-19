@@ -3,7 +3,7 @@
 	Function: crifan's common Javascript related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/JsUtil.js
-	Updated: 20251112
+	Updated: 20251119
 */
 
 // pure JavaScript utils
@@ -19,18 +19,22 @@ class JsUtil {
   /*---------- Number(Int) ----------*/
 
   static intToHexStr(intValue, prefix="0x", isUpperCase=true){
-    // var hexStr = prefix + intValue.toString(16)
-    // var hexStr = prefix + String(intValue).padStart(2, "0")
-    // var hexStr = prefix + intValue.toString(16).padStart(2, "0")
-    var intHexStr = intValue.toString(16)
-    // console.log("intHexStr=" + intHexStr)
-    var padding0HexStr = intHexStr.padStart(2, "0")
-    // console.log("padding0HexStr=" + padding0HexStr)
-    if (isUpperCase) {
-      padding0HexStr = padding0HexStr.toUpperCase()
+    var fullHexStr = "undefined/null"
+    // console.log(`intValue: type=${typeof intValue}, val=${intValue}`)
+    if (intValue) {
+      // var hexStr = prefix + intValue.toString(16)
+      // var hexStr = prefix + String(intValue).padStart(2, "0")
+      // var hexStr = prefix + intValue.toString(16).padStart(2, "0")
+      var intHexStr = intValue.toString(16)
+      // console.log("intHexStr=" + intHexStr)
+      var padding0HexStr = intHexStr.padStart(2, "0")
       // console.log("padding0HexStr=" + padding0HexStr)
+      if (isUpperCase) {
+        padding0HexStr = padding0HexStr.toUpperCase()
+        // console.log("padding0HexStr=" + padding0HexStr)
+      }
+      fullHexStr = prefix + padding0HexStr
     }
-    var fullHexStr = prefix + padding0HexStr
     // console.log("fullHexStr=" + fullHexStr)
     return fullHexStr
   }

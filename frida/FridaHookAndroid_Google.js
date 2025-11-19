@@ -3,7 +3,7 @@
 	Function: Frida hook common Android's class of com.google.xxx
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroid_Google.js
-	Updated: 20251107
+	Updated: 20251114
 */
 
 // Frida hook common Android's class of com.google.xxx
@@ -1059,5 +1059,36 @@ class FridaHookAndroid_Google {
     }
 
   }
+
+  //---------- com.google.protobuf ----------
+
+  static ByteString() {
+    var clsName_ByteString = "com.google.protobuf.ByteString"
+    // FridaAndroidUtil.updateClassLoader(clsName_ByteString)
+    FridaAndroidUtil.printClassAllMethodsFields(clsName_ByteString)
+
+    var cls_ByteString = Java.use(clsName_ByteString)
+    console.log("cls_ByteString=" + cls_ByteString)
+
+    // // static ByteString copyFrom(byte[] bytes)
+    // // 
+    // var func_ByteString_copyFrom = cls_ByteString.copyFrom.overload('[B')
+    // console.log("func_ByteString_copyFrom=" + func_ByteString_copyFrom)
+    // if (func_ByteString_copyFrom) {
+    //   func_ByteString_copyFrom.implementation = function (bytes) {
+    //     var funcName = "ByteString.copyFrom"
+    //     var funcParaDict = {
+    //       "bytes": bytes,
+    //     }
+    //     FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
+
+    //     var retByteString = this.copyFrom(bytes)
+    //     console.log(funcName + " => retByteString=" + retByteString)
+    //     return retByteString
+    //   }
+    // }
+
+  }
+
 
 }
