@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251112
+	Updated: 20251119
 */
 
 // Frida Android Util
@@ -1231,6 +1231,9 @@ class FridaAndroidUtil {
     return logStr
   }
 
+  static printNothing(funcName, funcParaDict){
+  }
+
   static printFunctionCallStr(funcName, funcParaDict){
     // var functionCallStr = this.genFunctionCallStr(funcName, funcParaDict)
     var functionCallStr = FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict)
@@ -1280,6 +1283,21 @@ class FridaAndroidUtil {
 
     if (isShowLog){
       console.log(curFuncCallStackStr)
+    }
+
+    return isShowLog
+  }
+
+  // Check whether to show log or not, and show input log if necessary
+  static showLogIfNecessary(callback_isShowLog, curLogStr, isShowLogDefault=true){
+    var isShowLog = isShowLogDefault
+
+    if (null != callback_isShowLog) {
+      isShowLog = callback_isShowLog(curLogStr)
+    }
+
+    if (isShowLog){
+      console.log(curLogStr)
     }
 
     return isShowLog

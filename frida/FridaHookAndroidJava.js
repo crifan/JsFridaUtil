@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20251105
+	Updated: 20251120
 */
 
 // Frida hook common Android/Java class
@@ -11,7 +11,6 @@ class FridaHookAndroidJava {
   constructor() {
     console.log("FridaHookAndroidJava constructor")
   }
-
 
   static JSONObject(callback_isShowLog=null) {
     var className_JSONObject = "org.json.JSONObject"
@@ -34,15 +33,7 @@ class FridaHookAndroidJava {
           "str": str,
           "obj": obj,
         }
-
-        var isShowLog = true
-        var curFuncCallStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(curFuncCallStackStr)
-        }
-        if (isShowLog){
-          console.log(curFuncCallStackStr)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retJsonObj = this.put(str, obj)
         if (isShowLog){
@@ -61,15 +52,7 @@ class FridaHookAndroidJava {
         var funcName = "JSONObject.toString()"
         var funcParaDict = {
         }
-
-        var isShowLog = true
-        var curFuncCallStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(curFuncCallStackStr)
-        }
-        if (isShowLog){
-          console.log(curFuncCallStackStr)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retJsonStr = this.toString()
         if (isShowLog){
@@ -103,18 +86,7 @@ class FridaHookAndroidJava {
           "keyObj": keyObj,
           "valueObj": valueObj,
         }
-
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(funcCallAndStackStr)
-        }
-
-        if (isShowLog) {
-          console.log(funcCallAndStackStr)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retObj = this.put(keyObj, valueObj)
 
@@ -136,18 +108,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "newMap": newMap,
         }
-
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(funcCallAndStackStr)
-        }
-
-        if (isShowLog) {
-          console.log(funcCallAndStackStr)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         this.putAll(newMap)
         return
@@ -164,17 +125,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "keyObj": keyObj,
         }
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(funcCallAndStackStr)
-        }
-
-        if (isShowLog) {
-          console.log(funcCallAndStackStr)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retValObj = this.get(keyObj)
 
@@ -239,9 +190,10 @@ class FridaHookAndroidJava {
         var funcParaDict = {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        var newBuilder_void = this.$init()
+        this.$init()
+        var newBuilder_void = this
         console.log("newBuilder_void=" + newBuilder_void)
-        return newBuilder_void
+        return
       }
     }
 
@@ -256,9 +208,10 @@ class FridaHookAndroidJava {
     //     var funcParaDict = {
     //     }
     //     FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-    //     var newBuilder_req = this.$init(request)
+    //     this.$init(request)
+    //     var newBuilder_req = this
     //     console.log("newBuilder_req=" + newBuilder_req)
-    //     return newBuilder_req
+    //     return
     //   }
     // }
 
@@ -1153,9 +1106,10 @@ class FridaHookAndroidJava {
         var funcParaDict = {}
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newIOException_void = this.$init()
+        this.$init()
+        var newIOException_void = this
         console.log("IOException => newIOException_void=" + newIOException_void)
-        return newIOException_void
+        return
       }
     }
 
@@ -1171,9 +1125,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newIOException_1str = this.$init(message)
+        this.$init(message)
+        var newIOException_1str = this
         console.log("IOException(msg) => newIOException_1str=" + newIOException_1str)
-        return newIOException_1str
+        return
       }
     }
 
@@ -1190,9 +1145,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newIOException_2para = this.$init(message, cause)
+        this.$init(message, cause)
+        var newIOException_2para = this
         console.log("IOException(msg,cause) => newIOException_2para=" + newIOException_2para)
-        return newIOException_2para
+        return
       }
     }
 
@@ -1208,9 +1164,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newIOException_1t = this.$init(cause)
+        this.$init(cause)
+        var newIOException_1t = this
         console.log("IOException(cause) => newIOException_1t=" + newIOException_1t)
-        return newIOException_1t
+        return
       }
     }
   }
@@ -1238,9 +1195,10 @@ class FridaHookAndroidJava {
         }
         curLogFunc(funcName, funcParaDict)
 
-        var newHttpURLConnectionImpl_2p = this.$init(url, client)
+        this.$init(url, client)
+        var newHttpURLConnectionImpl_2p = this
         console.log("HttpURLConnectionImpl(url,client) => newHttpURLConnectionImpl_2p=" + newHttpURLConnectionImpl_2p)
-        return newHttpURLConnectionImpl_2p
+        return
       }
     }
 
@@ -1258,9 +1216,10 @@ class FridaHookAndroidJava {
         }
         curLogFunc(funcName, funcParaDict)
 
-        var newHttpURLConnectionImpl_3p = this.$init(url, client, urlFilter)
+        this.$init(url, client, urlFilter)
+        var newHttpURLConnectionImpl_3p = this
         console.log("HttpURLConnectionImpl(url,client,urlFilter) => newHttpURLConnectionImpl_3p=" + newHttpURLConnectionImpl_3p)
-        return newHttpURLConnectionImpl_3p
+        return
       }
     }
 
@@ -1735,7 +1694,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {}
         curLogFunc(funcName, funcParaDict)
 
-        FridaAndroidUtil.printClass_HttpOrHttpsURLConnectionImpl(this)
+        // FridaAndroidUtil.printClass_HttpOrHttpsURLConnectionImpl(this)
         var retResponseCode = this.getResponseCode()
         console.log(funcName + " => retResponseCode=" + retResponseCode)
 
@@ -1907,9 +1866,10 @@ class FridaHookAndroidJava {
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
         FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
-        var newBundle_0p = this.$init()
+        this.$init()
+        var newBundle_0p = this
         console.log("Bundle_0p => newBundle_0p=" + newBundle_0p)
-        return newBundle_0p
+        return
       }
     }
 
@@ -1925,9 +1885,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newBundle_1pb = this.$init(b)
+        this.$init(b)
+        var newBundle_1pb = this
         console.log("Bundle_1pb => newBundle_1pb=" + newBundle_1pb)
-        return newBundle_1pb
+        return
       }
     }
 
@@ -1943,9 +1904,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newBundle_1pb = this.$init(b)
+        this.$init(b)
+        var newBundle_1pb = this
         console.log("Bundle_1pb => newBundle_1pb=" + newBundle_1pb)
-        return newBundle_1pb
+        return
       }
     }
 
@@ -1961,9 +1923,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newBundle_1pc = this.$init(capacity)
+        this.$init(capacity)
+        var newBundle_1pc = this
         console.log("Bundle_1pc => newBundle_1pc=" + newBundle_1pc)
-        return newBundle_1pc
+        return
       }
     }
 
@@ -1979,9 +1942,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newBundle_1pl = this.$init(loader)
+        this.$init(loader)
+        var newBundle_1pl = this
         console.log("Bundle_1pl => newBundle_1pl=" + newBundle_1pl)
-        return newBundle_1pl
+        return
       }
     }
 
@@ -2739,9 +2703,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newMessenger_1ph = this.$init(targetHandler)
+        this.$init(targetHandler)
+        var newMessenger_1ph = this
         console.log("Messenger(Handler) => newMessenger_1ph=" + newMessenger_1ph)
-        return newMessenger_1ph
+        return
       }
     }
 
@@ -2757,9 +2722,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newMessenger_1pi = this.$init(targetIBinder)
+        this.$init(targetIBinder)
+        var newMessenger_1pi = this
         console.log("Messenger(IBinder) => newMessenger_1pi=" + newMessenger_1pi)
-        return newMessenger_1pi
+        return
       }
     }
 
@@ -2918,9 +2884,10 @@ class FridaHookAndroidJava {
         var funcParaDict = {}
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newMessage = this.$init()
-        console.log("Message => newMessage=" + newMessage)
-        return newMessage
+        this.$init()
+        var newMessage = this
+        console.log(funcName + " => newMessage=" + newMessage)
+        return
       }
     }
 
@@ -2936,7 +2903,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
         var retMessage_0p = this.obtain()
-        console.log("Message.obtain_0p => retMessage_0p=" + retMessage_0p)
+        console.log(funcName + " => retMessage_0p=" + retMessage_0p)
         return retMessage_0p
       }
     }
@@ -2969,7 +2936,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retData = this.getData()
-        console.log("Message.getData => retData=" + retData)
+        console.log(funcName + " => retData=" + retData)
         return retData
       }
     }
@@ -3010,9 +2977,10 @@ class FridaHookAndroidJava {
         var funcParaDict = {}
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newIntent_0p = this.$init()
-        console.log("Intent_0p => newIntent_0p=" + newIntent_0p)
-        return newIntent_0p
+        this.$init()
+        var newIntent_0p = this
+        console.log(funcName + " => newIntent_0p=" + newIntent_0p)
+        return
       }
     }
 
@@ -3028,9 +2996,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newIntent_1pa = this.$init(action)
-        console.log("Intent_1pa => newIntent_1pa=" + newIntent_1pa)
-        return newIntent_1pa
+        this.$init(action)
+        var newIntent_1pa = this
+        console.log(funcName + " => newIntent_1pa=" + newIntent_1pa)
+        return
       }
     }
 
@@ -3047,9 +3016,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newIntent_2pau = this.$init(action, uri)
-        console.log("Intent_2pau => newIntent_2pau=" + newIntent_2pau)
-        return newIntent_2pau
+        this.$init(action, uri)
+        var newIntent_2pau = this
+        console.log(funcName + " => newIntent_2pau=" + newIntent_2pau)
+        return
       }
     }
 
@@ -3066,7 +3036,7 @@ class FridaHookAndroidJava {
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retIntent = this.setPackage(packageName)
-        console.log("Intent.setPackage => retIntent=" + retIntent)
+        console.log(funcName + " => retIntent=" + retIntent)
         return retIntent
       }
     }
@@ -3247,18 +3217,11 @@ class FridaHookAndroidJava {
     console.log("func_Handler_dispatchMessage=" + func_Handler_dispatchMessage)
     if (func_Handler_dispatchMessage) {
       func_Handler_dispatchMessage.implementation = function (msg) {
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(msg)
+        var funcName = "Handler.dispatchMessage"
+        var funcParaDict = {
+          "msg": msg,
         }
-
-        if (isShowLog){
-          var funcName = "Handler.dispatchMessage"
-          var funcParaDict = {
-            "msg": msg,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)  
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         return this.dispatchMessage(msg)
       }
@@ -3270,21 +3233,16 @@ class FridaHookAndroidJava {
     console.log("func_Handler_getMessageName=" + func_Handler_getMessageName)
     if (func_Handler_getMessageName) {
       func_Handler_getMessageName.implementation = function (message) {
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(message)
+        var funcName = "Handler.getMessageName"
+        var funcParaDict = {
+          "message": message,
         }
-
-        if (isShowLog){
-          var funcName = "Handler.getMessageName"
-          var funcParaDict = {
-            "message": message,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retMessageName = this.getMessageName(message)
-        console.log("Handler.getMessageName => retMessageName=" + retMessageName)
+        if (isShowLog) {
+          console.log("Handler.getMessageName => retMessageName=" + retMessageName)
+        }
         return retMessageName
       }
     }
@@ -3295,18 +3253,11 @@ class FridaHookAndroidJava {
     console.log("func_Handler_handleMessage=" + func_Handler_handleMessage)
     if (func_Handler_handleMessage) {
       func_Handler_handleMessage.implementation = function (msg) {
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(msg)
+        var funcName = "Handler.handleMessage"
+        var funcParaDict = {
+          "msg": msg,
         }
-
-        if (isShowLog){
-          var funcName = "Handler.handleMessage"
-          var funcParaDict = {
-            "msg": msg,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         return this.handleMessage(msg)
       }
@@ -3318,21 +3269,16 @@ class FridaHookAndroidJava {
     console.log("func_Handler_sendMessage=" + func_Handler_sendMessage)
     if (func_Handler_sendMessage) {
       func_Handler_sendMessage.implementation = function (msg) {
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(msg)
+        var funcName = "Handler.sendMessage"
+        var funcParaDict = {
+          "msg": msg,
         }
-
-        if (isShowLog){
-          var funcName = "Handler.sendMessage"
-          var funcParaDict = {
-            "msg": msg,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retBoolean = this.sendMessage(msg)
-        console.log("Handler.sendMessage => retBoolean=" + retBoolean)
+        if (isShowLog) {
+          console.log("Handler.sendMessage => retBoolean=" + retBoolean)
+        }
         return retBoolean
       }
     }
@@ -3343,21 +3289,16 @@ class FridaHookAndroidJava {
     console.log("func_Handler_sendMessageAtFrontOfQueue=" + func_Handler_sendMessageAtFrontOfQueue)
     if (func_Handler_sendMessageAtFrontOfQueue) {
       func_Handler_sendMessageAtFrontOfQueue.implementation = function (msg) {
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(msg)
+        var funcName = "Handler.sendMessageAtFrontOfQueue"
+        var funcParaDict = {
+          "msg": msg,
         }
-
-        if (isShowLog){
-          var funcName = "Handler.sendMessageAtFrontOfQueue"
-          var funcParaDict = {
-            "msg": msg,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retBoolean = this.sendMessageAtFrontOfQueue(msg)
-        console.log("Handler.sendMessageAtFrontOfQueue => retBoolean=" + retBoolean)
+        if (isShowLog) {
+          console.log("Handler.sendMessageAtFrontOfQueue => retBoolean=" + retBoolean)
+        }
         return retBoolean
       }
     }
@@ -3368,22 +3309,17 @@ class FridaHookAndroidJava {
     console.log("func_Handler_sendMessageAtTime=" + func_Handler_sendMessageAtTime)
     if (func_Handler_sendMessageAtTime) {
       func_Handler_sendMessageAtTime.implementation = function (msg, uptimeMillis) {
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(msg)
+        var funcName = "Handler.sendMessageAtTime"
+        var funcParaDict = {
+          "msg": msg,
+          "uptimeMillis": uptimeMillis,
         }
-
-        if (isShowLog){
-          var funcName = "Handler.sendMessageAtTime"
-          var funcParaDict = {
-            "msg": msg,
-            "uptimeMillis": uptimeMillis,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retBoolean = this.sendMessageAtTime(msg, uptimeMillis)
-        console.log("Handler.sendMessageAtTime => retBoolean=" + retBoolean)
+        if (isShowLog) {
+          console.log("Handler.sendMessageAtTime => retBoolean=" + retBoolean)
+        }
         return retBoolean
       }
     }
@@ -3394,22 +3330,17 @@ class FridaHookAndroidJava {
     console.log("func_Handler_sendMessageDelayed=" + func_Handler_sendMessageDelayed)
     if (func_Handler_sendMessageDelayed) {
       func_Handler_sendMessageDelayed.implementation = function (msg, delayMillis) {
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(msg)
+        var funcName = "Handler.sendMessageDelayed"
+        var funcParaDict = {
+          "msg": msg,
+          "delayMillis": delayMillis,
         }
-
-        if (isShowLog){
-          var funcName = "Handler.sendMessageDelayed"
-          var funcParaDict = {
-            "msg": msg,
-            "delayMillis": delayMillis,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)  
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         var retBoolean = this.sendMessageDelayed(msg, delayMillis)
-        console.log("Handler.sendMessageDelayed => retBoolean=" + retBoolean)
+        if (isShowLog) {
+          console.log("Handler.sendMessageDelayed => retBoolean=" + retBoolean)
+        }
         return retBoolean
       }
     }
@@ -3420,25 +3351,14 @@ class FridaHookAndroidJava {
     console.log("func_Handler_obtainMessage_2pwo=" + func_Handler_obtainMessage_2pwo)
     if (func_Handler_obtainMessage_2pwo) {
       func_Handler_obtainMessage_2pwo.implementation = function (what, obj) {
-
+        var funcName = "Handler.obtainMessage_2pwo"
+        var funcParaDict = {
+          "what": what,
+          "obj": obj,
+        }
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
         var retMessage_2pwo = this.obtainMessage(what, obj)
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(retMessage_2pwo)
-        }
-
-        if (isShowLog){
-          var funcName = "Handler.obtainMessage_2pwo"
-          var funcParaDict = {
-            "what": what,
-            "obj": obj,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-          console.log("Handler.obtainMessage_2pwo => retMessage_2pwo=" + retMessage_2pwo)
-        }
-
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retMessage_2pwo=${retMessage_2pwo}`)
         return retMessage_2pwo
       }
     }
@@ -3449,22 +3369,11 @@ class FridaHookAndroidJava {
     console.log("func_Handler_obtainMessage_0p=" + func_Handler_obtainMessage_0p)
     if (func_Handler_obtainMessage_0p) {
       func_Handler_obtainMessage_0p.implementation = function () {
-
+        var funcName = "Handler.obtainMessage_0p"
+        var funcParaDict = {}
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
         var retMessage_0p = this.obtainMessage()
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(retMessage_0p)
-        }
-
-        if (isShowLog){
-          var funcName = "Handler.obtainMessage_0p"
-          var funcParaDict = {}
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-  
-          console.log("Handler.obtainMessage_0p => retMessage_0p=" + retMessage_0p)
-        }
-
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retMessage_0p=${retMessage_0p}`)
         return retMessage_0p
       }
     }
@@ -3475,26 +3384,15 @@ class FridaHookAndroidJava {
     console.log("func_Handler_obtainMessage_3pwaa=" + func_Handler_obtainMessage_3pwaa)
     if (func_Handler_obtainMessage_3pwaa) {
       func_Handler_obtainMessage_3pwaa.implementation = function (what, arg1, arg2) {
-
+        var funcName = "Handler.obtainMessage_3pwaa"
+        var funcParaDict = {
+          "what": what,
+          "arg1": arg1,
+          "arg2": arg2,
+        }
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
         var retMessage_3pwaa = this.obtainMessage(what, arg1, arg2)
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(retMessage_3pwaa)
-        }
-
-        if (isShowLog){
-          var funcName = "Handler.obtainMessage_3pwaa"
-          var funcParaDict = {
-            "what": what,
-            "arg1": arg1,
-            "arg2": arg2,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-  
-          console.log("Handler.obtainMessage_3pwaa => retMessage_3pwaa=" + retMessage_3pwaa)
-        }
-
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retMessage_3pwaa=${retMessage_3pwaa}`)
         return retMessage_3pwaa
       }
     }
@@ -3505,27 +3403,16 @@ class FridaHookAndroidJava {
     console.log("func_Handler_obtainMessage_4pwaao=" + func_Handler_obtainMessage_4pwaao)
     if (func_Handler_obtainMessage_4pwaao) {
       func_Handler_obtainMessage_4pwaao.implementation = function (what, arg1, arg2, obj) {
-
+        var funcName = "Handler.obtainMessage_4pwaao"
+        var funcParaDict = {
+          "what": what,
+          "arg1": arg1,
+          "arg2": arg2,
+          "obj": obj,
+        }
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
         var retMessage_4pwaao = this.obtainMessage(what, arg1, arg2, obj)
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(retMessage_4pwaao)
-        }
-
-        if (isShowLog){
-          var funcName = "Handler.obtainMessage_4pwaao"
-          var funcParaDict = {
-            "what": what,
-            "arg1": arg1,
-            "arg2": arg2,
-            "obj": obj,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-  
-          console.log("Handler.obtainMessage_4pwaao => retMessage_4pwaao=" + retMessage_4pwaao)
-        }
-
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retMessage_4pwaao=${retMessage_4pwaao}`)
         return retMessage_4pwaao
       }
     }
@@ -3536,31 +3423,20 @@ class FridaHookAndroidJava {
     console.log("func_Handler_obtainMessage_1pw=" + func_Handler_obtainMessage_1pw)
     if (func_Handler_obtainMessage_1pw) {
       func_Handler_obtainMessage_1pw.implementation = function (what) {
-
+        var funcName = "Handler.obtainMessage_1pw"
+        var funcParaDict = {
+          "what": what,
+        }
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
         var retMessage_1pw = this.obtainMessage(what)
-
-        var isShowLog = true
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(retMessage_1pw)
-        }
-
-        if (isShowLog){
-          var funcName = "Handler.obtainMessage_1pw"
-          var funcParaDict = {
-            "what": what,
-          }
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-    
-          console.log("Handler.obtainMessage_1pw => retMessage_1pw=" + retMessage_1pw)
-        }
-
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retMessage_1pw=${retMessage_1pw}`)
         return retMessage_1pw
       }
     }
 
   }
 
-  static Uri_Builder() {
+  static Uri_Builder(callback_isShowLog=null) {
     var clsName_Uri_Builder = "android.net.Uri$Builder"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_Uri_Builder)
 
@@ -3576,10 +3452,11 @@ class FridaHookAndroidJava {
       func_Uri_Builder_build.implementation = function () {
         var funcName = "Uri$Builder.build"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
         var retUri = this.build()
-        console.log(funcName + " => retUri=" + retUri)
+        if (isShowLog) {
+          console.log(funcName + " => retUri=" + retUri)
+        }
         return retUri
       }
     }
@@ -3595,38 +3472,56 @@ class FridaHookAndroidJava {
           "key": key,
           "value": value,
         }
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
         var retUri_Builder = this.appendQueryParameter(key, value)
-        console.log(funcName + " => retUri_Builder=" + retUri_Builder)
+        if (isShowLog) {
+          console.log(funcName + " => retUri_Builder=" + retUri_Builder)
+        }
         return retUri_Builder
       }
     }
 
-    // // 
-    // // 
-    // var func_Uri_Builder_getEncodedQuery = cls_Uri_Builder.getEncodedQuery
-    // console.log("func_Uri_Builder_getEncodedQuery=" + func_Uri_Builder_getEncodedQuery) // func_Uri_Builder_getEncodedQuery=undefined
-    // if (func_Uri_Builder_getEncodedQuery) {
-    //   func_Uri_Builder_getEncodedQuery.implementation = function () {
-    //     var funcName = "Uri$Builder.getEncodedQuery"
-    //     var funcParaDict = {}
-    //     FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-    //     var retEncodedQuery_ub = this.getEncodedQuery()
-    //     console.log(funcName + " => retEncodedQuery_ub=" + retEncodedQuery_ub)
-    //     return retEncodedQuery_ub
-    //   }
-    // }
-
   }
 
-  static Uri() {
+  static Uri(callback_isShowLog=null) {
     var clsName_Uri = "android.net.Uri"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_Uri)
 
     var cls_Uri = Java.use(clsName_Uri)
     console.log("cls_Uri=" + cls_Uri)
+
+    // public abstract String getPath()
+    // public abstract java.lang.String android.net.Uri.getPath()
+    var func_Uri_getPath = cls_Uri.getPath
+    console.log("func_Uri_getPath=" + func_Uri_getPath)
+    if (func_Uri_getPath) {
+      func_Uri_getPath.implementation = function () {
+        var funcName = "Uri.getPath"
+        var funcParaDict = {}
+        // var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+        var retPath = this.getPath()
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retPath=${retPath}`)
+        return retPath
+      }
+    }
+
+    // public abstract String getAuthority()
+    // public abstract java.lang.String android.net.Uri.getAuthority()
+    var func_Uri_getAuthority = cls_Uri.getAuthority
+    console.log("func_Uri_getAuthority=" + func_Uri_getAuthority)
+    if (func_Uri_getAuthority) {
+      func_Uri_getAuthority.implementation = function () {
+        var funcName = "Uri.getAuthority"
+        var funcParaDict = {}
+        // var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
+        var retAuthority = this.getAuthority()
+        // if (isShowLog) {
+          console.log(funcName + " => retAuthority=" + retAuthority)
+        // }
+        return retAuthority
+      }
+    }
 
     // public abstract String getEncodedQuery()
     // public abstract java.lang.String android.net.Uri.getEncodedQuery()
@@ -3636,18 +3531,37 @@ class FridaHookAndroidJava {
       func_Uri_getEncodedQuery.implementation = function () {
         var funcName = "Uri.getEncodedQuery"
         var funcParaDict = {}
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
         var retEncodedQuery = this.getEncodedQuery()
-        console.log(funcName + " => retEncodedQuery=" + retEncodedQuery)
+        if (isShowLog) {
+          console.log(funcName + " => retEncodedQuery=" + retEncodedQuery)
+        }
         return retEncodedQuery
+      }
+    }
+
+    // public static Uri parse(String uriString)
+    // public static android.net.Uri android.net.Uri.parse(java.lang.String)
+    var func_Uri_parse = cls_Uri.parse
+    console.log("func_Uri_parse=" + func_Uri_parse)
+    if (func_Uri_parse) {
+      func_Uri_parse.implementation = function (uriString) {
+        var funcName = "Uri.parse"
+        var funcParaDict = {
+          "uriString": uriString,
+        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
+        var retUri = this.parse(uriString)
+        // if (isShowLog) {
+          console.log(funcName + " => retUri=" + retUri)
+        // }
+        return retUri
       }
     }
 
   }
 
   static CronetUrlRequest_origCode(cls_CronetUrlRequest) {
-    
     // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
 
     /* CronetUrlRequest(
@@ -3708,9 +3622,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newCronetUrlRequest = this.$init(requestContext, url, priority, callback, executor, requestAnnotations, disableCache, disableConnectionMigration, allowDirectExecutor, trafficStatsTagSet, trafficStatsTag, trafficStatsUidSet, trafficStatsUid, requestFinishedListener, idempotency, networkHandle, method, requestHeaders, uploadDataProvider, uploadDataProviderExecutor, dictionarySha256Hash, dictionary, dictionaryId)
+        this.$init(requestContext, url, priority, callback, executor, requestAnnotations, disableCache, disableConnectionMigration, allowDirectExecutor, trafficStatsTagSet, trafficStatsTag, trafficStatsUidSet, trafficStatsUid, requestFinishedListener, idempotency, networkHandle, method, requestHeaders, uploadDataProvider, uploadDataProviderExecutor, dictionarySha256Hash, dictionary, dictionaryId)
+        var newCronetUrlRequest = this
         console.log(funcName + " => newCronetUrlRequest=" + newCronetUrlRequest)
-        return newCronetUrlRequest
+        return
       }
     }
 
@@ -4392,9 +4307,7 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "byteArray": byteArray,
         }
-
         var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
-
         this.$init(byteArray)
         var newUUID_1b = this
         if (isShowLog){
@@ -5017,7 +4930,7 @@ class FridaHookAndroidJava {
 
   }
 
-  static File(func_isShowLog=null) {
+  static File(callback_isShowLog=null) {
     var className_File = FridaAndroidUtil.clsName_File
     // FridaAndroidUtil.printClassAllMethodsFields(className_File)
 
@@ -5041,25 +4954,17 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "pathname": pathname,
         }
-
-        var isShowLog = true
-
-        if (null != func_isShowLog){
-          isShowLog = func_isShowLog(pathname)
-        }
-
-        if (isShowLog){
-          FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        }
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
 
         // // for debug: tmp use previould check to bypass new File
         // pathname = "" // hook bypass return empty File by empty filename
 
-        var newFile_1pp = this.$init(pathname)
+        this.$init(pathname)
+        var newFile_1pp = this
         if (isShowLog) {
           console.log(`${funcName}(${pathname}) => newFile_1pp=${newFile_1pp}`)
         }
-        return newFile_1pp
+        return
       }
     }
 
@@ -5073,12 +4978,11 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "uri": uri,
         }
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
-
-        var newFile_1pu = this.$init(uri)
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
+        this.$init(uri)
+        var newFile_1pu = this
         console.log(funcName + " => newFile_1pu=" + newFile_1pu)
-        return newFile_1pu
+        return
       }
     }
 
@@ -5095,20 +4999,7 @@ class FridaHookAndroidJava {
 
         var retAbsolutePath = this.getAbsolutePath()
 
-        var isShowLog = true
-
-        if(func_isShowLog != null){
-          var fullStr = funcCallAndStackStr + retAbsolutePath
-          isShowLog = func_isShowLog(fullStr)
-        }
-
-        if(isShowLog){
-          // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-          // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
-          // console.log(funcCallAndStackStr)
-  
-          console.log(funcName + " => retAbsolutePath=" + retAbsolutePath)
-        }
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retAbsolutePath=${retAbsolutePath}`)
 
         return retAbsolutePath
       }
@@ -5127,17 +5018,8 @@ class FridaHookAndroidJava {
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
         var retParentFile = this.getParentFile()
-        
-        var isShowLog = true
-        if(func_isShowLog != null){
-          var fullStr = funcCallAndStackStr + retParentFile
-          isShowLog = func_isShowLog(fullStr)
-        }
 
-        if(isShowLog){
-          // console.log(funcCallAndStackStr)
-          console.log(funcName + " => retParentFile=" + retParentFile)
-        }
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retParentFile=${retParentFile}`)
 
         return retParentFile
       }
@@ -5155,20 +5037,8 @@ class FridaHookAndroidJava {
         var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
 
         var fileAbsPath = this.getAbsolutePath()
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} fileAbsPath=${fileAbsPath}`)
 
-        var isShowLog = true
-
-        if(func_isShowLog != null){
-          var fullStr = funcCallAndStackStr + fileAbsPath
-          isShowLog = func_isShowLog(fullStr)
-        }
-
-        if(isShowLog){
-          // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-          // FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
-          // console.log(funcCallAndStackStr)
-        }
-        
         var retBoolean = this.exists()
 
         if(isShowLog){
@@ -5202,8 +5072,8 @@ class FridaHookAndroidJava {
         }
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
         FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
-
-        return this.$init(original)
+        this.$init(original)
+        return
       }
     }
 
@@ -5221,9 +5091,10 @@ class FridaHookAndroidJava {
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
         FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
-        var newString_2pbc = this.$init(bytes, charset)
+        this.$init(bytes, charset)
+        var newString_2pbc = this
         console.log(funcName + " => newString_2pbc=" + newString_2pbc)
-        return newString_2pbc
+        return
       }
     }
 
@@ -5241,9 +5112,10 @@ class FridaHookAndroidJava {
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
         FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
 
-        var newString_2pbs = this.$init(bytes, charsetName)
+        this.$init(bytes, charsetName)
+        var newString_2pbs = this
         console.log(funcName + " => newString_2pbs=" + newString_2pbs)
-        return newString_2pbs
+        return
       }
     }
 
@@ -5550,9 +5422,10 @@ class FridaHookAndroidJava {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newGZIPOutputStream_1po = this.$init(out)
+        this.$init(out)
+        var newGZIPOutputStream_1po = this
         console.log(funcName + " => newGZIPOutputStream_1po=" + newGZIPOutputStream_1po)
-        return newGZIPOutputStream_1po
+        return
       }
     }
 
@@ -7891,28 +7764,10 @@ class FridaHookAndroidJava {
       func_LinkedBlockingQueue_ctor_0p.implementation = function () {
         var funcName = "LinkedBlockingQueue_0p"
         var funcParaDict = {}
-        // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
         var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-        // var isShowLog = true
-        var isShowLog = false
-        if (null != callback_isShowLog) {
-          isShowLog = callback_isShowLog(funcCallAndStackStr)
-        }
-        if (isShowLog) {
-          // console.log(funcCallAndStackStr)
-        }
-
         this.$init()
         var newLinkedBlockingQueue_0p = this
-
-        if (isShowLog) {
-          if (retE_0p) {
-            console.log(funcCallAndStackStr)
-
-            console.log(funcName + " => newLinkedBlockingQueue_0p=" + newLinkedBlockingQueue_0p)
-          }
-        }
-
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => newLinkedBlockingQueue_0p=${newLinkedBlockingQueue_0p}`, false)
         return
       }
     }

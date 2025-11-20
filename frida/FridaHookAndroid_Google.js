@@ -3,7 +3,7 @@
 	Function: Frida hook common Android's class of com.google.xxx
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroid_Google.js
-	Updated: 20251114
+	Updated: 20251120
 */
 
 // Frida hook common Android's class of com.google.xxx
@@ -107,9 +107,10 @@ class FridaHookAndroid_Google {
         }
         FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
 
-        var newFirebaseInstallationServiceClient = this.$init(context, userAgentPublisher, heartbeatInfo)
+        this.$init(context, userAgentPublisher, heartbeatInfo)
+        var newFirebaseInstallationServiceClient = this
         console.log(funcName + " => newFirebaseInstallationServiceClient=" + newFirebaseInstallationServiceClient)
-        return newFirebaseInstallationServiceClient
+        return
       }
     }
 
