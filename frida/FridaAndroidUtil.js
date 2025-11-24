@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251119
+	Updated: 20251124
 */
 
 // Frida Android Util
@@ -1092,6 +1092,29 @@ class FridaAndroidUtil {
     }
     // console.log("keyValStrList=" + keyValStrList)
     return keyValStrList
+  }
+
+  // check whether the key in keyList exists in keys of map
+  static existKeysInMap(curMap, keyList){
+    var foundKey = false
+
+    var keys = curMap.keySet()
+    var keyIterator = keys.iterator()
+    while (keyIterator.hasNext()) {
+      var curKey = keyIterator.next()
+      // console.log("curKey=" + curKey)
+      var curKeyStr = curKey.toString()
+      // console.log("curKeyStr=" + curKeyStr)
+      foundKey = keyList.includes(curKeyStr)
+      if(foundKey) {
+        break
+      }
+    }
+
+    if(foundKey) {
+      console.log(`existKeysInMap: curMap=${FridaAndroidUtil.mapToStr(curMap)}, keyList=${keyList} => foundKey=${foundKey}`)
+    }
+    return foundKey
   }
 
   // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to string
