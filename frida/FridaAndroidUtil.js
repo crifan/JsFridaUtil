@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251124
+	Updated: 20251126
 */
 
 // Frida Android Util
@@ -148,12 +148,16 @@ class FridaAndroidUtil {
     }
   }
 
+  /*-------------------- Long --------------------*/
+
   // print/convet Java long (maybe negtive) to (unsigned=positive long value) string
   static printLongToStr(longVal){
     var longStr = FridaAndroidUtil.Long.toUnsignedString(longVal)
     // console.log(`longStr: type=${typeof longStr}, val=${longStr}`)
     return longStr
   }
+
+  /*-------------------- isClass --------------------*/
 
   static isClass_File(curObj){
     var isClsFile = FridaAndroidUtil.isJavaClass(curObj, FridaAndroidUtil.clsName_File)
@@ -197,17 +201,28 @@ class FridaAndroidUtil {
     return isClsHttpsURLConnectionImpl
   }
 
-  // Convert com.android.okhttp.Headers$Builder to string
-  static HeadersBuilderToString(headersBuilderObj) {
-    var headersStr = ""
-    if (headersBuilderObj) {
-      var headers = headersBuilderObj.build()
-      // console.log("headers=" + headers)
-      // com.squareup.okhttp.Headers
-      headersStr = headers.toString()
+  /*-------------------- printClass --------------------*/
+
+  static printClassTemplate(className, inputObj, callback_printProps, prefixStr=""){
+    const FuncName = "printClass_" + className
+    const NewPrefStr = prefixStr ? (prefixStr + " ") : prefixStr
+    const PrefAndClsName = `${FuncName}: ${NewPrefStr}${className}`
+    if (inputObj) {
+      var realClassName = FridaAndroidUtil.getJavaClassName(inputObj)
+      // console.log(`${PrefAndClsName}: realClassName=${realClassName}`)
+      if (realClassName === className) {
+        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, className)
+        // console.log(`${PrefAndClsName}: curObj=${curObj}`)
+        var curClsNameValStr = FridaAndroidUtil.valueToNameStr(curObj)
+        var fullPrefixStr = `${PrefAndClsName}:${curClsNameValStr}:`
+        callback_printProps(curObj, fullPrefixStr)
+      } else {
+        var valNameStr = FridaAndroidUtil.valueToNameStr(inputObj)
+        console.log(`${PrefAndClsName}: ${valNameStr} not a ${className}`)
+      }
+    } else {
+      console.log(`${PrefAndClsName}: null`)
     }
-    // console.log("headersStr=" + headersStr)
-    return headersStr
   }
 
   static printClass_SharedPreferencesImpl_EditorImpl(inputObj, prefixStr=""){
@@ -831,13 +846,22 @@ class FridaAndroidUtil {
     }
   }
 
-  // static printRequestBodyInfo(urlConn){
-  //   console.log("printRequestBodyInfo: urlConn=" + urlConn)
-  //   var requestBody = urlConn.getOutputStream()
-  //   console.log("requestBody=" + requestBody)
-  //   var reqBodyClsName = FridaAndroidUtil.getJavaClassName(requestBody)
-  //   console.log("reqBodyClsName=" + reqBodyClsName)
-  // }
+  /*-------------------- Others --------------------*/
+
+  // Convert com.android.okhttp.Headers$Builder to string
+  static HeadersBuilderToString(headersBuilderObj) {
+    var headersStr = ""
+    if (headersBuilderObj) {
+      var headers = headersBuilderObj.build()
+      // console.log("headers=" + headers)
+      // com.squareup.okhttp.Headers
+      headersStr = headers.toString()
+    }
+    // console.log("headersStr=" + headersStr)
+    return headersStr
+  }
+
+  /*-------------------- Byte Array --------------------*/
 
   static javaByteArrToJsByteArr(javaByteArr){
     // var javaByteArrLen = javaByteArr.length
@@ -871,6 +895,8 @@ class FridaAndroidUtil {
     return javaObjListStr
   }
 
+  /*-------------------- ByteBuffer --------------------*/
+
   // java ByteBuffer to String
   static javaByteBufferToStr(byteBufer, isFlip=true){
     // console.log(`javaByteBufferToStr: byteBufer=${byteBufer}`)
@@ -892,13 +918,101 @@ class FridaAndroidUtil {
     return utf8BufStr
   }
 
+
+  /*-------------------- Map --------------------*/
+
+  // check whether the key in keyList exists in keys of map
+  static existKeysInMap(curMap, keyList){
+    var foundKey = false
+
+    var keys = curMap.keySet()
+    var keyIterator = keys.iterator()
+    while (keyIterator.hasNext()) {
+      var curKey = keyIterator.next()
+      // console.log("curKey=" + curKey)
+      var curKeyStr = curKey.toString()
+      // console.log("curKeyStr=" + curKeyStr)
+      foundKey = keyList.includes(curKeyStr)
+      if(foundKey) {
+        break
+      }
+    }
+
+    // if(foundKey) {
+    //   console.log(`existKeysInMap: curMap=${FridaAndroidUtil.mapToStr(curMap)}, keyList=${keyList} => foundKey=${foundKey}`)
+    // }
+    return foundKey
+  }
+
+  // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to key=value string list
+  static mapToKeyValueStrList(curMap){
+    var keyValStrList = []
+    if((null != curMap) && (curMap != undefined)) {
+      var keys = curMap.keySet()
+      // console.log("keys=" + keys)
+      var keyIterator = keys.iterator()
+      // console.log("keyIterator=" + keyIterator)
+      while (keyIterator.hasNext()) {
+        var curKey = keyIterator.next()
+        // console.log("curKey=" + curKey)
+        var curValue = curMap.get(curKey)
+        // console.log("curValue=" + curValue)
+        var keyValStr = `${curKey}=${curValue}`
+        // console.log("keyValStr=" + keyValStr)
+        keyValStrList.push(keyValStr)
+      }
+    }
+    // console.log("keyValStrList=" + keyValStrList)
+    return keyValStrList
+  }
+
+  // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to string
+  static mapToStr(curMap){
+    //  curMap="<instance: java.util.Map, $className: java.util.HashMap>"
+    // return JSON.stringify(curMap, (key, value) => (value instanceof Map ? [...value] : value));
+    // var keyValStrList = this.mapToKeyValueStrList(curMap)
+    var keyValStrList = FridaAndroidUtil.mapToKeyValueStrList(curMap)
+    // console.log("keyValStrList=" + keyValStrList)
+    var mapStr = keyValStrList.join(", ")
+    var mapStr = `[${mapStr}]`
+    // console.log("mapStr=" + mapStr)
+    return mapStr
+  }
+
+  /*-------------------- Set --------------------*/
+
+  // convert Java Set to js string
+  static setToStr(curSet){
+    // console.log(`setToStr: curSet: type=${typeof curSet}, val=${curSet}`)
+    var setStr = ""
+    if((null != curSet) && (curSet != undefined)) {
+      var setIter = curSet.iterator()
+      var itemArr = []
+      while (setIter.hasNext()) {
+        var curItem = setIter.next();
+        // 如果 item 是 Java 对象，优先 toString()
+        try {
+          itemArr.push(curItem.toString())
+        } catch (e) {
+          itemArr.push(item)
+        }
+      }
+      setStr = JSON.stringify(itemArr, null, 2)
+    } else {
+      setStr = "null"
+    }
+    // console.log(`curSet=${curSet} => setStr=${setStr}`)
+    return setStr
+  }
+
+  /*-------------------- Class --------------------*/
+
   // get java class name from clazz
   // example:
   //  clazz=0x35 -> className=java.lang.ref.Reference
   //  clazz=0xa1 -> className=com.tencent.wcdb.database.SQLiteConnection
   //  clazz=0x91 -> className=java.lang.String
   //  clazz=0x42a6 -> jclassName=java.lang.Integer
-  // static getJclassName(clazz){
   // Note: if not use cache, some time will cause Frida crashed: Process terminated
   static getJclassName(clazz, isUseCache=true){
   // static getJclassName(clazz, isUseCache=false){
@@ -988,6 +1102,7 @@ class FridaAndroidUtil {
     return className
   }
 
+  // get java class name from object
   static getJavaClassName(curObj){
     var javaClsName = null
     if (null != curObj) {
@@ -1047,88 +1162,6 @@ class FridaAndroidUtil {
     }
   }
 
-  // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to key=value string list
-  static mapToKeyValueStrList(curMap){
-    var keyValStrList = []
-    // var HashMapNode = Java.use('java.util.HashMap$Node')
-    // console.log("HashMapNode=" + HashMapNode)
-    if((null != curMap) && (curMap != undefined)) {
-      // var mapEntrySet = curMap.entrySet()
-      // console.log("mapEntrySet=" + mapEntrySet)
-      // if (mapEntrySet != undefined) {
-      //   var iterator = mapEntrySet.iterator()
-      //   console.log("iterator=" + iterator)
-      //   while (iterator.hasNext()) {
-      //     var nextObj = iterator.next()
-      //     console.log("nextObj=" + nextObj)
-      //     // var entry = Java.cast(nextObj, HashMapNode)
-      //     var entry = nextObj
-      //     console.log("entry=" + entry)
-      //     var curKey = entry.getKey()
-      //     var curVal = entry.getValue()
-      //     console.log("key=" + entry.getKey() + ", value=" + entry.getValue());
-      //     var keyValStr = `${curKey}=${curVal}`
-      //     console.log("keyValStr=" + keyValStr);
-      //     keyValStrList.push(keyValStr)
-      //   }
-      // }
-          
-      // var curMapJavaClsName = FridaAndroidUtil.getJavaClassName(curMap)
-      // console.log("curMapJavaClsName=" + curMapJavaClsName)
-
-      var keys = curMap.keySet()
-      // console.log("keys=" + keys)
-      var keyIterator = keys.iterator()
-      // console.log("keyIterator=" + keyIterator)
-      while (keyIterator.hasNext()) {
-        var curKey = keyIterator.next()
-        // console.log("curKey=" + curKey)
-        var curValue = curMap.get(curKey)
-        // console.log("curValue=" + curValue)
-        var keyValStr = `${curKey}=${curValue}`
-        // console.log("keyValStr=" + keyValStr)
-        keyValStrList.push(keyValStr)
-      }
-    }
-    // console.log("keyValStrList=" + keyValStrList)
-    return keyValStrList
-  }
-
-  // check whether the key in keyList exists in keys of map
-  static existKeysInMap(curMap, keyList){
-    var foundKey = false
-
-    var keys = curMap.keySet()
-    var keyIterator = keys.iterator()
-    while (keyIterator.hasNext()) {
-      var curKey = keyIterator.next()
-      // console.log("curKey=" + curKey)
-      var curKeyStr = curKey.toString()
-      // console.log("curKeyStr=" + curKeyStr)
-      foundKey = keyList.includes(curKeyStr)
-      if(foundKey) {
-        break
-      }
-    }
-
-    if(foundKey) {
-      console.log(`existKeysInMap: curMap=${FridaAndroidUtil.mapToStr(curMap)}, keyList=${keyList} => foundKey=${foundKey}`)
-    }
-    return foundKey
-  }
-
-  // convert Java map/Collections (java.util.HashMap / java.util.Collections$UnmodifiableMap) to string
-  static mapToStr(curMap){
-    //  curMap="<instance: java.util.Map, $className: java.util.HashMap>"
-    // return JSON.stringify(curMap, (key, value) => (value instanceof Map ? [...value] : value));
-    // var keyValStrList = this.mapToKeyValueStrList(curMap)
-    var keyValStrList = FridaAndroidUtil.mapToKeyValueStrList(curMap)
-    // console.log("keyValStrList=" + keyValStrList)
-    var mapStr = keyValStrList.join(", ")
-    var mapStr = `[${mapStr}]`
-    // console.log("mapStr=" + mapStr)
-    return mapStr
-  }
 
   static describeJavaClass(className) {
     var jClass = Java.use(className);
@@ -1196,6 +1229,37 @@ class FridaAndroidUtil {
     // console.log("")
     console.log("=========== " + "End of class: " + javaClassName + " ===========")
   }
+
+  // find loaded classes that match a pattern (async)
+  // Note: for some app, will crash: Process terminated
+  static findClass(pattern) {
+    console.log("Finding all classes that match pattern: " + pattern + "\n");
+
+    Java.enumerateLoadedClasses({
+      onMatch: function(aClass) {
+        if (aClass.match(pattern)){
+          console.log(aClass)
+        }
+      },
+      onComplete: function() {}
+    });
+  }
+
+  // emulate print all Java Classes
+  // Note: for some app, will crash: Process terminated
+  static printAllClasses() {
+    // findClass("*")
+
+    Java.enumerateLoadedClasses({
+      onMatch: function(className) {
+        console.log(className);
+      },
+      onComplete: function() {}
+    });
+  }
+
+
+  /*-------------------- Stack & Function Call & Log --------------------*/
 
   // generate current stack trace string
   static genStackStr(prefix="") {
@@ -1382,35 +1446,7 @@ class FridaAndroidUtil {
     return isShowLog
   }
 
-
-  // find loaded classes that match a pattern (async)
-  // Note: for some app, will crash: Process terminated
-  static findClass(pattern) {
-    console.log("Finding all classes that match pattern: " + pattern + "\n");
-
-    Java.enumerateLoadedClasses({
-      onMatch: function(aClass) {
-        if (aClass.match(pattern)){
-          console.log(aClass)
-        }
-      },
-      onComplete: function() {}
-    });
-  }
-
-  // emulate print all Java Classes
-  // Note: for some app, will crash: Process terminated
-  static printAllClasses() {
-    // findClass("*")
-
-    Java.enumerateLoadedClasses({
-      onMatch: function(className) {
-        console.log(className);
-      },
-      onComplete: function() {}
-    });
-  }
-
+  /*-------------------- Class Loder --------------------*/
 
   static findOverloadFunction(overloads, argTypeList, retType=null){
     var foundOverloadFunc = null

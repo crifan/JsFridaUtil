@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20251120
+	Updated: 20251126
 */
 
 // Frida hook common Android/Java class
@@ -3443,7 +3443,6 @@ class FridaHookAndroidJava {
     var cls_Uri_Builder = Java.use(clsName_Uri_Builder)
     console.log("cls_Uri_Builder=" + cls_Uri_Builder)
 
-    
     // public Uri build()
     // public android.net.Uri android.net.Uri$Builder.build()
     var func_Uri_Builder_build = cls_Uri_Builder.build
@@ -4980,8 +4979,10 @@ class FridaHookAndroidJava {
         }
         var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
         this.$init(uri)
-        var newFile_1pu = this
-        console.log(funcName + " => newFile_1pu=" + newFile_1pu)
+        if (isShowLog) {
+          var newFile_1pu = this
+          console.log(funcName + " => newFile_1pu=" + newFile_1pu)
+        }
         return
       }
     }
@@ -4994,13 +4995,9 @@ class FridaHookAndroidJava {
       func_File_getAbsolutePath.implementation = function () {
         var funcName = "File.getAbsolutePath"
         var funcParaDict = {}
-
         var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-
         var retAbsolutePath = this.getAbsolutePath()
-
         var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retAbsolutePath=${retAbsolutePath}`)
-
         return retAbsolutePath
       }
     }
@@ -5013,14 +5010,10 @@ class FridaHookAndroidJava {
       func_File_getParentFile.implementation = function () {
         var funcName = "File.getParentFile"
         var funcParaDict = {}
-
         var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
         // FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
         var retParentFile = this.getParentFile()
-
         var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retParentFile=${retParentFile}`)
-
         return retParentFile
       }
     }
@@ -5033,18 +5026,13 @@ class FridaHookAndroidJava {
       func_File_exists.implementation = function () {
         var funcName = "File.exists"
         var funcParaDict = {}
-
         var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
-
         var fileAbsPath = this.getAbsolutePath()
         var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} fileAbsPath=${fileAbsPath}`)
-
         var retBoolean = this.exists()
-
         if(isShowLog){
           console.log(funcName + " => retBoolean=" + retBoolean + ",  fileAbsPath=" + fileAbsPath)
         }
-
         return retBoolean
       }
     }
@@ -5275,7 +5263,7 @@ class FridaHookAndroidJava {
 
   }
 
-  static URL() {
+  static URL(callback_isShowLog=null) {
     var clsName_URL = "java.net.URL"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_URL)
 
@@ -5295,11 +5283,13 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "spec": spec,
         }
-        curLogFunc(funcName, funcParaDict)
-
+        // curLogFunc(funcName, funcParaDict)
+        var isShowLog = FridaAndroidUtil.showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict)
         this.$init(spec)
         var newURL_1ps = this
-        console.log(funcName + " => newURL_1ps=" + newURL_1ps)
+        // if (isShowLog) {
+          console.log(funcName + " => newURL_1ps=" + newURL_1ps)
+        // }
         return
       }
     }
@@ -5313,7 +5303,6 @@ class FridaHookAndroidJava {
         var funcName = "URL.getHost"
         var funcParaDict = {}
         curLogFunc(funcName, funcParaDict)
-
         var retHost = this.getHost()
         console.log(funcName + " => retHost=" + retHost)
         return retHost
@@ -5329,7 +5318,6 @@ class FridaHookAndroidJava {
         var funcName = "URL.getPath"
         var funcParaDict = {}
         curLogFunc(funcName, funcParaDict)
-
         var retPath = this.getPath()
         console.log(funcName + " => retPath=" + retPath)
         return retPath
@@ -5345,7 +5333,6 @@ class FridaHookAndroidJava {
         var funcName = "URL.getPort"
         var funcParaDict = {}
         curLogFunc(funcName, funcParaDict)
-
         var retPort = this.getPort()
         console.log(funcName + " => retPort=" + retPort)
         return retPort
@@ -5361,7 +5348,6 @@ class FridaHookAndroidJava {
         var funcName = "URL.getProtocol"
         var funcParaDict = {}
         curLogFunc(funcName, funcParaDict)
-
         var retProtocol = this.getProtocol()
         console.log(funcName + " => retProtocol=" + retProtocol)
         return retProtocol
@@ -5377,7 +5363,6 @@ class FridaHookAndroidJava {
         var funcName = "URL.getQuery"
         var funcParaDict = {}
         curLogFunc(funcName, funcParaDict)
-
         var retQuery = this.getQuery()
         console.log(funcName + " => retQuery=" + retQuery)
         return retQuery
@@ -5392,10 +5377,10 @@ class FridaHookAndroidJava {
       func_URL_openConnection_0p.implementation = function () {
         var funcName = "URL.openConnection"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
+        // curLogFunc(funcName, funcParaDict)
+        var funcCallAndStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
         var retUrlConn = this.openConnection()
-        console.log(funcName + " => retUrlConn=" + retUrlConn)
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, `${funcCallAndStackStr}\n${funcName} => retUrlConn=${retUrlConn}`)
         return retUrlConn
       }
     }
