@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251126
+	Updated: 20251128
 */
 
 // Frida Android Util
@@ -148,6 +148,40 @@ class FridaAndroidUtil {
     }
   }
 
+  /*-------------------- byte[] --------------------*/
+
+  // convert (Java) byte[] to hex string
+  static bytesToHexStr(curBytes, separator=",", hasBracket=true, has0xPrefix=false, isUpperCase=true){
+    var retAllHexStr = ""
+    if(curBytes) {
+      var hexStrList = []
+      // console.log(`curBytes.length=${curBytes.length}`)
+      for(var i = 0; i < curBytes.length; i++) {
+        var curByte = curBytes[i]
+        // console.log(`curByte=${curByte}`)
+        var positiveByte = curByte
+        if (positiveByte < 0) {
+          // convert to positive byte, eg: -104 => 152
+          positiveByte = positiveByte + 256
+        }
+        // console.log(`positiveByte=${positiveByte}`)
+        var prefixStr = ""
+        if (has0xPrefix) {
+          prefixStr = "0x"
+        }
+        var byteHexStr = JsUtil.intToHexStr(positiveByte, prefixStr, isUpperCase)
+        // console.log(`byteHexStr=${byteHexStr}`)
+        hexStrList.push(byteHexStr)
+      }
+      retAllHexStr = hexStrList.join(separator)
+      if (hasBracket) {
+        retAllHexStr = `[${retAllHexStr}]`
+      }
+    }
+
+    return retAllHexStr
+  }
+
   /*-------------------- Long --------------------*/
 
   // print/convet Java long (maybe negtive) to (unsigned=positive long value) string
@@ -215,7 +249,7 @@ class FridaAndroidUtil {
         // console.log(`${PrefAndClsName}: curObj=${curObj}`)
         var curClsNameValStr = FridaAndroidUtil.valueToNameStr(curObj)
         var fullPrefixStr = `${PrefAndClsName}:${curClsNameValStr}:`
-        callback_printProps(curObj, fullPrefixStr)
+        callback_printProps(curObj, fullPrefixStr, prefixStr)
       } else {
         var valNameStr = FridaAndroidUtil.valueToNameStr(inputObj)
         console.log(`${PrefAndClsName}: ${valNameStr} not a ${className}`)

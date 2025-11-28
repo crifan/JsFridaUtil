@@ -3,7 +3,7 @@
 	Function: crifan's common Javascript related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/JsUtil.js
-	Updated: 20251119
+	Updated: 20251128
 */
 
 // pure JavaScript utils
@@ -19,14 +19,14 @@ class JsUtil {
   /*---------- Number(Int) ----------*/
 
   static intToHexStr(intValue, prefix="0x", isUpperCase=true){
-    var fullHexStr = "undefined/null"
+    var fullHexStr = ""
     // console.log(`intValue: type=${typeof intValue}, val=${intValue}`)
     if (intValue) {
       // var hexStr = prefix + intValue.toString(16)
       // var hexStr = prefix + String(intValue).padStart(2, "0")
       // var hexStr = prefix + intValue.toString(16).padStart(2, "0")
       var intHexStr = intValue.toString(16)
-      // console.log("intHexStr=" + intHexStr)
+      // console.log(`intValue=${intValue} -> intHexStr=${intHexStr}`)
       var padding0HexStr = intHexStr.padStart(2, "0")
       // console.log("padding0HexStr=" + padding0HexStr)
       if (isUpperCase) {
@@ -34,6 +34,8 @@ class JsUtil {
         // console.log("padding0HexStr=" + padding0HexStr)
       }
       fullHexStr = prefix + padding0HexStr
+    } else {
+      fullHexStr = `${intValue}`
     }
     // console.log("fullHexStr=" + fullHexStr)
     return fullHexStr
@@ -47,6 +49,29 @@ class JsUtil {
     }
     // console.log(`bigIntVal: type=${typeof bigIntVal}, val=${bigIntVal}`)
     return bigIntVal
+  }
+
+  /*---------- Byte ----------*/
+
+  // byte decimal to byte hex
+  // eg:
+  //    8 => 8
+  //    -60 => c4
+  // function byteDecimalToByteHex(byteDecimal) {
+  static byteDecimalToByteHex(byteDecimal) {
+    // var digitCount = 6
+    var digitCount = 2
+    var minusDigitCount = 0 - digitCount
+    // return (byteDecimal + Math.pow(16, 6)).toString(16).substr(-6)
+    // var hexStr = (byteDecimal + Math.pow(16, 2)).toString(16).substr(-2)
+    // return (byteDecimal + Math.pow(16, digitCount)).toString(16).substr(minusDigitCount)
+    var hexStr = (byteDecimal + Math.pow(16, digitCount)).toString(16).substr(minusDigitCount)
+    // console.log("typeof hexStr=" + (typeof hexStr))
+    // console.log("hexStr=" + hexStr)
+    var hexValue = parseInt(hexStr, 16)
+    // console.log("typeof hexValue=" + (typeof hexValue))
+    // console.log("hexValue=" + hexValue)
+    return hexValue
   }
 
   /*---------- Log ----------*/
@@ -121,6 +146,16 @@ class JsUtil {
     return objStr
   }
 
+  // check object whether is js string
+  static isJsStr(curObj){
+    // console.log("curObj=" + curObj)
+    var curObjType = (typeof curObj)
+    // console.log("curObjType=" + curObjType)
+    var isStr = curObjType === "string"
+    // console.log("isStr=" + isStr)
+    return isStr
+  }
+
   /*---------- List ----------*/
 
   // check whether is item inside the list
@@ -188,41 +223,6 @@ class JsUtil {
     var isNull = null == curStr
     var isEmp = "" === curStr
     return isNull || isEmp
-  }
-
-  /*---------- Byte ----------*/
-
-  // byte decimaal to byte hex
-  // eg:
-  //    8 => 8
-  //    -60 => c4
-  // function byteDecimalToByteHex(byteDecimal) {
-  static byteDecimalToByteHex(byteDecimal) {
-    // var digitCount = 6
-    var digitCount = 2
-    var minusDigitCount = 0 - digitCount
-    // return (byteDecimal + Math.pow(16, 6)).toString(16).substr(-6)
-    // var hexStr = (byteDecimal + Math.pow(16, 2)).toString(16).substr(-2)
-    // return (byteDecimal + Math.pow(16, digitCount)).toString(16).substr(minusDigitCount)
-    var hexStr = (byteDecimal + Math.pow(16, digitCount)).toString(16).substr(minusDigitCount)
-    // console.log("typeof hexStr=" + (typeof hexStr))
-    // console.log("hexStr=" + hexStr)
-    var hexValue = parseInt(hexStr, 16)
-    // console.log("typeof hexValue=" + (typeof hexValue))
-    // console.log("hexValue=" + hexValue)
-    return hexValue
-  }
-
-  /*---------- Object ----------*/
-
-  // check is js string
-  static isJsStr(curObj){
-    // console.log("curObj=" + curObj)
-    var curObjType = (typeof curObj)
-    // console.log("curObjType=" + curObjType)
-    var isStr = curObjType === "string"
-    // console.log("isStr=" + isStr)
-    return isStr
   }
 
   /*---------- Pointer ----------*/
