@@ -3,7 +3,7 @@
 	Function: crifan's common Javascript related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/JsUtil.js
-	Updated: 20251128
+	Updated: 20251202
 */
 
 // pure JavaScript utils
@@ -21,7 +21,9 @@ class JsUtil {
   static intToHexStr(intValue, prefix="0x", isUpperCase=true){
     var fullHexStr = ""
     // console.log(`intValue: type=${typeof intValue}, val=${intValue}`)
-    if (intValue) {
+    // if (intValue) {
+    // if ((intValue == 0) || intValue) {
+    if ((intValue !== null) && (intValue !== undefined) ) {
       // var hexStr = prefix + intValue.toString(16)
       // var hexStr = prefix + String(intValue).padStart(2, "0")
       // var hexStr = prefix + intValue.toString(16).padStart(2, "0")
@@ -35,6 +37,7 @@ class JsUtil {
       }
       fullHexStr = prefix + padding0HexStr
     } else {
+      // null, undefined
       fullHexStr = `${intValue}`
     }
     // console.log("fullHexStr=" + fullHexStr)

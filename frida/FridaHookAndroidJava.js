@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20251126
+	Updated: 20251203
 */
 
 // Frida hook common Android/Java class
@@ -784,7 +784,725 @@ class FridaHookAndroidJava {
   }
 
 
-  static HttpURLConnection() {
+  static urlCommon_filterLogByUrl(curUrl, funcName, funcParaDict, curLogFunc, callback_isShowLog=null) {
+    var urlLog = `${funcName}: curUrl=${curUrl}`
+    // console.log(urlLog)
+    var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, urlLog)
+    if(isShowLog) {
+      curLogFunc(funcName, funcParaDict)
+    }
+
+    return isShowLog
+  }
+
+  static HttpURLConnectionImpl(callback_isShowLog=null) {
+    var clsName_HttpURLConnectionImpl = "com.android.okhttp.internal.huc.HttpURLConnectionImpl"
+    // FridaAndroidUtil.printClassAllMethodsFields(clsName_HttpURLConnectionImpl)
+
+    var cls_HttpURLConnectionImpl = Java.use(clsName_HttpURLConnectionImpl)
+    console.log("cls_HttpURLConnectionImpl=" + cls_HttpURLConnectionImpl)
+
+    const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
+    // const curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
+    // public HttpURLConnectionImpl(URL url, OkHttpClient client) {
+    // 
+    var func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p = cls_HttpURLConnectionImpl.$init.overload("java.net.URL", "com.android.okhttp.OkHttpClient")
+    console.log("func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p=" + func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p)
+    if (func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p) {
+      func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p.implementation = function (url, client) {
+        var funcName = "HttpURLConnectionImpl(url,client)"
+        var funcParaDict = {
+          "url": url,
+          "client": client,
+        }
+        var funcCallStr = FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict)
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, funcCallStr)
+        if(isShowLog) {
+          curLogFunc(funcName, funcParaDict)
+        }
+
+        this.$init(url, client)
+        if(isShowLog) {
+          var newHttpURLConnectionImpl_2p = this
+          console.log(`${funcName} => newHttpURLConnectionImpl_2p=${newHttpURLConnectionImpl_2p}`)
+        }
+        return
+      }
+    }
+
+    // public HttpURLConnectionImpl(URL url, OkHttpClient client, URLFilter urlFilter) {
+    // 
+    var func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p = cls_HttpURLConnectionImpl.$init.overload("java.net.URL", "com.android.okhttp.OkHttpClient", "com.android.okhttp.internal.URLFilter")
+    console.log("func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p=" + func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p)
+    if (func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p) {
+      func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p.implementation = function (url, client, urlFilter) {
+        var funcName = "HttpURLConnectionImpl(url,client,urlFilter)"
+        var funcParaDict = {
+          "url": url,
+          "client": client,
+          "urlFilter": urlFilter,
+        }
+        var funcCallStr = FridaAndroidUtil.genFunctionCallStr(funcName, funcParaDict)
+        var isShowLog = FridaAndroidUtil.showLogIfNecessary(callback_isShowLog, funcCallStr)
+        if(isShowLog) {
+          curLogFunc(funcName, funcParaDict)
+        }
+
+        this.$init(url, client, urlFilter)
+        if(isShowLog) {
+          var newHttpURLConnectionImpl_3p = this
+          console.log(`${funcName} => newHttpURLConnectionImpl_3p=${newHttpURLConnectionImpl_3p}`)
+        }
+        return
+      }
+    }
+
+    // @Override public final void connect() throws IOException {
+    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.connect() throws java.io.IOException
+    var func_HttpURLConnectionImpl_connect = cls_HttpURLConnectionImpl.connect
+    console.log("func_HttpURLConnectionImpl_connect=" + func_HttpURLConnectionImpl_connect)
+    if (func_HttpURLConnectionImpl_connect) {
+      func_HttpURLConnectionImpl_connect.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.connect"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.connect()
+        return
+      }
+    }
+
+    // @Override public final void disconnect() {
+    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.disconnect()
+    var func_HttpURLConnectionImpl_disconnect = cls_HttpURLConnectionImpl.disconnect
+    console.log("func_HttpURLConnectionImpl_disconnect=" + func_HttpURLConnectionImpl_disconnect)
+    if (func_HttpURLConnectionImpl_disconnect) {
+      func_HttpURLConnectionImpl_disconnect.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.disconnect"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.disconnect()
+        return
+      }
+    }
+
+    // @Override public final InputStream getErrorStream() {
+    // public final java.io.InputStream com.android.okhttp.internal.huc.HttpURLConnectionImpl.getErrorStream()
+    var func_HttpURLConnectionImpl_getErrorStream = cls_HttpURLConnectionImpl.getErrorStream
+    console.log("func_HttpURLConnectionImpl_getErrorStream=" + func_HttpURLConnectionImpl_getErrorStream)
+    if (func_HttpURLConnectionImpl_getErrorStream) {
+      func_HttpURLConnectionImpl_getErrorStream.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getErrorStream"
+        var funcParaDict = {}
+        curLogFunc(funcName, funcParaDict)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retErrorStream = this.getErrorStream()
+        if (isShowLog) {
+          console.log(`${funcName} => retErrorStream=${retErrorStream}`)
+        }
+        return retErrorStream
+      }
+    }
+
+    // private Headers getHeaders() throws IOException {
+    // private com.android.okhttp.Headers com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaders() throws java.io.IOException
+    var func_HttpURLConnectionImpl_getHeaders = cls_HttpURLConnectionImpl.getHeaders
+    console.log("func_HttpURLConnectionImpl_getHeaders=" + func_HttpURLConnectionImpl_getHeaders)
+    if (func_HttpURLConnectionImpl_getHeaders) {
+      func_HttpURLConnectionImpl_getHeaders.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getHeaders"
+        var funcParaDict = {}
+        curLogFunc(funcName, funcParaDict)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retHeaders = this.getHeaders()
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaders=${retHeaders}`)
+        }
+        return retHeaders
+      }
+    }
+
+    // private static String responseSourceHeader(Response response) {
+    // private static java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.responseSourceHeader(com.android.okhttp.Response)
+    var func_HttpURLConnectionImpl_responseSourceHeader = cls_HttpURLConnectionImpl.responseSourceHeader
+    console.log("func_HttpURLConnectionImpl_responseSourceHeader=" + func_HttpURLConnectionImpl_responseSourceHeader)
+    if (func_HttpURLConnectionImpl_responseSourceHeader) {
+      func_HttpURLConnectionImpl_responseSourceHeader.implementation = function (response) {
+        var funcName = "HttpURLConnectionImpl.responseSourceHeader"
+        var funcParaDict = {
+          "response": response,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retString = this.responseSourceHeader(response)
+        if (isShowLog) {
+          console.log(`${funcName} => retString=${retString}`)
+        }
+        return retString
+      }
+    }
+
+    // @Override public final String getHeaderField(int position) {
+    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderField(int)
+    var func_HttpURLConnectionImpl_getHeaderField_i = cls_HttpURLConnectionImpl.getHeaderField.overload("int")
+    console.log("func_HttpURLConnectionImpl_getHeaderField_i=" + func_HttpURLConnectionImpl_getHeaderField_i)
+    if (func_HttpURLConnectionImpl_getHeaderField_i) {
+      func_HttpURLConnectionImpl_getHeaderField_i.implementation = function (position) {
+        var funcName = "HttpURLConnectionImpl.getHeaderField(position)"
+        var funcParaDict = {
+          "position": position,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retHeaderField_i = this.getHeaderField(position)
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaderField_i=${retHeaderField_i}`)
+        }
+        return retHeaderField_i
+      }
+    }
+
+    // @Override public final String getHeaderField(String fieldName) {
+    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderField(java.lang.String)
+    var func_HttpURLConnectionImpl_getHeaderField_str = cls_HttpURLConnectionImpl.getHeaderField.overload("java.lang.String")
+    console.log("func_HttpURLConnectionImpl_getHeaderField_str=" + func_HttpURLConnectionImpl_getHeaderField_str)
+    if (func_HttpURLConnectionImpl_getHeaderField_str) {
+      func_HttpURLConnectionImpl_getHeaderField_str.implementation = function (fieldName) {
+        var funcName = "HttpURLConnectionImpl.getHeaderField(fieldName)"
+        var funcParaDict = {
+          "fieldName": fieldName,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retHeaderField_str = this.getHeaderField(fieldName)
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaderField_str=${retHeaderField_str}`)
+        }
+        return retHeaderField_str
+      }
+    }
+
+    // @Override public final String getHeaderFieldKey(int position) {
+    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderFieldKey(int)
+    var func_HttpURLConnectionImpl_getHeaderFieldKey = cls_HttpURLConnectionImpl.getHeaderFieldKey
+    console.log("func_HttpURLConnectionImpl_getHeaderFieldKey=" + func_HttpURLConnectionImpl_getHeaderFieldKey)
+    if (func_HttpURLConnectionImpl_getHeaderFieldKey) {
+      func_HttpURLConnectionImpl_getHeaderFieldKey.implementation = function (position) {
+        var funcName = "HttpURLConnectionImpl.getHeaderFieldKey"
+        var funcParaDict = {
+          "position": position,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retHeaderFieldKey = this.getHeaderFieldKey(position)
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaderFieldKey=${retHeaderFieldKey}`)
+        }
+        return retHeaderFieldKey
+      }
+    }
+
+    // @Override public final Map<String, List<String>> getHeaderFields() {
+    // public final java.util.Map com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderFields()
+    var func_HttpURLConnectionImpl_getHeaderFields = cls_HttpURLConnectionImpl.getHeaderFields
+    console.log("func_HttpURLConnectionImpl_getHeaderFields=" + func_HttpURLConnectionImpl_getHeaderFields)
+    if (func_HttpURLConnectionImpl_getHeaderFields) {
+      func_HttpURLConnectionImpl_getHeaderFields.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getHeaderFields"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retHeaderFields = this.getHeaderFields()
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaderFields=${retHeaderFields}`)
+        }
+        return retHeaderFields
+      }
+    }
+
+    // @Override public final Map<String, List<String>> getRequestProperties() {
+    // public final java.util.Map com.android.okhttp.internal.huc.HttpURLConnectionImpl.getRequestProperties()
+    var func_HttpURLConnectionImpl_getRequestProperties = cls_HttpURLConnectionImpl.getRequestProperties
+    console.log("func_HttpURLConnectionImpl_getRequestProperties=" + func_HttpURLConnectionImpl_getRequestProperties)
+    if (func_HttpURLConnectionImpl_getRequestProperties) {
+      func_HttpURLConnectionImpl_getRequestProperties.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getRequestProperties"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retRequestProperties = this.getRequestProperties()
+        if (isShowLog) {
+          console.log(`${funcName} => retRequestProperties=${retRequestProperties}`)
+        }
+        return retRequestProperties
+      }
+    }
+
+    // @Override public final InputStream getInputStream() throws IOException {
+    // public final java.io.InputStream com.android.okhttp.internal.huc.HttpURLConnectionImpl.getInputStream() throws java.io.IOException
+    var func_HttpURLConnectionImpl_getInputStream = cls_HttpURLConnectionImpl.getInputStream
+    console.log("func_HttpURLConnectionImpl_getInputStream=" + func_HttpURLConnectionImpl_getInputStream)
+    if (func_HttpURLConnectionImpl_getInputStream) {
+      func_HttpURLConnectionImpl_getInputStream.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getInputStream"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retInputStream = this.getInputStream()
+        if (isShowLog) {
+          console.log(`${funcName} => retInputStream=${retInputStream}`)
+        }
+        return retInputStream
+      }
+    }
+
+    // @Override public final OutputStream getOutputStream() throws IOException {
+    // public final java.io.OutputStream com.android.okhttp.internal.huc.HttpURLConnectionImpl.getOutputStream() throws java.io.IOException
+    var func_HttpURLConnectionImpl_getOutputStream = cls_HttpURLConnectionImpl.getOutputStream
+    console.log("func_HttpURLConnectionImpl_getOutputStream=" + func_HttpURLConnectionImpl_getOutputStream)
+    if (func_HttpURLConnectionImpl_getOutputStream) {
+      func_HttpURLConnectionImpl_getOutputStream.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getOutputStream"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retOutputStream = this.getOutputStream()
+        if (isShowLog) {
+          console.log(`${funcName} => retOutputStream=${retOutputStream}`)
+        }
+        return retOutputStream
+      }
+    }
+
+    // @Override public final Permission getPermission() throws IOException {
+    // public final java.security.Permission com.android.okhttp.internal.huc.HttpURLConnectionImpl.getPermission() throws java.io.IOException
+    var func_HttpURLConnectionImpl_getPermission = cls_HttpURLConnectionImpl.getPermission
+    console.log("func_HttpURLConnectionImpl_getPermission=" + func_HttpURLConnectionImpl_getPermission)
+    if (func_HttpURLConnectionImpl_getPermission) {
+      func_HttpURLConnectionImpl_getPermission.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getPermission"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retPermission = this.getPermission()
+        if (isShowLog) {
+          console.log(`${funcName} => retPermission=${retPermission}`)
+        }
+        return retPermission
+      }
+    }
+
+    // @Override public final String getRequestProperty(String field) {
+    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getRequestProperty(java.lang.String)
+    var func_HttpURLConnectionImpl_getRequestProperty = cls_HttpURLConnectionImpl.getRequestProperty
+    console.log("func_HttpURLConnectionImpl_getRequestProperty=" + func_HttpURLConnectionImpl_getRequestProperty)
+    if (func_HttpURLConnectionImpl_getRequestProperty) {
+      func_HttpURLConnectionImpl_getRequestProperty.implementation = function (field) {
+        var funcName = "HttpURLConnectionImpl.getRequestProperty"
+        var funcParaDict = {
+          "field": field,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retRequestProperty = this.getRequestProperty(field)
+        if (isShowLog) {
+          console.log(`${funcName} => retRequestProperty=${retRequestProperty}`)
+        }
+        return retRequestProperty
+      }
+    }
+
+    // @Override public void setConnectTimeout(int timeoutMillis) {
+    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setConnectTimeout(int)
+    var func_HttpURLConnectionImpl_setConnectTimeout = cls_HttpURLConnectionImpl.setConnectTimeout
+    console.log("func_HttpURLConnectionImpl_setConnectTimeout=" + func_HttpURLConnectionImpl_setConnectTimeout)
+    if (func_HttpURLConnectionImpl_setConnectTimeout) {
+      func_HttpURLConnectionImpl_setConnectTimeout.implementation = function (timeoutMillis) {
+        var funcName = "HttpURLConnectionImpl.setConnectTimeout"
+        var funcParaDict = {
+          "timeoutMillis": timeoutMillis,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setConnectTimeout(timeoutMillis)
+        return
+      }
+    }
+
+    // public void setInstanceFollowRedirects(boolean followRedirects) {
+    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setInstanceFollowRedirects(boolean)
+    var func_HttpURLConnectionImpl_setInstanceFollowRedirects = cls_HttpURLConnectionImpl.setInstanceFollowRedirects
+    console.log("func_HttpURLConnectionImpl_setInstanceFollowRedirects=" + func_HttpURLConnectionImpl_setInstanceFollowRedirects)
+    if (func_HttpURLConnectionImpl_setInstanceFollowRedirects) {
+      func_HttpURLConnectionImpl_setInstanceFollowRedirects.implementation = function (followRedirects) {
+        var funcName = "HttpURLConnectionImpl.setInstanceFollowRedirects"
+        var funcParaDict = {
+          "followRedirects": followRedirects,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setInstanceFollowRedirects(followRedirects)
+        return
+      }
+    }
+
+    // @Override public boolean getInstanceFollowRedirects() {
+    // public boolean com.android.okhttp.internal.huc.HttpURLConnectionImpl.getInstanceFollowRedirects()
+    var func_HttpURLConnectionImpl_getInstanceFollowRedirects = cls_HttpURLConnectionImpl.getInstanceFollowRedirects
+    console.log("func_HttpURLConnectionImpl_getInstanceFollowRedirects=" + func_HttpURLConnectionImpl_getInstanceFollowRedirects)
+    if (func_HttpURLConnectionImpl_getInstanceFollowRedirects) {
+      func_HttpURLConnectionImpl_getInstanceFollowRedirects.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getInstanceFollowRedirects"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var instanceFollowRedirects = this.getInstanceFollowRedirects()
+        if (isShowLog) {
+          console.log(`${funcName} => instanceFollowRedirects=${instanceFollowRedirects}`)
+        }
+        return instanceFollowRedirects
+      }
+    }
+
+    // @Override public int getConnectTimeout() {
+    // public int com.android.okhttp.internal.huc.HttpURLConnectionImpl.getConnectTimeout()
+    var func_HttpURLConnectionImpl_getConnectTimeout = cls_HttpURLConnectionImpl.getConnectTimeout
+    console.log("func_HttpURLConnectionImpl_getConnectTimeout=" + func_HttpURLConnectionImpl_getConnectTimeout)
+    if (func_HttpURLConnectionImpl_getConnectTimeout) {
+      func_HttpURLConnectionImpl_getConnectTimeout.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getConnectTimeout"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var connectTimeout = this.getConnectTimeout()
+        if (isShowLog) {
+          console.log(`${funcName} => connectTimeout=${connectTimeout}`)
+        }
+        return connectTimeout
+      }
+    }
+
+    // @Override public void setReadTimeout(int timeoutMillis) {
+    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setReadTimeout(int)
+    var func_HttpURLConnectionImpl_setReadTimeout = cls_HttpURLConnectionImpl.setReadTimeout
+    console.log("func_HttpURLConnectionImpl_setReadTimeout=" + func_HttpURLConnectionImpl_setReadTimeout)
+    if (func_HttpURLConnectionImpl_setReadTimeout) {
+      func_HttpURLConnectionImpl_setReadTimeout.implementation = function (timeoutMillis) {
+        var funcName = "HttpURLConnectionImpl.setReadTimeout"
+        var funcParaDict = {
+          "timeoutMillis": timeoutMillis,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setReadTimeout(timeoutMillis)
+        return
+      }
+    }
+
+    // @Override public int getReadTimeout() {
+    // public int com.android.okhttp.internal.huc.HttpURLConnectionImpl.getReadTimeout()
+    var func_HttpURLConnectionImpl_getReadTimeout = cls_HttpURLConnectionImpl.getReadTimeout
+    console.log("func_HttpURLConnectionImpl_getReadTimeout=" + func_HttpURLConnectionImpl_getReadTimeout)
+    if (func_HttpURLConnectionImpl_getReadTimeout) {
+      func_HttpURLConnectionImpl_getReadTimeout.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getReadTimeout"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retReadTimeout = this.getReadTimeout()
+        if (isShowLog) {
+          console.log(`${funcName} => retReadTimeout=${retReadTimeout}`)
+        }
+        return retReadTimeout
+      }
+    }
+
+    // private void initHttpEngine() throws IOException {
+    // private void com.android.okhttp.internal.huc.HttpURLConnectionImpl.initHttpEngine() throws java.io.IOException
+    var func_HttpURLConnectionImpl_initHttpEngine = cls_HttpURLConnectionImpl.initHttpEngine
+    console.log("func_HttpURLConnectionImpl_initHttpEngine=" + func_HttpURLConnectionImpl_initHttpEngine)
+    if (func_HttpURLConnectionImpl_initHttpEngine) {
+      func_HttpURLConnectionImpl_initHttpEngine.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.initHttpEngine"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.initHttpEngine()
+        return
+      }
+    }
+
+    // private HttpEngine newHttpEngine(String method, StreamAllocation streamAllocation, RetryableSink requestBody, Response priorResponse) throws MalformedURLException, UnknownHostException {
+    // private com.android.okhttp.internal.http.HttpEngine com.android.okhttp.internal.huc.HttpURLConnectionImpl.newHttpEngine(java.lang.String,com.android.okhttp.internal.http.StreamAllocation,com.android.okhttp.internal.http.RetryableSink,com.android.okhttp.Response) throws java.net.MalformedURLException,java.net.UnknownHostException
+    var func_HttpURLConnectionImpl_newHttpEngine = cls_HttpURLConnectionImpl.newHttpEngine
+    console.log("func_HttpURLConnectionImpl_newHttpEngine=" + func_HttpURLConnectionImpl_newHttpEngine)
+    if (func_HttpURLConnectionImpl_newHttpEngine) {
+      func_HttpURLConnectionImpl_newHttpEngine.implementation = function (method, streamAllocation, requestBody, priorResponse) {
+        var funcName = "HttpURLConnectionImpl.newHttpEngine"
+        var funcParaDict = {
+          "method": method,
+          "streamAllocation": streamAllocation,
+          "requestBody": requestBody,
+          "priorResponse": priorResponse,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retHttpEngine = this.newHttpEngine(method, streamAllocation, requestBody, priorResponse)
+        if (isShowLog) {
+          console.log(`${funcName} => retHttpEngine=${retHttpEngine}`)
+        }
+        return retHttpEngine
+      }
+    }
+
+    // private String defaultUserAgent() {
+    // private java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.defaultUserAgent()
+    var func_HttpURLConnectionImpl_defaultUserAgent = cls_HttpURLConnectionImpl.defaultUserAgent
+    console.log("func_HttpURLConnectionImpl_defaultUserAgent=" + func_HttpURLConnectionImpl_defaultUserAgent)
+    if (func_HttpURLConnectionImpl_defaultUserAgent) {
+      func_HttpURLConnectionImpl_defaultUserAgent.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.defaultUserAgent"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retString = this.defaultUserAgent()
+        if (isShowLog) {
+          console.log(`${funcName} => retString=${retString}`)
+        }
+        return retString
+      }
+    }
+
+    // private HttpEngine getResponse() throws IOException {
+    // private com.android.okhttp.internal.http.HttpEngine com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponse() throws java.io.IOException
+    var func_HttpURLConnectionImpl_getResponse = cls_HttpURLConnectionImpl.getResponse
+    console.log("func_HttpURLConnectionImpl_getResponse=" + func_HttpURLConnectionImpl_getResponse)
+    if (func_HttpURLConnectionImpl_getResponse) {
+      func_HttpURLConnectionImpl_getResponse.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getResponse"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var curHttpEngine = this.getResponse()
+        if (isShowLog) {
+          console.log(`${funcName} => curHttpEngine=${curHttpEngine}`)
+        }
+
+        // // var reqBodyOutStream = curHttpEngine.requestBodyOut.value
+        // // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
+        // // var reqBodyOutStream = this.requestBodyOut
+        // var retryableSink = curHttpEngine.getRequestBody()
+        // var clsName_RetryableSink = FridaAndroidUtil.getJavaClassName(retryableSink)
+        // console.log("retryableSink=" + retryableSink + ", clsName=" + clsName_RetryableSink)
+        // // retryableSink=[object Object], clsName=com.android.okhttp.internal.http.RetryableSink
+        // // FridaAndroidUtil.printClassAllMethodsFields(clsName_RetryableSink)
+
+        // var curRequest = curHttpEngine.getRequest()
+        // console.log("curRequest=" + curRequest + ", clsName=" + FridaAndroidUtil.getJavaClassName(curRequest))
+
+        // FridaAndroidUtil.printClass_RetryableSink(retryableSink)
+
+        return curHttpEngine
+      }
+    }
+
+    // private boolean execute(boolean readResponse) throws IOException {
+    // private boolean com.android.okhttp.internal.huc.HttpURLConnectionImpl.execute(boolean) throws java.io.IOException
+    var func_HttpURLConnectionImpl_execute = cls_HttpURLConnectionImpl.execute
+    console.log("func_HttpURLConnectionImpl_execute=" + func_HttpURLConnectionImpl_execute)
+    if (func_HttpURLConnectionImpl_execute) {
+      func_HttpURLConnectionImpl_execute.implementation = function (readResponse) {
+        var funcName = "HttpURLConnectionImpl.execute"
+        var funcParaDict = {
+          "readResponse": readResponse,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retBoolean = this.execute(readResponse)
+        if (isShowLog) {
+          console.log(`${funcName} => retBoolean=${retBoolean}`)
+        }
+        return retBoolean
+      }
+    }
+
+    // @Override public final boolean usingProxy() {
+    // public final boolean com.android.okhttp.internal.huc.HttpURLConnectionImpl.usingProxy()
+    var func_HttpURLConnectionImpl_usingProxy = cls_HttpURLConnectionImpl.usingProxy
+    console.log("func_HttpURLConnectionImpl_usingProxy=" + func_HttpURLConnectionImpl_usingProxy)
+    if (func_HttpURLConnectionImpl_usingProxy) {
+      func_HttpURLConnectionImpl_usingProxy.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.usingProxy"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retBoolean = this.usingProxy()
+        if (isShowLog) {
+          console.log(`${funcName} => retBoolean=${retBoolean}`)
+        }
+        return retBoolean
+      }
+    }
+
+    // @Override public String getResponseMessage() throws IOException {
+    // public java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponseMessage() throws java.io.IOException
+    var func_HttpURLConnectionImpl_getResponseMessage = cls_HttpURLConnectionImpl.getResponseMessage
+    console.log("func_HttpURLConnectionImpl_getResponseMessage=" + func_HttpURLConnectionImpl_getResponseMessage)
+    if (func_HttpURLConnectionImpl_getResponseMessage) {
+      func_HttpURLConnectionImpl_getResponseMessage.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getResponseMessage"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        var retResponseMessage = this.getResponseMessage()
+        if (isShowLog) {
+          console.log(`${funcName} => retResponseMessage=${retResponseMessage}`)
+        }
+        return retResponseMessage
+      }
+    }
+
+    // @Override public final int getResponseCode() throws IOException {
+    // public final int com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponseCode() throws java.io.IOException
+    var func_HttpURLConnectionImpl_getResponseCode = cls_HttpURLConnectionImpl.getResponseCode
+    console.log("func_HttpURLConnectionImpl_getResponseCode=" + func_HttpURLConnectionImpl_getResponseCode)
+    if (func_HttpURLConnectionImpl_getResponseCode) {
+      func_HttpURLConnectionImpl_getResponseCode.implementation = function () {
+        var funcName = "HttpURLConnectionImpl.getResponseCode"
+        var funcParaDict = {}
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        // FridaAndroidUtil.printClass_HttpOrHttpsURLConnectionImpl(this)
+        var retResponseCode = this.getResponseCode()
+        if (isShowLog) {
+          console.log(`${funcName} => retResponseCode=${retResponseCode}`)
+        }
+
+        // // get request body data
+        // var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
+        // console.log("newBaos=" + newBaos + ", clsName=" + FridaAndroidUtil.getJavaClassName(newBaos))
+
+        // // var reqBodyOutStream = this.getOutputStream()
+        // // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
+        // // newBaos.writeTo(reqBodyOutStream)
+
+        // var reqBodyRbs = this.getOutputStream() // RealBufferedSink
+        // console.log("reqBodyRbs=" + reqBodyRbs + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbs))
+
+        // // var reqBodyRbsOutStream = reqBodyRbs.outputStream() // OutputStream
+        // // console.log("reqBodyRbsOutStream=" + reqBodyRbsOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbsOutStream))
+        // // newBaos.writeTo(reqBodyRbsOutStream)
+
+        // var rbsSize = reqBodyRbs.size
+        // console.log("rbsSize=" + rbsSize)
+        // var rbsBuffer = reqBodyRbs.buffer
+        // console.log("rbsBuffer=" + rbsBuffer + ", clsName=" + FridaAndroidUtil.getJavaClassName(rbsBuffer))
+
+        // var okBufferSize = rbsBuffer.size
+        // console.log("okBufferSize=" + okBufferSize)
+        // var okBufferHead = rbsBuffer.head
+        // console.log("okBufferHead=" + okBufferHead + ", clsName=" + FridaAndroidUtil.getJavaClassName(okBufferHead))
+
+        // var reqBodyByteArr = newBaos.toByteArray()
+        // console.log("reqBodyByteArr=" + reqBodyByteArr + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyByteArr))
+
+        return retResponseCode
+      }
+    }
+
+    // @Override public final void setRequestProperty(String field, String newValue) {
+    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setRequestProperty(java.lang.String,java.lang.String)
+    var func_HttpURLConnectionImpl_setRequestProperty = cls_HttpURLConnectionImpl.setRequestProperty
+    console.log("func_HttpURLConnectionImpl_setRequestProperty=" + func_HttpURLConnectionImpl_setRequestProperty)
+    if (func_HttpURLConnectionImpl_setRequestProperty) {
+      func_HttpURLConnectionImpl_setRequestProperty.implementation = function (field, newValue) {
+        var funcName = "HttpURLConnectionImpl.setRequestProperty"
+        var funcParaDict = {
+          "field": field,
+          "newValue": newValue,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setRequestProperty(field, newValue)
+        return
+      }
+    }
+
+    // @Override public void setIfModifiedSince(long newValue) {
+    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setIfModifiedSince(long)
+    var func_HttpURLConnectionImpl_setIfModifiedSince = cls_HttpURLConnectionImpl.setIfModifiedSince
+    console.log("func_HttpURLConnectionImpl_setIfModifiedSince=" + func_HttpURLConnectionImpl_setIfModifiedSince)
+    if (func_HttpURLConnectionImpl_setIfModifiedSince) {
+      func_HttpURLConnectionImpl_setIfModifiedSince.implementation = function (newValue) {
+        var funcName = "HttpURLConnectionImpl.setIfModifiedSince"
+        var funcParaDict = {
+          "newValue": newValue,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setIfModifiedSince(newValue)
+        return
+      }
+    }
+
+    // @Override public final void addRequestProperty(String field, String value) {
+    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.addRequestProperty(java.lang.String,java.lang.String)
+    var func_HttpURLConnectionImpl_addRequestProperty = cls_HttpURLConnectionImpl.addRequestProperty
+    console.log("func_HttpURLConnectionImpl_addRequestProperty=" + func_HttpURLConnectionImpl_addRequestProperty)
+    if (func_HttpURLConnectionImpl_addRequestProperty) {
+      func_HttpURLConnectionImpl_addRequestProperty.implementation = function (field, value) {
+        var funcName = "HttpURLConnectionImpl.addRequestProperty"
+        var funcParaDict = {
+          "field": field,
+          "value": value,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.addRequestProperty(field, value)
+        return
+      }
+    }
+
+    // private void setProtocols(String protocolsString, boolean append) {
+    // private void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setProtocols(java.lang.String,boolean)
+    var func_HttpURLConnectionImpl_setProtocols = cls_HttpURLConnectionImpl.setProtocols
+    console.log("func_HttpURLConnectionImpl_setProtocols=" + func_HttpURLConnectionImpl_setProtocols)
+    if (func_HttpURLConnectionImpl_setProtocols) {
+      func_HttpURLConnectionImpl_setProtocols.implementation = function (protocolsString, append) {
+        var funcName = "HttpURLConnectionImpl.setProtocols"
+        var funcParaDict = {
+          "protocolsString": protocolsString,
+          "append": append,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setProtocols(protocolsString, append)
+        return
+      }
+    }
+
+    // @Override public void setRequestMethod(String method) throws ProtocolException {
+    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setRequestMethod(java.lang.String) throws java.net.ProtocolException
+    var func_HttpURLConnectionImpl_setRequestMethod = cls_HttpURLConnectionImpl.setRequestMethod
+    console.log("func_HttpURLConnectionImpl_setRequestMethod=" + func_HttpURLConnectionImpl_setRequestMethod)
+    if (func_HttpURLConnectionImpl_setRequestMethod) {
+      func_HttpURLConnectionImpl_setRequestMethod.implementation = function (method) {
+        var funcName = "HttpURLConnectionImpl.setRequestMethod"
+        var funcParaDict = {
+          "method": method,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setRequestMethod(method)
+        return
+      }
+    }
+
+    // @Override public void setFixedLengthStreamingMode(int contentLength) {
+    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setFixedLengthStreamingMode(int)
+    var func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i = cls_HttpURLConnectionImpl.setFixedLengthStreamingMode.overload("int")
+    console.log("func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i=" + func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i)
+    if (func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i) {
+      func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i.implementation = function (contentLength) {
+        var funcName = "HttpURLConnectionImpl.setFixedLengthStreamingMode(int)"
+        var funcParaDict = {
+          "contentLength": contentLength,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setFixedLengthStreamingMode(contentLength)
+        return
+      }
+    }
+
+    // @Override public void setFixedLengthStreamingMode(long contentLength) {
+    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setFixedLengthStreamingMode(long)
+    var func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l = cls_HttpURLConnectionImpl.setFixedLengthStreamingMode.overload("long")
+    console.log("func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l=" + func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l)
+    if (func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l) {
+      func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l.implementation = function (contentLength) {
+        var funcName = "HttpURLConnectionImpl.setFixedLengthStreamingMode"
+        var funcParaDict = {
+          "contentLength": contentLength,
+        }
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setFixedLengthStreamingMode(contentLength)
+        return
+      }
+    }
+  }
+
+  static HttpURLConnection(callback_isShowLog=null) {
     // FridaAndroidUtil.printClassAllMethodsFields(FridaAndroidUtil.clsName_HttpURLConnection)
 
     var cls_HttpURLConnection = Java.use(FridaAndroidUtil.clsName_HttpURLConnection)
@@ -792,6 +1510,21 @@ class FridaHookAndroidJava {
 
     //var  curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
     var curLogFunc = FridaAndroidUtil.printFunctionCallStr
+
+    // static boolean getFollowRedirects()
+    // public static boolean java.net.HttpURLConnection.getFollowRedirects()
+    var func_HttpURLConnection_getFollowRedirects = cls_HttpURLConnection.getFollowRedirects
+    console.log("func_HttpURLConnection_getFollowRedirects=" + func_HttpURLConnection_getFollowRedirects)
+    func_HttpURLConnection_getFollowRedirects.implementation = function () {
+      var funcName = "HttpURLConnection.getFollowRedirects"
+      var funcParaDict = {}
+      var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, FridaAndroidUtil.printFunctionCallAndStack, callback_isShowLog)
+      var retFollowRedirects = this.getFollowRedirects()
+      if (isShowLog) {
+        console.log(`${funcName} => retFollowRedirects: type=${typeof retFollowRedirects},val=${retFollowRedirects}`)
+      }
+      return retFollowRedirects
+    }
 
     // abstract void disconnect()
     // public abstract void java.net.HttpURLConnection.disconnect()
@@ -801,9 +1534,10 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_disconnect.implementation = function () {
         var funcName = "HttpURLConnection.disconnect"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        return this.disconnect()
+        // curLogFunc(funcName, funcParaDict)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.disconnect()
+        return
       }
     }
 
@@ -815,27 +1549,12 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getErrorStream.implementation = function () {
         var funcName = "HttpURLConnection.getErrorStream"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retErrorStream = this.getErrorStream()
-        console.log("HttpURLConnection.getErrorStream => retErrorStream=" + retErrorStream)
+        if (isShowLog) {
+          console.log(`${funcName} => retErrorStream=${retErrorStream}`)
+        }
         return retErrorStream
-      }
-    }
-
-    // static boolean getFollowRedirects()
-    // public static boolean java.net.HttpURLConnection.getFollowRedirects()
-    var func_HttpURLConnection_getFollowRedirects = cls_HttpURLConnection.getFollowRedirects
-    console.log("func_HttpURLConnection_getFollowRedirects=" + func_HttpURLConnection_getFollowRedirects)
-    if (func_HttpURLConnection_getFollowRedirects) {
-      func_HttpURLConnection_getFollowRedirects.implementation = function () {
-        var funcName = "HttpURLConnection.getFollowRedirects"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retFollowRedirects = this.getFollowRedirects()
-        console.log("HttpURLConnection.getFollowRedirects => retFollowRedirects=" + retFollowRedirects)
-        return retFollowRedirects
       }
     }
 
@@ -849,10 +1568,11 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "n": n,
         }
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retHeaderField = this.getHeaderField(n)
-        console.log("HttpURLConnection.getHeaderField => retHeaderField=" + retHeaderField)
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaderField=${retHeaderField}`)
+        }
         return retHeaderField
       }
     }
@@ -868,10 +1588,11 @@ class FridaHookAndroidJava {
           "name": name,
           "Default": Default,
         }
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retHeaderFieldDate = this.getHeaderFieldDate(name, Default)
-        console.log("HttpURLConnection.getHeaderFieldDate => retHeaderFieldDate=" + retHeaderFieldDate)
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaderFieldDate=${retHeaderFieldDate}`)
+        }
         return retHeaderFieldDate
       }
     }
@@ -886,10 +1607,11 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "n": n,
         }
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retHeaderFieldKey = this.getHeaderFieldKey(n)
-        console.log("HttpURLConnection.getHeaderFieldKey => retHeaderFieldKey=" + retHeaderFieldKey)
+        if (isShowLog) {
+          console.log(`${funcName} => retHeaderFieldKey=${retHeaderFieldKey}`)
+        }
         return retHeaderFieldKey
       }
     }
@@ -902,10 +1624,11 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getInstanceFollowRedirects.implementation = function () {
         var funcName = "HttpURLConnection.getInstanceFollowRedirects"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retInstanceFollowRedirects = this.getInstanceFollowRedirects()
-        console.log("HttpURLConnection.getInstanceFollowRedirects => retInstanceFollowRedirects=" + retInstanceFollowRedirects)
+        if (isShowLog) {
+          console.log(`${funcName} => retInstanceFollowRedirects=${retInstanceFollowRedirects}`)
+        }
         return retInstanceFollowRedirects
       }
     }
@@ -918,10 +1641,11 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getPermission.implementation = function () {
         var funcName = "HttpURLConnection.getPermission"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retPermission = this.getPermission()
-        console.log("HttpURLConnection.getPermission => retPermission=" + retPermission)
+        if (isShowLog) {
+          console.log(`${funcName} => retPermission=${retPermission}`)
+        }
         return retPermission
       }
     }
@@ -934,10 +1658,11 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getRequestMethod.implementation = function () {
         var funcName = "HttpURLConnection.getRequestMethod"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retRequestMethod = this.getRequestMethod()
-        console.log("HttpURLConnection.getRequestMethod => retRequestMethod=" + retRequestMethod)
+        if (isShowLog) {
+          console.log(`${funcName} => retRequestMethod=${retRequestMethod}`)
+        }
         return retRequestMethod
       }
     }
@@ -950,11 +1675,12 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getResponseCode.implementation = function () {
         var funcName = "HttpURLConnection.getResponseCode"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retResponseCode = this.getResponseCode()
-        console.log("HttpURLConnection.getResponseCode => retResponseCode=" + retResponseCode)
-        return retResponseCode
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, FridaAndroidUtil.printFunctionCallAndStack, callback_isShowLog)
+        var respCode = this.getResponseCode()
+        if(isShowLog) {
+          console.log(`${funcName} => respCode=${respCode}`)
+        }
+        return respCode
       }
     }
 
@@ -966,10 +1692,11 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_getResponseMessage.implementation = function () {
         var funcName = "HttpURLConnection.getResponseMessage"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retResponseMessage = this.getResponseMessage()
-        console.log("HttpURLConnection.getResponseMessage => retResponseMessage=" + retResponseMessage)
+        if(isShowLog) {
+          console.log(`${funcName} => retResponseMessage=${retResponseMessage}`)
+        }
         return retResponseMessage
       }
     }
@@ -984,41 +1711,41 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "chunklen": chunklen,
         }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setChunkedStreamingMode(chunklen)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setChunkedStreamingMode(chunklen)
+        return
       }
     }
 
     // void setFixedLengthStreamingMode(int contentLength)
     // public void java.net.HttpURLConnection.setFixedLengthStreamingMode(int)
-    var func_HttpURLConnection_setFixedLengthStreamingMode = cls_HttpURLConnection.setFixedLengthStreamingMode.overload("int")
-    console.log("func_HttpURLConnection_setFixedLengthStreamingMode=" + func_HttpURLConnection_setFixedLengthStreamingMode)
-    if (func_HttpURLConnection_setFixedLengthStreamingMode) {
-      func_HttpURLConnection_setFixedLengthStreamingMode.implementation = function (contentLength) {
-        var funcName = "HttpURLConnection.setFixedLengthStreamingMode"
+    var func_HttpURLConnection_setFixedLengthStreamingMode_1pi = cls_HttpURLConnection.setFixedLengthStreamingMode.overload("int")
+    console.log("func_HttpURLConnection_setFixedLengthStreamingMode_1pi=" + func_HttpURLConnection_setFixedLengthStreamingMode_1pi)
+    if (func_HttpURLConnection_setFixedLengthStreamingMode_1pi) {
+      func_HttpURLConnection_setFixedLengthStreamingMode_1pi.implementation = function (contentLength) {
+        var funcName = "HttpURLConnection.setFixedLengthStreamingMode(int)"
         var funcParaDict = {
           "contentLength": contentLength,
         }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setFixedLengthStreamingMode(contentLength)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, FridaAndroidUtil.printFunctionCallAndStack, callback_isShowLog)
+        this.setFixedLengthStreamingMode(contentLength)
+        return
       }
     }
 
     // void setFixedLengthStreamingMode(long contentLength)
     // public void java.net.HttpURLConnection.setFixedLengthStreamingMode(long)
-    var func_HttpURLConnection_setFixedLengthStreamingMode = cls_HttpURLConnection.setFixedLengthStreamingMode.overload("long")
-    console.log("func_HttpURLConnection_setFixedLengthStreamingMode=" + func_HttpURLConnection_setFixedLengthStreamingMode)
-    if (func_HttpURLConnection_setFixedLengthStreamingMode) {
-      func_HttpURLConnection_setFixedLengthStreamingMode.implementation = function (contentLength) {
-        var funcName = "HttpURLConnection.setFixedLengthStreamingMode"
+    var func_HttpURLConnection_setFixedLengthStreamingMode_1pl = cls_HttpURLConnection.setFixedLengthStreamingMode.overload("long")
+    console.log("func_HttpURLConnection_setFixedLengthStreamingMode_1pl=" + func_HttpURLConnection_setFixedLengthStreamingMode_1pl)
+    if (func_HttpURLConnection_setFixedLengthStreamingMode_1pl) {
+      func_HttpURLConnection_setFixedLengthStreamingMode_1pl.implementation = function (contentLength) {
+        var funcName = "HttpURLConnection.setFixedLengthStreamingMode(long)"
         var funcParaDict = {
           "contentLength": contentLength,
         }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setFixedLengthStreamingMode(contentLength)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, FridaAndroidUtil.printFunctionCallAndStack, callback_isShowLog)
+        this.setFixedLengthStreamingMode(contentLength)
+        return
       }
     }
 
@@ -1032,9 +1759,9 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "set": set,
         }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setFollowRedirects(set)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setFollowRedirects(set)
+        return
       }
     }
 
@@ -1048,9 +1775,9 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "followRedirects": followRedirects,
         }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setInstanceFollowRedirects(followRedirects)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        this.setInstanceFollowRedirects(followRedirects)
+        return
       }
     }
 
@@ -1064,9 +1791,9 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "method": method,
         }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setRequestMethod(method)
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, FridaAndroidUtil.printFunctionCallAndStack, callback_isShowLog)
+        this.setRequestMethod(method)
+        return
       }
     }
 
@@ -1078,15 +1805,17 @@ class FridaHookAndroidJava {
       func_HttpURLConnection_usingProxy.implementation = function () {
         var funcName = "HttpURLConnection.usingProxy"
         var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
+        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
         var retBoolean = this.usingProxy()
-        console.log("HttpURLConnection.usingProxy => retBoolean=" + retBoolean)
+        if(isShowLog) {
+          console.log(`${funcName} => retBoolean=${retBoolean}`)
+        }
         return retBoolean
       }
     }
 
   }
+
 
   static IOException() {
     var clsName_IOException = "java.io.IOException"
@@ -1172,681 +1901,6 @@ class FridaHookAndroidJava {
     }
   }
 
-  static HttpURLConnectionImpl() {
-    var clsName_HttpURLConnectionImpl = "com.android.okhttp.internal.huc.HttpURLConnectionImpl"
-    // FridaAndroidUtil.printClassAllMethodsFields(clsName_HttpURLConnectionImpl)
-
-    var cls_HttpURLConnectionImpl = Java.use(clsName_HttpURLConnectionImpl)
-    console.log("cls_HttpURLConnectionImpl=" + cls_HttpURLConnectionImpl)
-
-    // const curLogFunc = FridaAndroidUtil.printFunctionCallAndStack
-    const curLogFunc = FridaAndroidUtil.printFunctionCallStr
-
-    // public HttpURLConnectionImpl(URL url, OkHttpClient client) {
-    // 
-    var func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p = cls_HttpURLConnectionImpl.$init.overload("java.net.URL", "com.android.okhttp.OkHttpClient")
-    console.log("func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p=" + func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p)
-    if (func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p) {
-      func_HttpURLConnectionImpl_HttpURLConnectionImpl_2p.implementation = function (url, client) {
-        var funcName = "HttpURLConnectionImpl(url,client)"
-        var funcParaDict = {
-          "url": url,
-          "client": client,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        this.$init(url, client)
-        var newHttpURLConnectionImpl_2p = this
-        console.log("HttpURLConnectionImpl(url,client) => newHttpURLConnectionImpl_2p=" + newHttpURLConnectionImpl_2p)
-        return
-      }
-    }
-
-    // public HttpURLConnectionImpl(URL url, OkHttpClient client, URLFilter urlFilter) {
-    // 
-    var func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p = cls_HttpURLConnectionImpl.$init.overload("java.net.URL", "com.android.okhttp.OkHttpClient", "com.android.okhttp.internal.URLFilter")
-    console.log("func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p=" + func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p)
-    if (func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p) {
-      func_HttpURLConnectionImpl_HttpURLConnectionImpl_3p.implementation = function (url, client, urlFilter) {
-        var funcName = "HttpURLConnectionImpl(url,client,urlFilter)"
-        var funcParaDict = {
-          "url": url,
-          "client": client,
-          "urlFilter": urlFilter,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        this.$init(url, client, urlFilter)
-        var newHttpURLConnectionImpl_3p = this
-        console.log("HttpURLConnectionImpl(url,client,urlFilter) => newHttpURLConnectionImpl_3p=" + newHttpURLConnectionImpl_3p)
-        return
-      }
-    }
-
-    // @Override public final void connect() throws IOException {
-    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.connect() throws java.io.IOException
-    var func_HttpURLConnectionImpl_connect = cls_HttpURLConnectionImpl.connect
-    console.log("func_HttpURLConnectionImpl_connect=" + func_HttpURLConnectionImpl_connect)
-    if (func_HttpURLConnectionImpl_connect) {
-      func_HttpURLConnectionImpl_connect.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.connect"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        this.connect()
-
-        return
-      }
-    }
-
-    // @Override public final void disconnect() {
-    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.disconnect()
-    var func_HttpURLConnectionImpl_disconnect = cls_HttpURLConnectionImpl.disconnect
-    console.log("func_HttpURLConnectionImpl_disconnect=" + func_HttpURLConnectionImpl_disconnect)
-    if (func_HttpURLConnectionImpl_disconnect) {
-      func_HttpURLConnectionImpl_disconnect.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.disconnect"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        return this.disconnect()
-      }
-    }
-
-    // @Override public final InputStream getErrorStream() {
-    // public final java.io.InputStream com.android.okhttp.internal.huc.HttpURLConnectionImpl.getErrorStream()
-    var func_HttpURLConnectionImpl_getErrorStream = cls_HttpURLConnectionImpl.getErrorStream
-    console.log("func_HttpURLConnectionImpl_getErrorStream=" + func_HttpURLConnectionImpl_getErrorStream)
-    if (func_HttpURLConnectionImpl_getErrorStream) {
-      func_HttpURLConnectionImpl_getErrorStream.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getErrorStream"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retErrorStream = this.getErrorStream()
-        console.log("HttpURLConnectionImpl.getErrorStream => retErrorStream=" + retErrorStream)
-        return retErrorStream
-      }
-    }
-
-    // private Headers getHeaders() throws IOException {
-    // private com.android.okhttp.Headers com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaders() throws java.io.IOException
-    var func_HttpURLConnectionImpl_getHeaders = cls_HttpURLConnectionImpl.getHeaders
-    console.log("func_HttpURLConnectionImpl_getHeaders=" + func_HttpURLConnectionImpl_getHeaders)
-    if (func_HttpURLConnectionImpl_getHeaders) {
-      func_HttpURLConnectionImpl_getHeaders.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getHeaders"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retHeaders = this.getHeaders()
-        console.log("HttpURLConnectionImpl.getHeaders => retHeaders=" + retHeaders)
-        return retHeaders
-      }
-    }
-
-    // private static String responseSourceHeader(Response response) {
-    // private static java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.responseSourceHeader(com.android.okhttp.Response)
-    var func_HttpURLConnectionImpl_responseSourceHeader = cls_HttpURLConnectionImpl.responseSourceHeader
-    console.log("func_HttpURLConnectionImpl_responseSourceHeader=" + func_HttpURLConnectionImpl_responseSourceHeader)
-    if (func_HttpURLConnectionImpl_responseSourceHeader) {
-      func_HttpURLConnectionImpl_responseSourceHeader.implementation = function (response) {
-        var funcName = "HttpURLConnectionImpl.responseSourceHeader"
-        var funcParaDict = {
-          "response": response,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        var retString = this.responseSourceHeader(response)
-        console.log("HttpURLConnectionImpl.responseSourceHeader => retString=" + retString)
-        return retString
-      }
-    }
-
-    // @Override public final String getHeaderField(int position) {
-    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderField(int)
-    var func_HttpURLConnectionImpl_getHeaderField_i = cls_HttpURLConnectionImpl.getHeaderField.overload("int")
-    console.log("func_HttpURLConnectionImpl_getHeaderField_i=" + func_HttpURLConnectionImpl_getHeaderField_i)
-    if (func_HttpURLConnectionImpl_getHeaderField_i) {
-      func_HttpURLConnectionImpl_getHeaderField_i.implementation = function (position) {
-        var funcName = "HttpURLConnectionImpl.getHeaderField(position)"
-        var funcParaDict = {
-          "position": position,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        var retHeaderField_i = this.getHeaderField(position)
-        console.log("HttpURLConnectionImpl.getHeaderField(position) => retHeaderField_i=" + retHeaderField_i)
-        return retHeaderField_i
-      }
-    }
-
-    // @Override public final String getHeaderField(String fieldName) {
-    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderField(java.lang.String)
-    var func_HttpURLConnectionImpl_getHeaderField_str = cls_HttpURLConnectionImpl.getHeaderField.overload("java.lang.String")
-    console.log("func_HttpURLConnectionImpl_getHeaderField_str=" + func_HttpURLConnectionImpl_getHeaderField_str)
-    if (func_HttpURLConnectionImpl_getHeaderField_str) {
-      func_HttpURLConnectionImpl_getHeaderField_str.implementation = function (fieldName) {
-        var funcName = "HttpURLConnectionImpl.getHeaderField(fieldName)"
-        var funcParaDict = {
-          "fieldName": fieldName,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        var retHeaderField_str = this.getHeaderField(fieldName)
-        console.log("HttpURLConnectionImpl.getHeaderField(fieldName) => retHeaderField_str=" + retHeaderField_str)
-        return retHeaderField_str
-      }
-    }
-
-    // @Override public final String getHeaderFieldKey(int position) {
-    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderFieldKey(int)
-    var func_HttpURLConnectionImpl_getHeaderFieldKey = cls_HttpURLConnectionImpl.getHeaderFieldKey
-    console.log("func_HttpURLConnectionImpl_getHeaderFieldKey=" + func_HttpURLConnectionImpl_getHeaderFieldKey)
-    if (func_HttpURLConnectionImpl_getHeaderFieldKey) {
-      func_HttpURLConnectionImpl_getHeaderFieldKey.implementation = function (position) {
-        var funcName = "HttpURLConnectionImpl.getHeaderFieldKey"
-        var funcParaDict = {
-          "position": position,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        var retHeaderFieldKey = this.getHeaderFieldKey(position)
-        console.log("HttpURLConnectionImpl.getHeaderFieldKey => retHeaderFieldKey=" + retHeaderFieldKey)
-        return retHeaderFieldKey
-      }
-    }
-
-    // @Override public final Map<String, List<String>> getHeaderFields() {
-    // public final java.util.Map com.android.okhttp.internal.huc.HttpURLConnectionImpl.getHeaderFields()
-    var func_HttpURLConnectionImpl_getHeaderFields = cls_HttpURLConnectionImpl.getHeaderFields
-    console.log("func_HttpURLConnectionImpl_getHeaderFields=" + func_HttpURLConnectionImpl_getHeaderFields)
-    if (func_HttpURLConnectionImpl_getHeaderFields) {
-      func_HttpURLConnectionImpl_getHeaderFields.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getHeaderFields"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retHeaderFields = this.getHeaderFields()
-        console.log("HttpURLConnectionImpl.getHeaderFields => retHeaderFields=" + retHeaderFields)
-        return retHeaderFields
-      }
-    }
-
-    // @Override public final Map<String, List<String>> getRequestProperties() {
-    // public final java.util.Map com.android.okhttp.internal.huc.HttpURLConnectionImpl.getRequestProperties()
-    var func_HttpURLConnectionImpl_getRequestProperties = cls_HttpURLConnectionImpl.getRequestProperties
-    console.log("func_HttpURLConnectionImpl_getRequestProperties=" + func_HttpURLConnectionImpl_getRequestProperties)
-    if (func_HttpURLConnectionImpl_getRequestProperties) {
-      func_HttpURLConnectionImpl_getRequestProperties.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getRequestProperties"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retRequestProperties = this.getRequestProperties()
-        console.log("HttpURLConnectionImpl.getRequestProperties => retRequestProperties=" + retRequestProperties)
-        return retRequestProperties
-      }
-    }
-
-    // @Override public final InputStream getInputStream() throws IOException {
-    // public final java.io.InputStream com.android.okhttp.internal.huc.HttpURLConnectionImpl.getInputStream() throws java.io.IOException
-    var func_HttpURLConnectionImpl_getInputStream = cls_HttpURLConnectionImpl.getInputStream
-    console.log("func_HttpURLConnectionImpl_getInputStream=" + func_HttpURLConnectionImpl_getInputStream)
-    if (func_HttpURLConnectionImpl_getInputStream) {
-      func_HttpURLConnectionImpl_getInputStream.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getInputStream"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retInputStream = this.getInputStream()
-        console.log("HttpURLConnectionImpl.getInputStream => retInputStream=" + retInputStream)
-        return retInputStream
-      }
-    }
-
-    // @Override public final OutputStream getOutputStream() throws IOException {
-    // public final java.io.OutputStream com.android.okhttp.internal.huc.HttpURLConnectionImpl.getOutputStream() throws java.io.IOException
-    var func_HttpURLConnectionImpl_getOutputStream = cls_HttpURLConnectionImpl.getOutputStream
-    console.log("func_HttpURLConnectionImpl_getOutputStream=" + func_HttpURLConnectionImpl_getOutputStream)
-    if (func_HttpURLConnectionImpl_getOutputStream) {
-      func_HttpURLConnectionImpl_getOutputStream.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getOutputStream"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retOutputStream = this.getOutputStream()
-        console.log("HttpURLConnectionImpl.getOutputStream => retOutputStream=" + retOutputStream)
-        return retOutputStream
-      }
-    }
-
-    // @Override public final Permission getPermission() throws IOException {
-    // public final java.security.Permission com.android.okhttp.internal.huc.HttpURLConnectionImpl.getPermission() throws java.io.IOException
-    var func_HttpURLConnectionImpl_getPermission = cls_HttpURLConnectionImpl.getPermission
-    console.log("func_HttpURLConnectionImpl_getPermission=" + func_HttpURLConnectionImpl_getPermission)
-    if (func_HttpURLConnectionImpl_getPermission) {
-      func_HttpURLConnectionImpl_getPermission.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getPermission"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retPermission = this.getPermission()
-        console.log("HttpURLConnectionImpl.getPermission => retPermission=" + retPermission)
-        return retPermission
-      }
-    }
-
-    // @Override public final String getRequestProperty(String field) {
-    // public final java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getRequestProperty(java.lang.String)
-    var func_HttpURLConnectionImpl_getRequestProperty = cls_HttpURLConnectionImpl.getRequestProperty
-    console.log("func_HttpURLConnectionImpl_getRequestProperty=" + func_HttpURLConnectionImpl_getRequestProperty)
-    if (func_HttpURLConnectionImpl_getRequestProperty) {
-      func_HttpURLConnectionImpl_getRequestProperty.implementation = function (field) {
-        var funcName = "HttpURLConnectionImpl.getRequestProperty"
-        var funcParaDict = {
-          "field": field,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        var retRequestProperty = this.getRequestProperty(field)
-        console.log("HttpURLConnectionImpl.getRequestProperty => retRequestProperty=" + retRequestProperty)
-        return retRequestProperty
-      }
-    }
-
-    // @Override public void setConnectTimeout(int timeoutMillis) {
-    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setConnectTimeout(int)
-    var func_HttpURLConnectionImpl_setConnectTimeout = cls_HttpURLConnectionImpl.setConnectTimeout
-    console.log("func_HttpURLConnectionImpl_setConnectTimeout=" + func_HttpURLConnectionImpl_setConnectTimeout)
-    if (func_HttpURLConnectionImpl_setConnectTimeout) {
-      func_HttpURLConnectionImpl_setConnectTimeout.implementation = function (timeoutMillis) {
-        var funcName = "HttpURLConnectionImpl.setConnectTimeout"
-        var funcParaDict = {
-          "timeoutMillis": timeoutMillis,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setConnectTimeout(timeoutMillis)
-      }
-    }
-
-    // public void setInstanceFollowRedirects(boolean followRedirects) {
-    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setInstanceFollowRedirects(boolean)
-    var func_HttpURLConnectionImpl_setInstanceFollowRedirects = cls_HttpURLConnectionImpl.setInstanceFollowRedirects
-    console.log("func_HttpURLConnectionImpl_setInstanceFollowRedirects=" + func_HttpURLConnectionImpl_setInstanceFollowRedirects)
-    if (func_HttpURLConnectionImpl_setInstanceFollowRedirects) {
-      func_HttpURLConnectionImpl_setInstanceFollowRedirects.implementation = function (followRedirects) {
-        var funcName = "HttpURLConnectionImpl.setInstanceFollowRedirects"
-        var funcParaDict = {
-          "followRedirects": followRedirects,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setInstanceFollowRedirects(followRedirects)
-      }
-    }
-
-    // @Override public boolean getInstanceFollowRedirects() {
-    // public boolean com.android.okhttp.internal.huc.HttpURLConnectionImpl.getInstanceFollowRedirects()
-    var func_HttpURLConnectionImpl_getInstanceFollowRedirects = cls_HttpURLConnectionImpl.getInstanceFollowRedirects
-    console.log("func_HttpURLConnectionImpl_getInstanceFollowRedirects=" + func_HttpURLConnectionImpl_getInstanceFollowRedirects)
-    if (func_HttpURLConnectionImpl_getInstanceFollowRedirects) {
-      func_HttpURLConnectionImpl_getInstanceFollowRedirects.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getInstanceFollowRedirects"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retInstanceFollowRedirects = this.getInstanceFollowRedirects()
-        console.log("HttpURLConnectionImpl.getInstanceFollowRedirects => retInstanceFollowRedirects=" + retInstanceFollowRedirects)
-        return retInstanceFollowRedirects
-      }
-    }
-
-    // @Override public int getConnectTimeout() {
-    // public int com.android.okhttp.internal.huc.HttpURLConnectionImpl.getConnectTimeout()
-    var func_HttpURLConnectionImpl_getConnectTimeout = cls_HttpURLConnectionImpl.getConnectTimeout
-    console.log("func_HttpURLConnectionImpl_getConnectTimeout=" + func_HttpURLConnectionImpl_getConnectTimeout)
-    if (func_HttpURLConnectionImpl_getConnectTimeout) {
-      func_HttpURLConnectionImpl_getConnectTimeout.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getConnectTimeout"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retConnectTimeout = this.getConnectTimeout()
-        console.log("HttpURLConnectionImpl.getConnectTimeout => retConnectTimeout=" + retConnectTimeout)
-        return retConnectTimeout
-      }
-    }
-
-    // @Override public void setReadTimeout(int timeoutMillis) {
-    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setReadTimeout(int)
-    var func_HttpURLConnectionImpl_setReadTimeout = cls_HttpURLConnectionImpl.setReadTimeout
-    console.log("func_HttpURLConnectionImpl_setReadTimeout=" + func_HttpURLConnectionImpl_setReadTimeout)
-    if (func_HttpURLConnectionImpl_setReadTimeout) {
-      func_HttpURLConnectionImpl_setReadTimeout.implementation = function (timeoutMillis) {
-        var funcName = "HttpURLConnectionImpl.setReadTimeout"
-        var funcParaDict = {
-          "timeoutMillis": timeoutMillis,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setReadTimeout(timeoutMillis)
-      }
-    }
-
-    // @Override public int getReadTimeout() {
-    // public int com.android.okhttp.internal.huc.HttpURLConnectionImpl.getReadTimeout()
-    var func_HttpURLConnectionImpl_getReadTimeout = cls_HttpURLConnectionImpl.getReadTimeout
-    console.log("func_HttpURLConnectionImpl_getReadTimeout=" + func_HttpURLConnectionImpl_getReadTimeout)
-    if (func_HttpURLConnectionImpl_getReadTimeout) {
-      func_HttpURLConnectionImpl_getReadTimeout.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getReadTimeout"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retReadTimeout = this.getReadTimeout()
-        console.log("HttpURLConnectionImpl.getReadTimeout => retReadTimeout=" + retReadTimeout)
-        return retReadTimeout
-      }
-    }
-
-    // private void initHttpEngine() throws IOException {
-    // private void com.android.okhttp.internal.huc.HttpURLConnectionImpl.initHttpEngine() throws java.io.IOException
-    var func_HttpURLConnectionImpl_initHttpEngine = cls_HttpURLConnectionImpl.initHttpEngine
-    console.log("func_HttpURLConnectionImpl_initHttpEngine=" + func_HttpURLConnectionImpl_initHttpEngine)
-    if (func_HttpURLConnectionImpl_initHttpEngine) {
-      func_HttpURLConnectionImpl_initHttpEngine.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.initHttpEngine"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        return this.initHttpEngine()
-      }
-    }
-
-    // private HttpEngine newHttpEngine(String method, StreamAllocation streamAllocation, RetryableSink requestBody, Response priorResponse) throws MalformedURLException, UnknownHostException {
-    // private com.android.okhttp.internal.http.HttpEngine com.android.okhttp.internal.huc.HttpURLConnectionImpl.newHttpEngine(java.lang.String,com.android.okhttp.internal.http.StreamAllocation,com.android.okhttp.internal.http.RetryableSink,com.android.okhttp.Response) throws java.net.MalformedURLException,java.net.UnknownHostException
-    var func_HttpURLConnectionImpl_newHttpEngine = cls_HttpURLConnectionImpl.newHttpEngine
-    console.log("func_HttpURLConnectionImpl_newHttpEngine=" + func_HttpURLConnectionImpl_newHttpEngine)
-    if (func_HttpURLConnectionImpl_newHttpEngine) {
-      func_HttpURLConnectionImpl_newHttpEngine.implementation = function (method, streamAllocation, requestBody, priorResponse) {
-        var funcName = "HttpURLConnectionImpl.newHttpEngine"
-        var funcParaDict = {
-          "method": method,
-          "streamAllocation": streamAllocation,
-          "requestBody": requestBody,
-          "priorResponse": priorResponse,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        var retHttpEngine = this.newHttpEngine(method, streamAllocation, requestBody, priorResponse)
-        console.log("HttpURLConnectionImpl.newHttpEngine => retHttpEngine=" + retHttpEngine)
-        return retHttpEngine
-      }
-    }
-
-    // private String defaultUserAgent() {
-    // private java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.defaultUserAgent()
-    var func_HttpURLConnectionImpl_defaultUserAgent = cls_HttpURLConnectionImpl.defaultUserAgent
-    console.log("func_HttpURLConnectionImpl_defaultUserAgent=" + func_HttpURLConnectionImpl_defaultUserAgent)
-    if (func_HttpURLConnectionImpl_defaultUserAgent) {
-      func_HttpURLConnectionImpl_defaultUserAgent.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.defaultUserAgent"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retString = this.defaultUserAgent()
-        console.log("HttpURLConnectionImpl.defaultUserAgent => retString=" + retString)
-        return retString
-      }
-    }
-
-    // private HttpEngine getResponse() throws IOException {
-    // private com.android.okhttp.internal.http.HttpEngine com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponse() throws java.io.IOException
-    var func_HttpURLConnectionImpl_getResponse = cls_HttpURLConnectionImpl.getResponse
-    console.log("func_HttpURLConnectionImpl_getResponse=" + func_HttpURLConnectionImpl_getResponse)
-    if (func_HttpURLConnectionImpl_getResponse) {
-      func_HttpURLConnectionImpl_getResponse.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getResponse"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var curHttpEngine = this.getResponse()
-        console.log("HttpURLConnectionImpl.getResponse => curHttpEngine=" + curHttpEngine)
-
-        // // var reqBodyOutStream = curHttpEngine.requestBodyOut.value
-        // // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
-        // // var reqBodyOutStream = this.requestBodyOut
-        // var retryableSink = curHttpEngine.getRequestBody()
-        // var clsName_RetryableSink = FridaAndroidUtil.getJavaClassName(retryableSink)
-        // console.log("retryableSink=" + retryableSink + ", clsName=" + clsName_RetryableSink)
-        // // retryableSink=[object Object], clsName=com.android.okhttp.internal.http.RetryableSink
-        // // FridaAndroidUtil.printClassAllMethodsFields(clsName_RetryableSink)
-
-        // var curRequest = curHttpEngine.getRequest()
-        // console.log("curRequest=" + curRequest + ", clsName=" + FridaAndroidUtil.getJavaClassName(curRequest))
-
-        // FridaAndroidUtil.printClass_RetryableSink(retryableSink)
-
-        return curHttpEngine
-      }
-    }
-
-    // private boolean execute(boolean readResponse) throws IOException {
-    // private boolean com.android.okhttp.internal.huc.HttpURLConnectionImpl.execute(boolean) throws java.io.IOException
-    var func_HttpURLConnectionImpl_execute = cls_HttpURLConnectionImpl.execute
-    console.log("func_HttpURLConnectionImpl_execute=" + func_HttpURLConnectionImpl_execute)
-    if (func_HttpURLConnectionImpl_execute) {
-      func_HttpURLConnectionImpl_execute.implementation = function (readResponse) {
-        var funcName = "HttpURLConnectionImpl.execute"
-        var funcParaDict = {
-          "readResponse": readResponse,
-        }
-        // curLogFunc(funcName, funcParaDict)
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-        var retBoolean = this.execute(readResponse)
-        console.log("HttpURLConnectionImpl.execute => retBoolean=" + retBoolean)
-        return retBoolean
-      }
-    }
-
-    // @Override public final boolean usingProxy() {
-    // public final boolean com.android.okhttp.internal.huc.HttpURLConnectionImpl.usingProxy()
-    var func_HttpURLConnectionImpl_usingProxy = cls_HttpURLConnectionImpl.usingProxy
-    console.log("func_HttpURLConnectionImpl_usingProxy=" + func_HttpURLConnectionImpl_usingProxy)
-    if (func_HttpURLConnectionImpl_usingProxy) {
-      func_HttpURLConnectionImpl_usingProxy.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.usingProxy"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retBoolean = this.usingProxy()
-        console.log("HttpURLConnectionImpl.usingProxy => retBoolean=" + retBoolean)
-        return retBoolean
-      }
-    }
-
-    // @Override public String getResponseMessage() throws IOException {
-    // public java.lang.String com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponseMessage() throws java.io.IOException
-    var func_HttpURLConnectionImpl_getResponseMessage = cls_HttpURLConnectionImpl.getResponseMessage
-    console.log("func_HttpURLConnectionImpl_getResponseMessage=" + func_HttpURLConnectionImpl_getResponseMessage)
-    if (func_HttpURLConnectionImpl_getResponseMessage) {
-      func_HttpURLConnectionImpl_getResponseMessage.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getResponseMessage"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        var retResponseMessage = this.getResponseMessage()
-        console.log("HttpURLConnectionImpl.getResponseMessage => retResponseMessage=" + retResponseMessage)
-        return retResponseMessage
-      }
-    }
-
-    // @Override public final int getResponseCode() throws IOException {
-    // public final int com.android.okhttp.internal.huc.HttpURLConnectionImpl.getResponseCode() throws java.io.IOException
-    var func_HttpURLConnectionImpl_getResponseCode = cls_HttpURLConnectionImpl.getResponseCode
-    console.log("func_HttpURLConnectionImpl_getResponseCode=" + func_HttpURLConnectionImpl_getResponseCode)
-    if (func_HttpURLConnectionImpl_getResponseCode) {
-      func_HttpURLConnectionImpl_getResponseCode.implementation = function () {
-        var funcName = "HttpURLConnectionImpl.getResponseCode"
-        var funcParaDict = {}
-        curLogFunc(funcName, funcParaDict)
-
-        // FridaAndroidUtil.printClass_HttpOrHttpsURLConnectionImpl(this)
-        var retResponseCode = this.getResponseCode()
-        console.log(funcName + " => retResponseCode=" + retResponseCode)
-
-        // // get request body data
-        // var newBaos = FridaAndroidUtil.ByteArrayOutputStream.$new()
-        // console.log("newBaos=" + newBaos + ", clsName=" + FridaAndroidUtil.getJavaClassName(newBaos))
-
-        // // var reqBodyOutStream = this.getOutputStream()
-        // // console.log("reqBodyOutStream=" + reqBodyOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyOutStream))
-        // // newBaos.writeTo(reqBodyOutStream)
-
-        // var reqBodyRbs = this.getOutputStream() // RealBufferedSink
-        // console.log("reqBodyRbs=" + reqBodyRbs + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbs))
-
-        // // var reqBodyRbsOutStream = reqBodyRbs.outputStream() // OutputStream
-        // // console.log("reqBodyRbsOutStream=" + reqBodyRbsOutStream + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyRbsOutStream))
-        // // newBaos.writeTo(reqBodyRbsOutStream)
-
-        // var rbsSize = reqBodyRbs.size
-        // console.log("rbsSize=" + rbsSize)
-        // var rbsBuffer = reqBodyRbs.buffer
-        // console.log("rbsBuffer=" + rbsBuffer + ", clsName=" + FridaAndroidUtil.getJavaClassName(rbsBuffer))
-
-        // var okBufferSize = rbsBuffer.size
-        // console.log("okBufferSize=" + okBufferSize)
-        // var okBufferHead = rbsBuffer.head
-        // console.log("okBufferHead=" + okBufferHead + ", clsName=" + FridaAndroidUtil.getJavaClassName(okBufferHead))
-
-        // var reqBodyByteArr = newBaos.toByteArray()
-        // console.log("reqBodyByteArr=" + reqBodyByteArr + ", clsName=" + FridaAndroidUtil.getJavaClassName(reqBodyByteArr))
-
-        return retResponseCode
-      }
-    }
-
-    // @Override public final void setRequestProperty(String field, String newValue) {
-    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setRequestProperty(java.lang.String,java.lang.String)
-    var func_HttpURLConnectionImpl_setRequestProperty = cls_HttpURLConnectionImpl.setRequestProperty
-    console.log("func_HttpURLConnectionImpl_setRequestProperty=" + func_HttpURLConnectionImpl_setRequestProperty)
-    if (func_HttpURLConnectionImpl_setRequestProperty) {
-      func_HttpURLConnectionImpl_setRequestProperty.implementation = function (field, newValue) {
-        var funcName = "HttpURLConnectionImpl.setRequestProperty"
-        var funcParaDict = {
-          "field": field,
-          "newValue": newValue,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setRequestProperty(field, newValue)
-      }
-    }
-
-    // @Override public void setIfModifiedSince(long newValue) {
-    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setIfModifiedSince(long)
-    var func_HttpURLConnectionImpl_setIfModifiedSince = cls_HttpURLConnectionImpl.setIfModifiedSince
-    console.log("func_HttpURLConnectionImpl_setIfModifiedSince=" + func_HttpURLConnectionImpl_setIfModifiedSince)
-    if (func_HttpURLConnectionImpl_setIfModifiedSince) {
-      func_HttpURLConnectionImpl_setIfModifiedSince.implementation = function (newValue) {
-        var funcName = "HttpURLConnectionImpl.setIfModifiedSince"
-        var funcParaDict = {
-          "newValue": newValue,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setIfModifiedSince(newValue)
-      }
-    }
-
-    // @Override public final void addRequestProperty(String field, String value) {
-    // public final void com.android.okhttp.internal.huc.HttpURLConnectionImpl.addRequestProperty(java.lang.String,java.lang.String)
-    var func_HttpURLConnectionImpl_addRequestProperty = cls_HttpURLConnectionImpl.addRequestProperty
-    console.log("func_HttpURLConnectionImpl_addRequestProperty=" + func_HttpURLConnectionImpl_addRequestProperty)
-    if (func_HttpURLConnectionImpl_addRequestProperty) {
-      func_HttpURLConnectionImpl_addRequestProperty.implementation = function (field, value) {
-        var funcName = "HttpURLConnectionImpl.addRequestProperty"
-        var funcParaDict = {
-          "field": field,
-          "value": value,
-        }
-        // curLogFunc(funcName, funcParaDict)
-        FridaAndroidUtil.printFunctionCallAndStack(funcName, funcParaDict)
-
-        return this.addRequestProperty(field, value)
-      }
-    }
-
-    // private void setProtocols(String protocolsString, boolean append) {
-    // private void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setProtocols(java.lang.String,boolean)
-    var func_HttpURLConnectionImpl_setProtocols = cls_HttpURLConnectionImpl.setProtocols
-    console.log("func_HttpURLConnectionImpl_setProtocols=" + func_HttpURLConnectionImpl_setProtocols)
-    if (func_HttpURLConnectionImpl_setProtocols) {
-      func_HttpURLConnectionImpl_setProtocols.implementation = function (protocolsString, append) {
-        var funcName = "HttpURLConnectionImpl.setProtocols"
-        var funcParaDict = {
-          "protocolsString": protocolsString,
-          "append": append,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setProtocols(protocolsString, append)
-      }
-    }
-
-    // @Override public void setRequestMethod(String method) throws ProtocolException {
-    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setRequestMethod(java.lang.String) throws java.net.ProtocolException
-    var func_HttpURLConnectionImpl_setRequestMethod = cls_HttpURLConnectionImpl.setRequestMethod
-    console.log("func_HttpURLConnectionImpl_setRequestMethod=" + func_HttpURLConnectionImpl_setRequestMethod)
-    if (func_HttpURLConnectionImpl_setRequestMethod) {
-      func_HttpURLConnectionImpl_setRequestMethod.implementation = function (method) {
-        var funcName = "HttpURLConnectionImpl.setRequestMethod"
-        var funcParaDict = {
-          "method": method,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setRequestMethod(method)
-      }
-    }
-
-    // @Override public void setFixedLengthStreamingMode(int contentLength) {
-    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setFixedLengthStreamingMode(int)
-    var func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i = cls_HttpURLConnectionImpl.setFixedLengthStreamingMode.overload("int")
-    console.log("func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i=" + func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i)
-    if (func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i) {
-      func_HttpURLConnectionImpl_setFixedLengthStreamingMode_i.implementation = function (contentLength) {
-        var funcName = "HttpURLConnectionImpl.setFixedLengthStreamingMode(int)"
-        var funcParaDict = {
-          "contentLength": contentLength,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setFixedLengthStreamingMode(contentLength)
-      }
-    }
-
-    // @Override public void setFixedLengthStreamingMode(long contentLength) {
-    // public void com.android.okhttp.internal.huc.HttpURLConnectionImpl.setFixedLengthStreamingMode(long)
-    var func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l = cls_HttpURLConnectionImpl.setFixedLengthStreamingMode.overload("long")
-    console.log("func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l=" + func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l)
-    if (func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l) {
-      func_HttpURLConnectionImpl_setFixedLengthStreamingMode_l.implementation = function (contentLength) {
-        var funcName = "HttpURLConnectionImpl.setFixedLengthStreamingMode"
-        var funcParaDict = {
-          "contentLength": contentLength,
-        }
-        curLogFunc(funcName, funcParaDict)
-
-        return this.setFixedLengthStreamingMode(contentLength)
-      }
-    }
-  }
-
   static Bundle() {
     var clsName_Bundle = "android.os.Bundle"
     // FridaAndroidUtil.printClassAllMethodsFields(clsName_Bundle)
@@ -1894,10 +1948,10 @@ class FridaHookAndroidJava {
 
     // Bundle(PersistableBundle b)
     // Bundle(android.os.PersistableBundle)
-    var func_Bundle_Bundle_1pb = cls_Bundle.$init.overload("android.os.PersistableBundle")
-    console.log("func_Bundle_Bundle_1pb=" + func_Bundle_Bundle_1pb)
-    if (func_Bundle_Bundle_1pb) {
-      func_Bundle_Bundle_1pb.implementation = function (b) {
+    var func_Bundle_Bundle_1ppb = cls_Bundle.$init.overload("android.os.PersistableBundle")
+    console.log("func_Bundle_Bundle_1ppb=" + func_Bundle_Bundle_1ppb)
+    if (func_Bundle_Bundle_1ppb) {
+      func_Bundle_Bundle_1ppb.implementation = function (b) {
         var funcName = "Bundle_1pb"
         var funcParaDict = {
           "b": b,
