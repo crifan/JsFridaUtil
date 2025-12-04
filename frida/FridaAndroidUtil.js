@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251128
+	Updated: 20251204
 */
 
 // Frida Android Util
@@ -34,27 +34,39 @@ class FridaAndroidUtil {
   ]
 
   // const
-  static clsName_Message                      = "android.os.Message"
-  static clsName_Messenger                    = "android.os.Messenger"
+  static clsName_Long                         = "java.lang.Long"
+
+  static clsName_ByteArrayOutputStream        = "java.io.ByteArrayOutputStream"
+  static clsName_FileNotFoundException        = "java.io.FileNotFoundException"
+  static clsName_File                         = "java.io.File"
 
   static clsName_HttpURLConnection            = "java.net.HttpURLConnection"
   static clsName_URLConnection                = "java.net.URLConnection"
   static clsName_HttpsURLConnection           = "javax.net.ssl.HttpsURLConnection"
 
+  static clsName_SharedPreferencesImpl_EditorImpl = "android.app.SharedPreferencesImpl$EditorImpl"
+  static clsName_MemoryInfo                   = "android.app.ActivityManager.MemoryInfo"
+
+  static clsName_ConfigurationInfo            = "android.content.pm.ConfigurationInfo"
+  static clsName_Configuration                = "android.content.res.Configuration"
+  static clsName_FeatureInfo                  = "android.content.pm.FeatureInfo"
+
+  static clsName_Message                      = "android.os.Message"
+  static clsName_Messenger                    = "android.os.Messenger"
+  static clsName_Parcel                       = "android.os.Parcel"
+
+  static clsName_DisplayMetrics               = "android.util.DisplayMetrics"
+
+  static clsName_Buffer                       = "com.android.okhttp.okio.Buffer"
+  static clsName_RetryableSink                = "com.android.okhttp.internal.http.RetryableSink"
   static clsName_HttpURLConnectionImpl        = "com.android.okhttp.internal.huc.HttpURLConnectionImpl"
   static clsName_DelegatingHttpsURLConnection = "com.android.okhttp.internal.huc.DelegatingHttpsURLConnection"
   static clsName_HttpsURLConnectionImpl       = "com.android.okhttp.internal.huc.HttpsURLConnectionImpl"
   // static clsName_Headers_Builder              = "com.android.okhttp.internal.huc.Headers$Builder"
   static clsName_Headers_Builder              = "com.android.okhttp.Headers$Builder"
-  
 
   static clsName_CronetUrlRequest             = "org.chromium.net.impl.CronetUrlRequest"
-  static clsName_ByteArrayOutputStream        = "java.io.ByteArrayOutputStream"
-  static clsName_FileNotFoundException        = "java.io.FileNotFoundException"
-  static clsName_Long                         = "java.lang.Long"
-  static clsName_File                         = "java.io.File"
-  static clsName_Parcel                       = "android.os.Parcel"
-  static clsName_SharedPreferencesImpl_EditorImpl = "android.app.SharedPreferencesImpl$EditorImpl"
+
 
   // {env: {clazz: className} }
   static cacheDictEnvClazz = {}
@@ -151,11 +163,12 @@ class FridaAndroidUtil {
   /*-------------------- byte[] --------------------*/
 
   // convert (Java) byte[] to hex string
-  static bytesToHexStr(curBytes, separator=",", hasBracket=true, has0xPrefix=false, isUpperCase=true){
+  static bytesToHexStr(curBytes, separator=",", hasBracket=true, has0xPrefix=false, isUpperCase=true, isAddLenPrefix=true){
     var retAllHexStr = ""
     if(curBytes) {
       var hexStrList = []
-      // console.log(`curBytes.length=${curBytes.length}`)
+      var byteLen = curBytes.length
+      // console.log(`byteLen=${byteLen}`)
       for(var i = 0; i < curBytes.length; i++) {
         var curByte = curBytes[i]
         // console.log(`curByte=${curByte}`)
@@ -177,6 +190,10 @@ class FridaAndroidUtil {
       if (hasBracket) {
         retAllHexStr = `[${retAllHexStr}]`
       }
+
+      if(isAddLenPrefix) {
+        retAllHexStr = `<len=${byteLen}>${retAllHexStr}`
+      }
     }
 
     return retAllHexStr
@@ -185,7 +202,7 @@ class FridaAndroidUtil {
   /*-------------------- Long --------------------*/
 
   // print/convet Java long (maybe negtive) to (unsigned=positive long value) string
-  static printLongToStr(longVal){
+  static longToStr(longVal){
     var longStr = FridaAndroidUtil.Long.toUnsignedString(longVal)
     // console.log(`longStr: type=${typeof longStr}, val=${longStr}`)
     return longStr
@@ -237,149 +254,161 @@ class FridaAndroidUtil {
 
   /*-------------------- printClass --------------------*/
 
-  static printClassTemplate(className, inputObj, callback_printProps, prefixStr=""){
-    const FuncName = "printClass_" + className
-    const NewPrefStr = prefixStr ? (prefixStr + " ") : prefixStr
-    const PrefAndClsName = `${FuncName}: ${NewPrefStr}${className}`
+  static printClassTemplate(className, inputObj, callback_printProps, prefixStr="", fullClassName=""){
+    // console.log(`printClassTemplate: className=${className}, inputObj=${inputObj}, callback_printProps=${callback_printProps}, prefixStr=${prefixStr}, fullClassName=${fullClassName}`)
+    const PrintFuncName = "printClass_" + className
+    const NewPref = prefixStr ? (prefixStr + " ") : prefixStr
+    const PrefAndClassName = `${PrintFuncName}: ${NewPref}${className}`
     if (inputObj) {
-      var realClassName = FridaAndroidUtil.getJavaClassName(inputObj)
-      // console.log(`${PrefAndClsName}: realClassName=${realClassName}`)
-      if (realClassName === className) {
-        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, className)
-        // console.log(`${PrefAndClsName}: curObj=${curObj}`)
+      if (!fullClassName) {
+        fullClassName = className
+      }
+      // console.log(`${PrefAndClassName}: fullClassName=${fullClassName}`)
+      if (FridaAndroidUtil.isJavaClass(inputObj, fullClassName)) {
+        var realClassName = FridaAndroidUtil.getJavaClassName(inputObj)
+        // console.log(`${PrefAndClassName}: realClassName=${realClassName}`)
+        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, fullClassName)
+        // console.log(`${PrefAndClassName}: curObj=${curObj}`)
         var curClsNameValStr = FridaAndroidUtil.valueToNameStr(curObj)
-        var fullPrefixStr = `${PrefAndClsName}:${curClsNameValStr}:`
-        callback_printProps(curObj, fullPrefixStr, prefixStr)
+        var fullPrefix = `${PrefAndClassName}:${curClsNameValStr}:`
+        var strInfoDict = {
+          "className": className,
+          "fullClassName": fullClassName,
+          "realClassName": realClassName,
+          "printFuncName": PrintFuncName,
+          "origPref": prefixStr,
+          "newPref": NewPref,
+          "prefAndClassName": PrefAndClassName,
+          "fullPref": fullPrefix,
+          "curClsNameVal": curClsNameValStr,
+        }
+        callback_printProps(curObj, strInfoDict)
       } else {
-        var valNameStr = FridaAndroidUtil.valueToNameStr(inputObj)
-        console.log(`${PrefAndClsName}: ${valNameStr} not a ${className}`)
+        console.warn(`${PrefAndClassName}: ${FridaAndroidUtil.valueToNameStr(inputObj)} not a ${fullClassName}`)
       }
     } else {
-      console.log(`${PrefAndClsName}: null`)
+      console.log(`${PrefAndClassName}: null`)
     }
   }
 
   static printClass_SharedPreferencesImpl_EditorImpl(inputObj, prefixStr=""){
-    // android.app.SharedPreferencesImpl$EditorImpl
-    // https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/SharedPreferencesImpl.java
-    const ClassName = "SharedPreferencesImpl$EditorImpl"
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curClassName = FridaAndroidUtil.getJavaClassName(inputObj)
-      if (curClassName === FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl) {
-        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl)
-        // console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "SharedPreferencesImpl$EditorImpl",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.app.SharedPreferencesImpl$EditorImpl
+        // https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/app/SharedPreferencesImpl.java
 
-        var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-        console.log(newPrefStr + ClassName + ":" + clsNameStr
+        console.log(fullPref
           + " mEditorLock=" + curObj.mEditorLock.value
           + ", mModified=" + FridaAndroidUtil.mapToStr(curObj.mModified.value)
           + ", mClear=" + curObj.mClear.value
         )
-      } else {
-        console.log(newPrefStr + curClassName + ": not a " + ClassName)
-      }
-    } else {
-      console.log(newPrefStr + ClassName + ": null")
-    }
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_SharedPreferencesImpl_EditorImpl
+    )
   }
 
-  // org.chromium.net.impl.CronetUrlRequest
-  static printClass_CronetUrlRequest(inputObj){
-    // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
-    if (inputObj) {
-      // var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_CronetUrlRequest)
-      // console.log("curObj=" + curObj)
+  static printClass_CronetUrlRequest(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "CronetUrlRequest",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // org.chromium.net.impl.CronetUrlRequest
+        // https://chromium.googlesource.com/chromium/src/+/refs/heads/main/components/cronet/android/java/src/org/chromium/net/impl/CronetUrlRequest.java
 
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
-
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      console.log("CronetUrlRequest:" + clsNameStr
-        + " mInitialUrl=" + curObj.mInitialUrl.value
-        + " mInitialMethod=" + curObj.mInitialMethod.value
-        + " mRequestHeaders=" + curObj.mRequestHeaders.value
-        + " mUploadDataStream=" + curObj.mUploadDataStream.value
-        + " mRequestContext=" + curObj.mRequestContext.value
-        + " mNetworkHandle=" + curObj.mNetworkHandle.value
-        + " mPriority=" + curObj.mPriority.value
-        + " mStarted=" + curObj.mStarted.value
-        + " mDisableCache=" + curObj.mDisableCache.value
-      )
-    } else {
-      console.log("CronetUrlRequest: null")
-    }
+        console.log(fullPref
+          + " mInitialUrl=" + curObj.mInitialUrl.value
+          + " mInitialMethod=" + curObj.mInitialMethod.value
+          + " mRequestHeaders=" + curObj.mRequestHeaders.value
+          + " mUploadDataStream=" + curObj.mUploadDataStream.value
+          + " mRequestContext=" + curObj.mRequestContext.value
+          + " mNetworkHandle=" + curObj.mNetworkHandle.value
+          + " mPriority=" + curObj.mPriority.value
+          + " mStarted=" + curObj.mStarted.value
+          + " mDisableCache=" + curObj.mDisableCache.value
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_CronetUrlRequest
+    )
   }
 
-  // android.os.Messenger
-  static printClass_Messenger(inputObj){
-    // https://developer.android.com/reference/android/os/Messenger
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Messenger)
-      // console.log("curObj=" + curObj)
+  static printClass_Messenger(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "Messenger",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.os.Messenger
+        // https://developer.android.com/reference/android/os/Messenger
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      var binder = curObj.getBinder()
-
-      console.log("Messenger:" + clsNameStr
-        + " CREATOR=" + curObj.CREATOR.value
-        + ", binder=" + binder
-      )
-    } else {
-      console.log("Messenger: null")
-    }
+        console.log(fullPref
+          + " CREATOR=" + curObj.CREATOR.value
+          + ", binder=" + binder
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_Messenger
+    )
   }
 
-  // android.os.Message
-  static printClass_Message(inputObj, caller=""){
-    // https://developer.android.com/reference/android/os/Message
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Message)
-      // console.log("curObj=" + curObj)
+  static printClass_Message(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "Message",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.os.Message
+        // https://developer.android.com/reference/android/os/Message
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+        var callback = curObj.getCallback()
+        var dataBundle = curObj.getData()
+        var targetHandler = curObj.getTarget()
+        var when = curObj.getWhen()
+        var isAsync = curObj.isAsynchronous()
 
-      var callback = curObj.getCallback()
-      var dataBundle = curObj.getData()
-      var targetHandler = curObj.getTarget()
-      var when = curObj.getWhen()
-      var isAsync = curObj.isAsynchronous()
-      var callerStr = "[caller=" + caller + "] "
+        var replyToVal = curObj.replyTo.value
 
-      console.log(callerStr + "Message:" + clsNameStr
-        + " arg1=" + curObj.arg1.value
-        + ", arg2=" + curObj.arg2.value
-        + ", obj=" + curObj.obj.value
-        + ", replyTo=" + curObj.replyTo.value
-        + ", sendingUid=" + curObj.sendingUid.value
-        + ", what=" + curObj.what.value
+        console.log(fullPref
+          + " arg1=" + curObj.arg1.value
+          + ", arg2=" + curObj.arg2.value
+          + ", obj=" + curObj.obj.value
+          + ", replyTo=" + replyToVal
+          + ", sendingUid=" + curObj.sendingUid.value
+          + ", what=" + curObj.what.value
 
-        + ", callback=" + callback
-        + ", dataBundle=" + dataBundle
-        + ", targetHandler=" + targetHandler
-        + ", when=" + when
-        + ", isAsync=" + isAsync
-      )
+          + ", callback=" + callback
+          + ", dataBundle=" + dataBundle
+          + ", targetHandler=" + targetHandler
+          + ", when=" + when
+          + ", isAsync=" + isAsync
+        )
 
-      FridaAndroidUtil.printClass_Messenger(curObj.replyTo.value)
-    } else {
-      console.log("Message: null")
-    }
+        FridaAndroidUtil.printClass_Messenger(replyToVal, `${origPref} `)
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_Messenger
+    )
   }
 
-  // java.net.URLConnection
-  static printClass_URLConnection(inputObj){
-    // https://cs.android.com/android/platform/superproject/main/+/main:libcore/ojluni/src/main/java/java/net/URLConnection.java;drc=bd205f23c74d7498c9958d2bfa8622aacfe59517;l=161
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_URLConnection)
-      // console.log("curObj=" + curObj)
+  static printClass_URLConnection(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "URLConnection",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // java.net.URLConnection
+        // https://cs.android.com/android/platform/superproject/main/+/main:libcore/ojluni/src/main/java/java/net/URLConnection.java;drc=bd205f23c74d7498c9958d2bfa8622aacfe59517;l=161
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      // if (FridaAndroidUtil.isClass_URLConnection(curObj)){
         // console.log("URLConnection:"
         //   + " url=" + curObj.url.value
         //   + ", connected=" + curObj.connected.value
@@ -441,7 +470,7 @@ class FridaAndroidUtil {
         // var fileNameMapStr = FridaAndroidUtil.mapToStr(fileNameMap)
         // console.log("fileNameMapStr=" + fileNameMapStr)
 
-        console.log("URLConnection:" + clsNameStr
+        console.log(fullPref
           + " url=" + url
           + ", doInput=" + doInput
           + ", doOutput=" + doOutput
@@ -464,24 +493,21 @@ class FridaAndroidUtil {
           + ", readTimeout=" + readTimeout
           + ", fileNameMap=" + fileNameMap
         )
-
-        // } else {
-      //   console.warn(curObj + " is Not URLConnection")
-      // }
-    } else {
-      console.log("URLConnection: null")
-    }
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_URLConnection
+    )
   }
 
-  // java.net.HttpURLConnection
-  static printClass_HttpURLConnection(inputObj){
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpURLConnection)
-      // console.log("curObj=" + curObj)
+  static printClass_HttpURLConnection(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "HttpURLConnection",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // java.net.HttpURLConnection
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      // if (FridaAndroidUtil.isClass_HttpURLConnection(curObj)){
         // var headerFields = curObj.getHeaderFields()
         // console.log("HttpURLConnection: headerFields=" + headerFields)
         // var reqMethod = curObj.getRequestMethod()
@@ -498,103 +524,96 @@ class FridaAndroidUtil {
         //   + ", followRedirects=" + curObj.followRedirects.value
         // )
 
-        console.log("HttpURLConnection:" + clsNameStr
+        console.log(fullPref
           + " method=" + curObj.getRequestMethod()
           // + ", responseCode=" + curObj.getResponseCode() // NOTE: will trigger send request !
           // + ", responseMessage=" + curObj.getResponseMessage()  // NOTE: will trigger send request !
           + ", instanceFollowRedirects=" + curObj.getInstanceFollowRedirects()
           + ", followRedirects=" + curObj.getFollowRedirects()
         )
-      // } else {
-      //   console.warn(curObj + " is Not HttpURLConnection")
-      // }
-
-      FridaAndroidUtil.printClass_URLConnection(curObj)
-    } else {
-      console.log("HttpURLConnection: null")
-    }
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_HttpURLConnection
+    )
   }
 
-  // javax.net.ssl.HttpsURLConnection
-  static printClass_HttpsURLConnection(inputObj){
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpsURLConnection)
-      // console.log("curObj=" + curObj)
+  static printClass_HttpsURLConnection(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "HttpsURLConnection",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // javax.net.ssl.HttpsURLConnection
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      // if (FridaAndroidUtil.isClass_HttpsURLConnection(curObj)){
-        console.log("HttpsURLConnection: " + clsNameStr
+        console.log(fullPref
           + " no fields"
         )
-      // } else {
-      //   console.warn(curObj + " is Not HttpsURLConnection")
-      // }
 
-      FridaAndroidUtil.printClass_HttpURLConnection(curObj)
-    } else {
-      console.log("HttpsURLConnection: null")
-    }
+        var httpURLConnectionObj = FridaAndroidUtil.castToJavaClass(curObj, FridaAndroidUtil.clsName_HttpURLConnection)
+        FridaAndroidUtil.printClass_HttpURLConnection(httpURLConnectionObj, `${origPref} `)
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_HttpsURLConnection
+    )
   }
 
-  // com.android.okhttp.internal.huc.DelegatingHttpsURLConnection
-  static printClass_DelegatingHttpsURLConnection(inputObj){
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_DelegatingHttpsURLConnection)
-      // console.log("curObj=" + curObj)
+  static printClass_DelegatingHttpsURLConnection(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "DelegatingHttpsURLConnection",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // com.android.okhttp.internal.huc.DelegatingHttpsURLConnection
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      // if (FridaAndroidUtil.isClass_DelegatingHttpsURLConnection(curObj)){
-        console.log("DelegatingHttpsURLConnection:" + clsNameStr
+        console.log(fullPref
           + "  delegate=" + curObj.delegate.value
         )
-      // } else {
-      //   console.warn(curObj + " is Not DelegatingHttpsURLConnection")
-      // }
 
-      FridaAndroidUtil.printClass_HttpsURLConnection(curObj)
-    } else {
-      console.log("DelegatingHttpsURLConnection: null")
-    }
+        var httpsURLConnectionObj = FridaAndroidUtil.castToJavaClass(curObj, FridaAndroidUtil.clsName_HttpsURLConnection)
+        FridaAndroidUtil.printClass_HttpsURLConnection(httpsURLConnectionObj, `${origPref} `)
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_DelegatingHttpsURLConnection
+    )
   }
 
-  // com.android.okhttp.internal.huc.HttpsURLConnectionImpl
-  static printClass_HttpsURLConnectionImpl(inputObj){
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpsURLConnectionImpl)
-      // console.log("curObj=" + curObj)
+  static printClass_HttpsURLConnectionImpl(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "HttpsURLConnectionImpl",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // com.android.okhttp.internal.huc.HttpsURLConnectionImpl
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      // if (FridaAndroidUtil.isClass_HttpsURLConnectionImpl(curObj)){
-        console.log("HttpsURLConnectionImpl:" + clsNameStr
+        console.log(fullPref
           + "  delegate=" + curObj.delegate.value
         )
-  
-        FridaAndroidUtil.printClass_DelegatingHttpsURLConnection(curObj)  
-      // } else {
-      //   console.warn(curObj + " is Not HttpsURLConnectionImpl")
-      // }
-    } else {
-      console.log("HttpsURLConnectionImpl: null")
-    }
+
+        var delegatingHttpsURLConnectionObj = FridaAndroidUtil.castToJavaClass(curObj, FridaAndroidUtil.clsName_DelegatingHttpsURLConnection)
+        FridaAndroidUtil.printClass_DelegatingHttpsURLConnection(delegatingHttpsURLConnectionObj, `${origPref} `)
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_HttpsURLConnectionImpl
+    )
   }
 
-  // com.android.okhttp.internal.huc.HttpURLConnectionImpl
-  static printClass_HttpURLConnectionImpl(inputObj){
-    if (inputObj) {
-      var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_HttpURLConnectionImpl)
-      // console.log("curObj=" + curObj)
+  static printClass_HttpURLConnectionImpl(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "HttpURLConnectionImpl",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // com.android.okhttp.internal.huc.HttpURLConnectionImpl
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+        // var reqHeadersStr = FridaAndroidUtil.printClass_Headers_Builder(curObj.requestHeaders.value)
+        var reqHeadersStr = FridaAndroidUtil.HeadersBuilderToString(curObj.requestHeaders.value)
+        // console.log("reqHeadersStr=" + reqHeadersStr)
 
-      // var reqHeadersStr = FridaAndroidUtil.printClass_Headers_Builder(curObj.requestHeaders.value)
-      var reqHeadersStr = FridaAndroidUtil.HeadersBuilderToString(curObj.requestHeaders.value)
-      // console.log("reqHeadersStr=" + reqHeadersStr)
-
-      // if (FridaAndroidUtil.isClass_HttpURLConnectionImpl(curObj)){
-        console.log("HttpURLConnectionImpl:" + clsNameStr
+        console.log(fullPref
           + "  client=" + curObj.client.value
           + ", requestHeaders=" + reqHeadersStr
           + ", fixedContentLength=" + curObj.fixedContentLength.value
@@ -606,13 +625,13 @@ class FridaAndroidUtil {
           + ", handshake=" + curObj.handshake.value
           + ", urlFilter=" + curObj.urlFilter.value
         )
-        FridaAndroidUtil.printClass_HttpURLConnection(curObj)
-      // } else {
-      //   console.warn(curObj + " is Not HttpURLConnectionImpl")
-      // }
-    } else {
-      console.log("HttpURLConnectionImpl: null")
-    }
+
+        var httpURLConnectionObj = FridaAndroidUtil.castToJavaClass(curObj, FridaAndroidUtil.clsName_HttpURLConnection)
+        FridaAndroidUtil.printClass_HttpURLConnection(httpURLConnectionObj, `${origPref} `)
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_HttpURLConnectionImpl
+    )
   }
 
   // HTTP:  com.android.okhttp.internal.huc.HttpURLConnectionImpl
@@ -630,228 +649,221 @@ class FridaAndroidUtil {
     }
   }
 
-  // com.android.okhttp.internal.http.RetryableSink
   static printClass_RetryableSink(inputObj, prefixStr=""){
-    // https://cs.android.com/android/platform/superproject/+/master:external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/internal/http/RetryableSink.java
-    // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okhttp/src/main/java/com/squareup/okhttp/internal/http/RetryableSink.java
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "RetryableSink",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // com.android.okhttp.internal.http.RetryableSink
+        // https://cs.android.com/android/platform/superproject/+/master:external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/internal/http/RetryableSink.java
+        // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okhttp/src/main/java/com/squareup/okhttp/internal/http/RetryableSink.java
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
+        var contentVar = curObj.content.value
 
+        console.log(fullPref
+          + " closed=" + curObj.closed.value
+          + ", limit=" + curObj.limit.value
+          + ", contentLength()=" + curObj.contentLength()
+          + ", content=" + contentVar
+        )
 
-      console.log(newPrefStr + "RetryableSink:" + clsNameStr
-        + " closed=" + curObj.closed.value
-        + ", limit=" + curObj.limit.value
-        + ", contentLength()=" + curObj.contentLength()
-        + ", content=" + curObj.content.value
-      )
-
-      FridaAndroidUtil.printClass_Buffer(curObj.content.value, prefixStr)
-    } else {
-      console.log("RetryableSink: null")
-    }
+        FridaAndroidUtil.printClass_Buffer(contentVar, `${origPref} `)
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_RetryableSink
+    )
   }
 
-  static printClass_File(inputObj){
-    // https://developer.android.com/reference/java/io/File
-    if (inputObj) {
-      if (FridaAndroidUtil.isClass_File(inputObj)){
-        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_File)
-        // console.log("curObj=" + curObj)
+  static printClass_File(inputObj, prefixStr=""){
+    FridaAndroidUtil.printClassTemplate(
+      "File",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // https://developer.android.com/reference/java/io/File
 
-        var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-        console.log("File:" + clsNameStr
+        console.log(fullPref
           + " separator=" + curObj.separator.value
           + ", pathSeparator=" + curObj.pathSeparator.value
           + ", exists=" + curObj.exists()
           + ", name=" + curObj.getName()
           + ", absPath=" + curObj.getAbsolutePath()
         )
-      } else {
-        var curClsName = FridaAndroidUtil.getJavaClassName(inputObj)
-        console.log(`printClass_File: ${inputObj} is not File class, curClsName=${curClsName}`)
-      }
-    } else {
-      console.log(`printClass_File: inputObj is null`)
-    }
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_File
+    )
   }
 
-  // com.android.okhttp.okio.Buffer
   static printClass_Buffer(inputObj, prefixStr=""){
-    // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okio/okio/src/main/java/okio/Buffer.java
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "Buffer",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // com.android.okhttp.okio.Buffer
+        // https://android.googlesource.com/platform/external/okhttp/+/refs/heads/main/okio/okio/src/main/java/okio/Buffer.java
+  
+        var byteArray = curObj.readByteArray()
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-      var byteArray = curObj.readByteArray()
-
-
-      console.log(newPrefStr + "Buffer:" + clsNameStr
-        // + " size=" + curObj.size.value
-        + " size=" + curObj._size.value
-        + ", head=" + curObj.head.value
-        + ", toString()=" + curObj.toString()
-        + ", byteArray=" + byteArray
-      )
-    } else {
-      console.log("Buffer: null")
-    }
+        console.log(fullPref
+          // + " size=" + curObj.size.value
+          + " size=" + curObj._size.value
+          + ", head=" + curObj.head.value
+          + ", toString()=" + curObj.toString()
+          + ", byteArray=" + byteArray
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_Buffer
+    )
   }
 
-  // android.util.DisplayMetrics
   static printClass_DisplayMetrics(inputObj, prefixStr=""){
-    const ClassName = "DisplayMetrics"
-    // https://developer.android.com/reference/android/util/DisplayMetrics#DisplayMetrics()
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "DisplayMetrics",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.util.DisplayMetrics
+        // https://developer.android.com/reference/android/util/DisplayMetrics#DisplayMetrics()
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-
-      console.log(newPrefStr + ClassName + ":" + clsNameStr
-        + " DENSITY_DEVICE_STABLE=" + curObj.DENSITY_DEVICE_STABLE.value
-        + ", density=" + curObj.density.value
-        + ", densityDpi=" + curObj.densityDpi.value
-        + ", heightPixels=" + curObj.heightPixels.value
-        + ", scaledDensity=" + curObj.scaledDensity.value
-        + ", widthPixels=" + curObj.widthPixels.value
-        + ", xdpi=" + curObj.xdpi.value
-        + ", ydpi=" + curObj.ydpi.value
-      )
-    } else {
-      console.log(ClassName + ": null")
-    }
+        console.log(fullPref
+          + " DENSITY_DEVICE_STABLE=" + curObj.DENSITY_DEVICE_STABLE.value
+          + ", density=" + curObj.density.value
+          + ", densityDpi=" + curObj.densityDpi.value
+          + ", heightPixels=" + curObj.heightPixels.value
+          + ", scaledDensity=" + curObj.scaledDensity.value
+          + ", widthPixels=" + curObj.widthPixels.value
+          + ", xdpi=" + curObj.xdpi.value
+          + ", ydpi=" + curObj.ydpi.value
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_DisplayMetrics
+    )
   }
 
-  // android.content.pm.ConfigurationInfo
   static printClass_ConfigurationInfo(inputObj, prefixStr=""){
-    const ClassName = "ConfigurationInfo"
-    // https://developer.android.com/reference/android/content/pm/ConfigurationInfo#INPUT_FEATURE_FIVE_WAY_NAV
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "ConfigurationInfo",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.content.pm.ConfigurationInfo
+        // https://developer.android.com/reference/android/content/pm/ConfigurationInfo#INPUT_FEATURE_FIVE_WAY_NAV
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-
-      console.log(newPrefStr + ClassName + ":" + clsNameStr
-        + " reqGlEsVersion=" + curObj.reqGlEsVersion.value
-        + ", reqInputFeatures=" + curObj.reqInputFeatures.value
-        + ", reqKeyboardType=" + curObj.reqKeyboardType.value
-        + ", reqNavigation=" + curObj.reqNavigation.value
-        + ", reqTouchScreen=" + curObj.reqTouchScreen.value
-      )
-    } else {
-      console.log(ClassName + ": null")
-    }
+        console.log(fullPref
+          + " reqGlEsVersion=" + curObj.reqGlEsVersion.value
+          + ", reqInputFeatures=" + curObj.reqInputFeatures.value
+          + ", reqKeyboardType=" + curObj.reqKeyboardType.value
+          + ", reqNavigation=" + curObj.reqNavigation.value
+          + ", reqTouchScreen=" + curObj.reqTouchScreen.value
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_ConfigurationInfo
+    )
   }
 
-  // android.content.res.Configuration
   static printClass_Configuration(inputObj, prefixStr=""){
-    const ClassName = "Configuration"
-    // https://developer.android.com/reference/android/content/res/Configuration#screenLayout
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "ConfigurationInfo",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.content.res.Configuration
+        // https://developer.android.com/reference/android/content/res/Configuration#screenLayout
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-
-      console.log(newPrefStr + ClassName + ":" + clsNameStr
-        + " colorMode=" + curObj.colorMode.value
-        + ", densityDpi=" + curObj.densityDpi.value
-        + ", fontScale=" + curObj.fontScale.value
-        + ", fontWeightAdjustment=" + curObj.fontWeightAdjustment.value
-        + ", hardKeyboardHidden=" + curObj.hardKeyboardHidden.value
-        + ", keyboard=" + curObj.keyboard.value
-        + ", keyboardHidden=" + curObj.keyboardHidden.value
-        + ", locale=" + curObj.locale.value
-        + ", mcc=" + curObj.mcc.value
-        + ", mnc=" + curObj.mnc.value
-        + ", navigation=" + curObj.navigation.value
-        + ", navigationHidden=" + curObj.navigationHidden.value
-        + ", orientation=" + curObj.orientation.value
-        + ", screenHeightDp=" + curObj.screenHeightDp.value
-        + ", screenLayout=" + curObj.screenLayout.value
-        + ", screenWidthDp=" + curObj.screenWidthDp.value
-        + ", smallestScreenWidthDp=" + curObj.smallestScreenWidthDp.value
-        + ", touchscreen=" + curObj.touchscreen.value
-        + ", uiMode=" + curObj.uiMode.value
-      )
-    } else {
-      console.log(ClassName + ": null")
-    }
+        console.log(fullPref
+          + " colorMode=" + curObj.colorMode.value
+          + ", densityDpi=" + curObj.densityDpi.value
+          + ", fontScale=" + curObj.fontScale.value
+          + ", fontWeightAdjustment=" + curObj.fontWeightAdjustment.value
+          + ", hardKeyboardHidden=" + curObj.hardKeyboardHidden.value
+          + ", keyboard=" + curObj.keyboard.value
+          + ", keyboardHidden=" + curObj.keyboardHidden.value
+          + ", locale=" + curObj.locale.value
+          + ", mcc=" + curObj.mcc.value
+          + ", mnc=" + curObj.mnc.value
+          + ", navigation=" + curObj.navigation.value
+          + ", navigationHidden=" + curObj.navigationHidden.value
+          + ", orientation=" + curObj.orientation.value
+          + ", screenHeightDp=" + curObj.screenHeightDp.value
+          + ", screenLayout=" + curObj.screenLayout.value
+          + ", screenWidthDp=" + curObj.screenWidthDp.value
+          + ", smallestScreenWidthDp=" + curObj.smallestScreenWidthDp.value
+          + ", touchscreen=" + curObj.touchscreen.value
+          + ", uiMode=" + curObj.uiMode.value
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_Configuration
+    )
   }
 
-  // android.content.pm.FeatureInfo
   static printClass_FeatureInfo(inputObj, prefixStr=""){
-    const ClassName = "FeatureInfo"
-    // https://developer.android.com/reference/android/content/pm/FeatureInfo
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "FeatureInfo",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.content.pm.FeatureInfo
+        // https://developer.android.com/reference/android/content/pm/FeatureInfo
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-
-      console.log(newPrefStr + ClassName + ":" + clsNameStr
-        + " flags=" + curObj.flags.value
-        + ", name=" + curObj.name.value
-        + ", reqGlEsVersion=" + curObj.reqGlEsVersion.value
-        + ", version=" + curObj.version.value
-      )
-    } else {
-      console.log(ClassName + ": null")
-    }
+        console.log(fullPref
+          + " flags=" + curObj.flags.value
+          + ", name=" + curObj.name.value
+          + ", reqGlEsVersion=" + curObj.reqGlEsVersion.value
+          + ", version=" + curObj.version.value
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_FeatureInfo
+    )
   }
 
-  // android.app.ActivityManager.MemoryInfo
   static printClass_ActivityManagerMemoryInfo(inputObj, prefixStr=""){
-    const ClassName = "ActivityManager.MemoryInfo"
-    // https://developer.android.com/reference/android/app/ActivityManager.MemoryInfo
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curObj = inputObj
-      console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "MemoryInfo",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.app.ActivityManager.MemoryInfo
+        // https://developer.android.com/reference/android/app/ActivityManager.MemoryInfo
 
-      var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
-
-
-      console.log(newPrefStr + ClassName + ":" + clsNameStr
-        + " CREATOR=" + curObj.CREATOR.value
-        + ", advertisedMem=" + curObj.advertisedMem.value
-        + ", availMem=" + curObj.availMem.value
-        + ", lowMemory=" + curObj.lowMemory.value
-        + ", threshold=" + curObj.threshold.value
-        + ", totalMem=" + curObj.totalMem.value
-      )
-    } else {
-      console.log(ClassName + ": null")
-    }
+        console.log(fullPref
+          + " CREATOR=" + curObj.CREATOR.value
+          + ", advertisedMem=" + curObj.advertisedMem.value
+          + ", availMem=" + curObj.availMem.value
+          + ", lowMemory=" + curObj.lowMemory.value
+          + ", threshold=" + curObj.threshold.value
+          + ", totalMem=" + curObj.totalMem.value
+        )
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_MemoryInfo
+    )
   }
 
-  // android.os.Parcel
   static printClass_Parcel(inputObj, prefixStr=""){
-    // https://developer.android.com/reference/android/os/Parcel
-    const ClassName = "Parcel"
-    var newPrefStr  = prefixStr ? (prefixStr + " ") : prefixStr
-    if (inputObj) {
-      var curClassName = FridaAndroidUtil.getJavaClassName(inputObj)
-      if (curClassName === FridaAndroidUtil.clsName_Parcel) {
-        var curObj = FridaAndroidUtil.castToJavaClass(inputObj, FridaAndroidUtil.clsName_Parcel)
-        // console.log("curObj=" + curObj)
+    FridaAndroidUtil.printClassTemplate(
+      "Parcel",
+      inputObj,
+      function (curObj, strInfoDict) {
+        var fullPref = strInfoDict["fullPref"]
+        var origPref = strInfoDict["origPref"]
+        // android.os.Parcel
+        // https://developer.android.com/reference/android/os/Parcel
 
         var clsNameStr = FridaAndroidUtil.genClassNameStr(curObj)
 
@@ -864,7 +876,7 @@ class FridaAndroidUtil {
         var dataCapacity = curObj.dataCapacity()
         var hasFileDescriptors = curObj.hasFileDescriptors()
 
-        console.log(newPrefStr + ClassName + ":" + clsNameStr
+        console.log(fullPref
           + " STRING_CREATOR=" + stringCreatorStr
           + ", dataSize=" + dataSize
           + ", dataPosition=" + dataPosition
@@ -872,12 +884,10 @@ class FridaAndroidUtil {
           + ", dataCapacity=" + dataCapacity
           + ", hasFileDescriptors=" + hasFileDescriptors
         )
-      } else {
-        console.log(newPrefStr + ClassName + ": not a Parcel")
-      }
-    } else {
-      console.log(newPrefStr + ClassName + ": null")
-    }
+      },
+      prefixStr,
+      FridaAndroidUtil.clsName_Parcel
+    )
   }
 
   /*-------------------- Others --------------------*/
@@ -915,7 +925,7 @@ class FridaAndroidUtil {
   }
 
   // java ArrayList (byte array / List<Integer> / ArrayList<Map.Entry<String, String>> ) to string
-  static javaArrayListToStr(javaArraryList){
+  static listToStr(javaArraryList){
     // var jsArrayList = FridaAndroidUtil.javaByteArrToJsByteArr(javaArraryList)
     // console.log("jsArrayList=" + jsArrayList)
     // var jsArrayListStr = jsArrayList.toString()
