@@ -3,7 +3,7 @@
 	Function: crifan's common Frida Android util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaAndroidUtil.js
-	Updated: 20251204
+	Updated: 20251209
 */
 
 // Frida Android Util
@@ -100,7 +100,13 @@ class FridaAndroidUtil {
     "float":    "F",
     "double":   "D",
 
-    "char":     "[C",
+    // from FridaDexTypeMapppingDict_list
+
+    // TODO: add more type
+  }
+
+  static FridaDexTypeMapppingDict_list = {
+    "char[]":   "[C",
     "byte[]":   "[B",
     "short[]":  "[S",
     "int[]":    "[I",
@@ -110,8 +116,6 @@ class FridaAndroidUtil {
 
     "String[]": "[Ljava/lang/String;",
     "Object[]": "[Ljava/lang/Object;",
-
-    // TODO: add more type
   }
 
   constructor() {
@@ -119,7 +123,12 @@ class FridaAndroidUtil {
   }
 
   static {
+    Object.assign(FridaAndroidUtil.FridaDexTypeMapppingDict, FridaAndroidUtil.FridaDexTypeMapppingDict_list)
+
     if (FridaUtil.isAndroid()) {
+      console.log("FridaAndroidUtil.FridaDexTypeMapppingDict_list=" + FridaAndroidUtil.FridaDexTypeMapppingDict_list)
+      console.log("FridaAndroidUtil.FridaDexTypeMapppingDict=" + FridaAndroidUtil.FridaDexTypeMapppingDict)
+
       FridaAndroidUtil.curThrowableCls = Java.use("java.lang.Throwable")
       console.log("FridaAndroidUtil.curThrowableCls=" + FridaAndroidUtil.curThrowableCls)
 
@@ -931,7 +940,6 @@ class FridaAndroidUtil {
     // var jsArrayListStr = jsArrayList.toString()
     // console.log("jsArrayListStr=" + jsArrayListStr)
     // return jsArrayListStr
-
     var javaObjList = javaArraryList.toArray()
     console.log("javaObjList=" +  javaObjList)
     var javaObjListStr = javaObjList.toString()
@@ -1404,16 +1412,16 @@ class FridaAndroidUtil {
   }
 
   // Check whether to show log or not, and show (function call and stack) log if necessary
-  static showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict, isShowLogDefault=true){
+  static showFuncCallAndStackLogIfNecessary(callback_isShowLog, funcName, funcParaDict, isShowLogDefault=true, genLogFunc=FridaAndroidUtil.genFunctionCallAndStack){
     var isShowLog = isShowLogDefault
-    var curFuncCallStackStr = FridaAndroidUtil.genFunctionCallAndStack(funcName, funcParaDict)
+    var curLogStr = genLogFunc(funcName, funcParaDict)
 
     if (null != callback_isShowLog) {
-      isShowLog = callback_isShowLog(curFuncCallStackStr)
+      isShowLog = callback_isShowLog(curLogStr)
     }
 
     if (isShowLog){
-      console.log(curFuncCallStackStr)
+      console.log(curLogStr)
     }
 
     return isShowLog

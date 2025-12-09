@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common Android Java related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookAndroidJava.js
-	Updated: 20251203
+	Updated: 20251205
 */
 
 // Frida hook common Android/Java class
@@ -932,11 +932,13 @@ class FridaHookAndroidJava {
         var funcParaDict = {
           "response": response,
         }
-        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        // var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+        // curLogFunc(funcName, funcParaDict)
+        FridaAndroidUtil.printFunctionCallStr(funcName, funcParaDict)
         var retString = this.responseSourceHeader(response)
-        if (isShowLog) {
+        // if (isShowLog) {
           console.log(`${funcName} => retString=${retString}`)
-        }
+        // }
         return retString
       }
     }
@@ -1518,11 +1520,12 @@ class FridaHookAndroidJava {
     func_HttpURLConnection_getFollowRedirects.implementation = function () {
       var funcName = "HttpURLConnection.getFollowRedirects"
       var funcParaDict = {}
-      var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, FridaAndroidUtil.printFunctionCallAndStack, callback_isShowLog)
+      curLogFunc(funcName, funcParaDict)
+      // var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, FridaAndroidUtil.printFunctionCallAndStack, callback_isShowLog)
       var retFollowRedirects = this.getFollowRedirects()
-      if (isShowLog) {
-        console.log(`${funcName} => retFollowRedirects: type=${typeof retFollowRedirects},val=${retFollowRedirects}`)
-      }
+      // if (isShowLog) {
+        console.log(`${funcName} => retFollowRedirects=${retFollowRedirects}`)
+      // }
       return retFollowRedirects
     }
 
@@ -1753,16 +1756,15 @@ class FridaHookAndroidJava {
     // public static void java.net.HttpURLConnection.setFollowRedirects(boolean)
     var func_HttpURLConnection_setFollowRedirects = cls_HttpURLConnection.setFollowRedirects
     console.log("func_HttpURLConnection_setFollowRedirects=" + func_HttpURLConnection_setFollowRedirects)
-    if (func_HttpURLConnection_setFollowRedirects) {
-      func_HttpURLConnection_setFollowRedirects.implementation = function (set) {
-        var funcName = "HttpURLConnection.setFollowRedirects"
-        var funcParaDict = {
-          "set": set,
-        }
-        var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
-        this.setFollowRedirects(set)
-        return
+    func_HttpURLConnection_setFollowRedirects.implementation = function (set) {
+      var funcName = "HttpURLConnection.setFollowRedirects"
+      var funcParaDict = {
+        "set": set,
       }
+      curLogFunc(funcName, funcParaDict)
+      // var isShowLog = FridaHookAndroidJava.urlCommon_filterLogByUrl(this.url.value, funcName, funcParaDict, curLogFunc, callback_isShowLog)
+      this.setFollowRedirects(set)
+      return
     }
 
     // void setInstanceFollowRedirects(boolean followRedirects)
@@ -5813,10 +5815,9 @@ class FridaHookAndroidJava {
   }
 
   static RetryableSink() {
-    var clsName_RetryableSink = "com.android.okhttp.internal.http.RetryableSink"
-    // FridaAndroidUtil.printClassAllMethodsFields(clsName_RetryableSink)
+    // FridaAndroidUtil.printClassAllMethodsFields(FridaAndroidUtil.clsName_RetryableSink)
 
-    var cls_RetryableSink = Java.use(clsName_RetryableSink)
+    var cls_RetryableSink = Java.use(FridaAndroidUtil.clsName_RetryableSink)
     console.log("cls_RetryableSink=" + cls_RetryableSink)
 
     // @Override public void close() throws IOException {
@@ -5915,10 +5916,9 @@ class FridaHookAndroidJava {
 
   static Buffer() {
     // var clsName_Buffer = "okio.Buffer"
-    var clsName_Buffer = "com.android.okhttp.okio.Buffer"
-    // FridaAndroidUtil.printClassAllMethodsFields(clsName_Buffer)
+    FridaAndroidUtil.printClassAllMethodsFields(FridaAndroidUtil.clsName_Buffer)
 
-    var cls_Buffer = Java.use(clsName_Buffer)
+    var cls_Buffer = Java.use(FridaAndroidUtil.clsName_Buffer)
     console.log("cls_Buffer=" + cls_Buffer)
 
     // @Override public int read(byte[] sink) {
