@@ -3,7 +3,7 @@
 	Function: crifan's Frida hook common native related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaHookNative.js
-	Updated: 20251023
+	Updated: 20260223
 */
 
 // Frida hook common native functions
@@ -449,6 +449,43 @@ class FridaHookNative {
     })
   }
 
+ static hookNative_syscall(isAntiSyscall=false) {
+   Interceptor.attach(Module.findExportByName("libc.so", "syscall"), {
+     onEnter: function(args) {
+       var nr = args[0].toInt32()
+       // arm64: __NR_kill=129, __NR_tgkill=131, __NR_exit_group=94, __NR_exit=93, __NR_ptrace=117, __NR_openat=56
+       if (nr == 129 || nr == 131) {
+         var targetPid = args[1].toInt32()
+         var sig = args[2].toInt32()
+         console.log("[syscall] kill/tgkill(nr=" + nr + "): pid=" + targetPid + ", sig=" + sig)
+         FridaUtil.printFunctionCallStack_addr(this.context, "syscall kill/tgkill")
+         if (isAntiSyscall) {
+           var isSelfKill = (targetPid == Process.id)
+           if (isSelfKill && (sig == 9 || sig == 6 || sig == 11 || sig == 5)) {
+             console.log("[anti-syscall] blocked syscall kill/tgkill(pid=" + targetPid + ", sig=" + sig + ")")
+             args[2] = ptr(0) // change signal to 0
+           }
+         }
+       } else if (nr == 93 || nr == 94) {
+         console.log("[syscall] exit/exit_group(nr=" + nr + "): status=" + args[1])
+         FridaUtil.printFunctionCallStack_addr(this.context, "syscall exit/exit_group")
+       } else if (nr == 117) {
+         // __NR_ptrace = 117 on arm64
+         var request = args[1].toInt32()
+         console.log("[syscall] ptrace(nr=" + nr + "): request=" + request + ", pid=" + args[2])
+         FridaUtil.printFunctionCallStack_addr(this.context, "syscall ptrace")
+       } else if (nr == 56) {
+         // __NR_openat = 56 on arm64
+         var pathname = FridaUtil.ptrToCStr(args[2])
+         if (pathname && FridaHookNative.isAntiDebugRelatedPath(pathname)) {
+           console.log("[syscall] openat(nr=" + nr + "): pathname=" + pathname)
+           FridaUtil.printFunctionCallStack_addr(this.context, "syscall openat [anti-debug]")
+         }
+       }
+     }
+   })
+ }
+
   static hookNative_pthread_create(){
     // int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void*), void *arg);
     Interceptor.attach(Module.findExportByName(null, "pthread_create"), {
@@ -542,6 +579,91 @@ class FridaHookNative {
     })
   }
 
+  static hookAndIgnoreSIGSEGV() {
+    var SIG_IGN = ptr(1);
+    var SIGSEGV = 11;
+    var SIGBUS = 7;
+    var SIGABRT = 6;
+    
+    // 1. 先自己注册一个忽略处理器
+    var sigaction = new NativeFunction(
+      Module.findExportByName("libc.so", "sigaction"),
+      'int', ['int', 'pointer', 'pointer']
+    );
+    
+    var act = Memory.alloc(256);
+    act.writePointer(SIG_IGN); // sa_handler = SIG_IGN
+    
+    sigaction(SIGSEGV, act, ptr(0));
+    sigaction(SIGBUS, act, ptr(0));
+    console.log("[init] Set SIGSEGV/SIGBUS to SIG_IGN");
+    
+    // 2. 拦截后续的 sigaction 调用，阻止 app 重新注册
+    Interceptor.attach(Module.findExportByName("libc.so", "sigaction"), {
+      onEnter: function(args) {
+        var signum = args[0].toInt32();
+        if (signum == SIGSEGV || signum == SIGBUS) {
+          console.log("[sigaction] blocked attempt to set handler for sig=" + signum);
+          // 把 act 指针改成 null，让调用无效
+          args[1] = ptr(0);
+        }
+      }
+    });
+    
+    // 3. 同时拦截 signal() 函数
+    Interceptor.attach(Module.findExportByName("libc.so", "signal"), {
+      onEnter: function(args) {
+        var signum = args[0].toInt32();
+        if (signum == SIGSEGV || signum == SIGBUS) {
+          console.log("[signal] blocked attempt to set handler for sig=" + signum);
+          args[1] = SIG_IGN;
+        }
+      }
+    });
+  }
+  
+  static hookNative_exit(isAntiExit=false){
+    // void exit(int status);
+    Interceptor.attach(Module.findExportByName("libc.so", "exit"), {
+      onEnter: function (args) {
+        var status = args[0].toInt32()
+        console.log("[anti-debug] exit: status=" + status)
+        // 始终打印调用栈，定位谁在触发exit
+        FridaUtil.printFunctionCallStack_addr(this.context, "exit")
+        if (isAntiExit) {
+          console.log("[anti-exit] blocked exit(" + status + ")")
+          args[0] = ptr(0)
+        }
+      },
+      onLeave: function (args) {
+      }
+    })
+  }
+
+  static hookNative_kill(isAntiKill=false){
+    // int kill(pid_t pid, int sig);
+    Interceptor.attach(Module.findExportByName("libc.so", "kill"), {
+      onEnter: function (args) {
+        var pid = args[0].toInt32()
+        var sig = args[1].toInt32()
+        var isSelfKill = (pid == Process.id)
+        console.log("[anti-debug] kill: pid=" + pid + ", sig=" + sig + ", isSelfKill=" + isSelfKill)
+        // 始终打印调用栈，定位谁在触发kill
+        FridaUtil.printFunctionCallStack_addr(this.context, "kill")
+        if (isAntiKill) {
+          if (isSelfKill && (sig == 9 || sig == 6 || sig == 11 || sig == 5)) {
+            // SIGKILL=9, SIGABRT=6, SIGSEGV=11, SIGTRAP=5
+            console.log("[anti-kill] blocked kill(" + pid + ", " + sig + ")")
+            args[1] = ptr(0) // 改为信号0（无效信号，不会杀死进程）
+          }
+        }
+      },
+      onLeave: function (retval) {
+        console.log("\t kill retval=" + retval)
+      }
+    })
+  }
+
   static hookNative_killpg(){
     // int killpg(int pgrp, int sig)
     Interceptor.attach(Module.findExportByName(null, "killpg"), {
@@ -551,6 +673,309 @@ class FridaHookNative {
         console.log("killpg: pgrp=" + pgrp + ", sig=" + sig)
       },
       onLeave: function (args) {
+      }
+    })
+  }
+
+  /*-------------------- Anti-Debug: Process Kill Detection --------------------*/
+
+  static hookNative__exit(isAntiExit=false){
+    // void _exit(int status);
+    Interceptor.attach(Module.findExportByName("libc.so", "_exit"), {
+      onEnter: function (args) {
+        var status = args[0].toInt32()
+        console.log("[anti-debug] _exit: status=" + status)
+        FridaUtil.printFunctionCallStack_addr(this.context, "_exit")
+        if (isAntiExit) {
+          console.log("[anti-exit] blocked _exit(" + status + ")")
+          args[0] = ptr(0)
+        }
+      }
+    })
+  }
+
+  static hookNative_abort(isAntiAbort=false){
+    // void abort(void);
+    var abortAddr = Module.findExportByName("libc.so", "abort")
+    if (isAntiAbort) {
+      // 用Interceptor.replace彻底替换abort为空函数，阻止进程终止
+      Interceptor.replace(abortAddr, new NativeCallback(function() {
+        console.log("[anti-abort] ★ abort() 已拦截并阻止 ★")
+      }, 'void', []))
+    } else {
+      Interceptor.attach(abortAddr, {
+        onEnter: function (args) {
+          console.log("[anti-debug] abort called")
+          FridaUtil.printFunctionCallStack_addr(this.context, "abort")
+        }
+      })
+    }
+  }
+
+  static hookNative_raise(isAntiRaise=false){
+    // int raise(int sig);
+    Interceptor.attach(Module.findExportByName("libc.so", "raise"), {
+      onEnter: function (args) {
+        var sig = args[0].toInt32()
+        console.log("[anti-debug] raise: sig=" + sig)
+        FridaUtil.printFunctionCallStack_addr(this.context, "raise")
+        if (isAntiRaise) {
+          if (sig == 6 || sig == 9 || sig == 11) {
+            // SIGABRT=6, SIGKILL=9, SIGSEGV=11
+            console.log("[anti-raise] blocked raise(" + sig + ")")
+            args[0] = ptr(0) // change to signal 0 (no-op)
+          }
+        }
+      },
+      onLeave: function (retval) {
+        console.log("\t raise retval=" + retval)
+      }
+    })
+  }
+
+  /*-------------------- Anti-Debug: Detection Function Hooks --------------------*/
+
+  static hookNative_ptrace(isAntiPtrace=false){
+    // long ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+    var ptraceAddr = Module.findExportByName("libc.so", "ptrace")
+    if (null == ptraceAddr) {
+      console.warn("[anti-debug] ptrace not found in libc.so")
+      return
+    }
+    Interceptor.attach(ptraceAddr, {
+      onEnter: function (args) {
+        var request = args[0].toInt32()
+        var pid = args[1].toInt32()
+        var addr = args[2]
+        var data = args[3]
+        console.log("[anti-debug] ptrace: request=" + request + ", pid=" + pid + ", addr=" + addr + ", data=" + data)
+        FridaUtil.printFunctionCallStack_addr(this.context, "ptrace")
+        this._request = request
+      },
+      onLeave: function (retval) {
+        console.log("\t ptrace retval=" + retval)
+        if (isAntiPtrace) {
+          // PTRACE_TRACEME = 0
+          if (this._request == 0) {
+            console.log("[anti-ptrace] bypassed ptrace(PTRACE_TRACEME), return 0")
+            retval.replace(ptr(0))
+          }
+        }
+      }
+    })
+  }
+
+  static hookNative_inotify_init(){
+    // int inotify_init(void);
+    var inotifyInitAddr = Module.findExportByName("libc.so", "inotify_init")
+    if (null == inotifyInitAddr) {
+      console.warn("[anti-debug] inotify_init not found")
+      return
+    }
+    Interceptor.attach(inotifyInitAddr, {
+      onEnter: function (args) {
+        console.log("[anti-debug] inotify_init called")
+        FridaUtil.printFunctionCallStack_addr(this.context, "inotify_init")
+      },
+      onLeave: function (retval) {
+        console.log("\t inotify_init retFd=" + retval)
+      }
+    })
+  }
+
+  static hookNative_inotify_add_watch(){
+    // int inotify_add_watch(int fd, const char *pathname, uint32_t mask);
+    var inotifyAddWatchAddr = Module.findExportByName("libc.so", "inotify_add_watch")
+    if (null == inotifyAddWatchAddr) {
+      console.warn("[anti-debug] inotify_add_watch not found")
+      return
+    }
+    Interceptor.attach(inotifyAddWatchAddr, {
+      onEnter: function (args) {
+        var fd = args[0].toInt32()
+        var pathname = FridaUtil.ptrToCStr(args[1])
+        var mask = args[2]
+        console.log("[anti-debug] inotify_add_watch: fd=" + fd + ", pathname=" + pathname + ", mask=" + mask)
+        FridaUtil.printFunctionCallStack_addr(this.context, "inotify_add_watch")
+      },
+      onLeave: function (retval) {
+        console.log("\t inotify_add_watch retval=" + retval)
+      }
+    })
+  }
+
+  // Anti-debug path patterns for /proc, root, frida detection
+  static AntiDebugPathPatterns = [
+    "/proc/self/status",
+    "/proc/self/maps",
+    "/proc/self/mem",
+    "/proc/self/task",
+    "/proc/self/exe",
+    "/proc/self/fd",
+    "/proc/self/cmdline",
+    "/proc/self/wchan",
+    "/proc/self/attr",
+    "/proc/self/mountinfo",
+    "TracerPid",
+    "/proc/net/tcp",
+    "/proc/net/tcp6",
+  ]
+
+  static RootDetectPathPatterns = [
+    "/system/bin/su",
+    "/system/xbin/su",
+    "/sbin/su",
+    "/data/local/su",
+    "/data/local/bin/su",
+    "/data/local/xbin/su",
+    "/su/bin/su",
+    "/system/bin/magisk",
+    "magisk",
+    "supersu",
+    "Superuser",
+  ]
+
+  static FridaDetectPathPatterns = [
+    "frida",
+    "linjector",
+    "gmain",
+    "gum-js-loop",
+    "frida-agent",
+    "frida-server",
+    "/data/local/tmp/re.frida.server",
+  ]
+
+  static isAntiDebugRelatedPath(path){
+    if (null == path || path.length == 0) {
+      return false
+    }
+    var allPatterns = FridaHookNative.AntiDebugPathPatterns
+      .concat(FridaHookNative.RootDetectPathPatterns)
+      .concat(FridaHookNative.FridaDetectPathPatterns)
+    for (var i = 0; i < allPatterns.length; i++) {
+      if (path.indexOf(allPatterns[i]) !== -1) {
+        return true
+      }
+    }
+    return false
+  }
+
+  static hookNative_fopen_antiDebug(){
+    // FILE *fopen(const char *restrict pathname, const char *restrict mode);
+    Interceptor.attach(Module.findExportByName("libc.so", "fopen"), {
+      onEnter: function (args) {
+        var pathname = FridaUtil.ptrToCStr(args[0])
+        var mode = FridaUtil.ptrToCStr(args[1])
+        this._pathname = pathname
+        this._mode = mode
+        this._isAntiDebug = FridaHookNative.isAntiDebugRelatedPath(pathname)
+        if (this._isAntiDebug) {
+          console.log("[anti-debug] fopen: pathname=" + pathname + ", mode=" + mode)
+          FridaUtil.printFunctionCallStack_addr(this.context, "fopen [anti-debug]")
+        }
+      },
+      onLeave: function (retFile) {
+        if (this._isAntiDebug) {
+          console.log("[anti-debug] fopen: pathname=" + this._pathname + ", mode=" + this._mode + " -> retFile=" + retFile)
+        }
+      }
+    })
+  }
+
+  static hookNative_open_antiDebug(){
+    // int open(const char *pathname, int flags, mode_t mode);
+    Interceptor.attach(Module.findExportByName("libc.so", "open"), {
+      onEnter: function (args) {
+        var path = FridaUtil.ptrToCStr(args[0])
+        var oflags = args[1]
+        this._path = path
+        this._oflags = oflags
+        this._isAntiDebug = FridaHookNative.isAntiDebugRelatedPath(path)
+        if (this._isAntiDebug) {
+          console.log("[anti-debug] open: path=" + path + ", oflags=" + oflags)
+          FridaUtil.printFunctionCallStack_addr(this.context, "open [anti-debug]")
+        }
+      },
+      onLeave: function (retFd) {
+        if (this._isAntiDebug) {
+          console.log("[anti-debug] open: path=" + this._path + ", oflags=" + this._oflags + " -> retFd=" + retFd)
+        }
+      }
+    })
+  }
+
+  static hookNative_openat_antiDebug(){
+    // int openat(int dirfd, const char *pathname, int flags, ...);
+    var openatAddr = Module.findExportByName("libc.so", "openat")
+    if (null == openatAddr) {
+      console.warn("[anti-debug] openat not found")
+      return
+    }
+    Interceptor.attach(openatAddr, {
+      onEnter: function (args) {
+        var dirfd = args[0].toInt32()
+        var pathname = FridaUtil.ptrToCStr(args[1])
+        var flags = args[2]
+        this._dirfd = dirfd
+        this._pathname = pathname
+        this._flags = flags
+        this._isAntiDebug = FridaHookNative.isAntiDebugRelatedPath(pathname)
+        if (this._isAntiDebug) {
+          console.log("[anti-debug] openat: dirfd=" + dirfd + ", pathname=" + pathname + ", flags=" + flags)
+          FridaUtil.printFunctionCallStack_addr(this.context, "openat [anti-debug]")
+        }
+      },
+      onLeave: function (retFd) {
+        if (this._isAntiDebug) {
+          console.log("[anti-debug] openat: dirfd=" + this._dirfd + ", pathname=" + this._pathname + ", flags=" + this._flags + " -> retFd=" + retFd)
+        }
+      }
+    })
+  }
+
+  static hookNative_getppid_antiDebug(){
+    // pid_t getppid(void);
+    // anti-debug: check if parent is not zygote (could mean debugger attached)
+    Interceptor.attach(Module.findExportByName("libc.so", "getppid"), {
+      onEnter: function (args) {
+        // console.log("[anti-debug] getppid called")
+      },
+      onLeave: function (retPpid) {
+        console.log("[anti-debug] getppid -> retPpid=" + retPpid)
+      }
+    })
+  }
+
+  static hookNative_strstr_antiDebug(){
+    // char *strstr(const char *haystack, const char *needle);
+    // anti-debug: detect string-based checks for "TracerPid", "frida", etc.
+    Interceptor.attach(Module.findExportByName("libc.so", "strstr"), {
+      onEnter: function (args) {
+        try {
+          var haystack = FridaUtil.ptrToCStr(args[0])
+          var needle = FridaUtil.ptrToCStr(args[1])
+          this._haystack = haystack
+          this._needle = needle
+          this._isAntiDebug = false
+          if (needle) {
+            var antiDebugNeedles = ["TracerPid", "frida", "gum-js-loop", "gmain", "linjector", "REJECT"]
+            for (var i = 0; i < antiDebugNeedles.length; i++) {
+              if (needle.indexOf(antiDebugNeedles[i]) !== -1) {
+                this._isAntiDebug = true
+                console.log("[anti-debug] strstr: needle=" + needle + ", haystack(first100)=" + (haystack ? FridaUtil.truncateStr(haystack, 100) : "null"))
+                FridaUtil.printFunctionCallStack_addr(this.context, "strstr [anti-debug]")
+                break
+              }
+            }
+          }
+        } catch(e) {
+          // ignore read errors
+        }
+      },
+      onLeave: function (retval) {
+        if (this._isAntiDebug && !retval.isNull()) {
+          console.log("[anti-debug] strstr: FOUND needle=" + this._needle + " -> retval=" + retval)
+        }
       }
     })
   }

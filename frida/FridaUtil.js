@@ -3,7 +3,7 @@
 	Function: crifan's common Frida util related functions
 	Author: Crifan Li
 	Latest: https://github.com/crifan/JsFridaUtil/blob/main/frida/FridaUtil.js
-	Updated: 20250226
+	Updated: 20250309
 */
 
 // Frida Common Util
@@ -47,6 +47,13 @@ class FridaUtil {
     return isAndroidOS
   }
 
+  static truncateStr(curStr, maxShowLen=200){
+    if (curStr && curStr.length > maxShowLen) {
+      curStr = curStr.substring(0, maxShowLen) + "...<truncated>"
+    }
+    return curStr
+  }
+
   // Frida pointer to UTF-8 string
   static ptrToUtf8Str(curPtr){
     var curUtf8Str = curPtr.readUtf8String()
@@ -55,10 +62,22 @@ class FridaUtil {
   }
 
   // Frida pointer to C string
-  static ptrToCStr(curPtr){
+  static ptrToCStr(curPtr, isShowFull=true){
     // var curCStr = Memory.readCString(curPtr)
-    var curCStr = curPtr.readCString()
     // var curCStr = curPtr.readUtf8String()
+    // var curCStr = curPtr.readCString()
+    var curCStr = ""
+    try {
+      if (JsUtil.isValidPointer(curPtr)) {
+        curCStr = curPtr.readCString()
+        if (!isShowFull) {
+          curCStr = FridaUtil.truncateStr(curCStr)
+        }
+      }
+    } catch(e) {
+      curCStr = "<read_error>"
+    }
+
     // console.log("curCStr=" + curCStr)
     return curCStr
   }
